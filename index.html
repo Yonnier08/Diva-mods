@@ -97,7 +97,7 @@
 <body>
 
 <header>
-  <!-- Tu Logo personalizado -->
+  <!-- Logo de tu proyecto -->
   <a class="brand-logo" href="#">
     <img src="logo.png" alt="PDMM+ Mods Logo">
   </a>
@@ -253,4 +253,379 @@ const i18nDict = {
     rule3: "Prohibido subir archivos maliciosos, exploits o contenido ilegal.",
     rule4: "Mantén un ambiente respetuoso en las descripciones y nombres.",
     infoTitle: "Acerca de PDMM+ Mods",
-    infoBody: "Esta plataforma es un espacio independiente creado
+    infoBody: "Esta plataforma es un espacio independiente creado para compartir, explorar y descargar mods para Project Diva Mega Mix+ y entregas afines. Todo el contenido es proporcionado libremente por la comunidad.",
+    authTitle: "Cuenta", profTitle: "Mi perfil", btnChangeAvatar: "Cambiar foto",
+    profHint: "Este nombre se muestra como autor de tus mods. Foto máx. 5 MB.",
+    btnSave: "Guardar", btnMyMods: "Mis mods", btnLogout: "Cerrar sesión", btnClose: "Cerrar",
+    uploadTitle: "Subir un mod", upImgsHint: "Imágenes del mod (hasta 5)", upFileHint: "Archivo del mod (.zip, .7z, .rar, máx. 50 MB)",
+    orExternal: "— o, si pesa más de 50 MB —", reviewNotice: "Tu mod se publicará de inmediato.",
+    btnSubmitMod: "Subir mod", btnCancel: "Cancelar", editTitle: "Editar mod",
+    addImgsHint: "Agregar imágenes (máx. 5 en total)", replaceFileHint: "Reemplazar archivo (opcional, máx. 50 MB)",
+    reReviewNotice: "Los cambios se guardarán al instante.", download: "Descargar", edit: "Editar", hide: "Ocultar", show: "Mostrar", delete: "Eliminar"
+  },
+  en: {
+    navMods: "Mods", navRules: "Rules", navInfo: "Info",
+    btnUpload: "Upload", btnLogin: "Sign In", btnSignup: "Sign Up",
+    heroTitle: "Project Diva Mods", heroSubtitle: "Discover and share community-created mods.",
+    searchPlaceholder: "Search mods...", loading: "Loading...",
+    rulesTitle: "Community Rules",
+    rule1: "Only content related to Project Diva and rhythm games.",
+    rule2: "Respect original creators' credits and copyright.",
+    rule3: "No malicious files, exploits, or illegal content.",
+    rule4: "Keep a respectful environment in descriptions and names.",
+    infoTitle: "About PDMM+ Mods",
+    infoBody: "This platform is an independent place to share, explore, and download mods for Project Diva Mega Mix+ and related games. All content is freely uploaded by the community.",
+    authTitle: "Account", profTitle: "My Profile", btnChangeAvatar: "Change Avatar",
+    profHint: "This name appears as the author of your mods. Max avatar size: 5 MB.",
+    btnSave: "Save", btnMyMods: "My Mods", btnLogout: "Log Out", btnClose: "Close",
+    uploadTitle: "Upload a Mod", upImgsHint: "Mod images (up to 5)", upFileHint: "Mod file (.zip, .7z, .rar, max 50 MB)",
+    orExternal: "— or, if larger than 50 MB —", reviewNotice: "Your mod will be published immediately.",
+    btnSubmitMod: "Upload Mod", btnCancel: "Cancel", editTitle: "Edit Mod",
+    addImgsHint: "Add images (max 5 total)", replaceFileHint: "Replace file (optional, max 50 MB)",
+    reReviewNotice: "Changes will be saved instantly.", download: "Download", edit: "Edit", hide: "Hide", show: "Show", delete: "Delete"
+  },
+  ja: {
+    navMods: "モッド", navRules: "ルール", navInfo: "情報",
+    btnUpload: "投稿", btnLogin: "ログイン", btnSignup: "新規登録",
+    heroTitle: "Project Diva モッド", heroSubtitle: "コミュニティによって作成されたモッドを検索・共有できます。",
+    searchPlaceholder: "モッドを検索...", loading: "読み込み中...",
+    rulesTitle: "コミュニティルール",
+    rule1: "Project Divaおよび関連するリズムゲームに関するコンテンツのみ。",
+    rule2: "元の制作者のクレジットと権利を尊重してください。",
+    rule3: "悪質なファイルや違法コンテンツの投稿は禁止です。",
+    rule4: "説明文や名前において健全な環境を維持してください。",
+    infoTitle: "PDMM+ Mods について",
+    infoBody: "このプラットフォームは、Project Diva Mega Mix+および関連ゲームのモッドを共有、検索、ダウンロードするための独立したコミュニティスペースです。",
+    authTitle: "アカウント", profTitle: "プロフィール", btnChangeAvatar: "画像を変更",
+    profHint: "この名前はモッドの作者名として表示されます。",
+    btnSave: "保存", btnMyMods: "マイモッド", btnLogout: "ログアウト", btnClose: "閉じる",
+    uploadTitle: "モッドを投稿", upImgsHint: "モッド画像 (最大5枚)", upFileHint: "モッドファイル (.zip, .7z, .rar, 最大 50 MB)",
+    orExternal: "— 50 MBを超える場合 —", reviewNotice: "モッドはすぐに公開されます。",
+    btnSubmitMod: "投稿する", btnCancel: "キャンセル", editTitle: "モッドを編集",
+    addImgsHint: "画像を追加 (合計最大5枚)", replaceFileHint: "ファイルを差し替え (任意)",
+    reReviewNotice: "変更は即座に保存されます。", download: "ダウンロード", edit: "編集", hide: "非表示", show: "表示", delete: "削除"
+  }
+};
+
+let currentLang = 'es';
+
+function applyI18n() {
+  const userLang = (navigator.language || navigator.userLanguage || "es").slice(0, 2);
+  currentLang = i18nDict[userLang] ? userLang : 'en';
+  const dict = i18nDict[currentLang];
+
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const k = el.getAttribute('data-i18n');
+    if (dict[k]) el.textContent = dict[k];
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+    const k = el.getAttribute('data-i18n-ph');
+    if (dict[k]) el.placeholder = dict[k];
+  });
+}
+
+const URL_BASE = "https://nidlcakntjjzgkjlejbk.supabase.co";
+const KEY = "sb_publishable_TVKTwGkcuLX_eXNon8IQjg_Jor-NquZ";
+const MAX_FILE = 50 * 1024 * 1024, MAX_IMG = 5 * 1024 * 1024;
+const $ = (id) => document.getElementById(id);
+
+let session = null, profile = null, allMods = [], mine = [], editing = null, editImgs = [];
+try { session = JSON.parse(localStorage.getItem("pdmm_session") || "null"); } catch (e) {}
+
+function toast(t) { const el = $("toast"); el.textContent = t; el.style.display = "block"; clearTimeout(toast.t); toast.t = setTimeout(() => (el.style.display = "none"), 5000); }
+window.addEventListener("error", (e) => toast("Error: " + e.message));
+window.addEventListener("unhandledrejection", (e) => toast("Error: " + ((e.reason && e.reason.message) || e.reason)));
+
+function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c])); }
+function safeUrl(u) { return /^https?:\/\//i.test(u || "") ? u : ""; }
+function headers(extra) { const tk = session && session.access_token ? session.access_token : KEY; return Object.assign({ apikey: KEY, Authorization: "Bearer " + tk }, extra || {}); }
+
+function avatarHtml(url, name, size) {
+  const s = size || 28;
+  if (safeUrl(url)) return `<img class="av" src="${esc(url)}" width="${s}" height="${s}" alt="">`;
+  return `<span class="av" style="width:${s}px;height:${s}px;font-size:${Math.round(s * .45)}px">${esc((name || "?").charAt(0).toUpperCase())}</span>`;
+}
+const authorOf = (m) => m.author || "Anónimo";
+const safeName = (n) => n.replace(/[^a-zA-Z0-9._-]/g, "_");
+const isOwner = (m) => !!(session && session.user && m.user_id === session.user.id);
+
+function saveSession(s) { session = s; if (s) localStorage.setItem("pdmm_session", JSON.stringify(s)); else { localStorage.removeItem("pdmm_session"); profile = null; mine = []; } renderAuth(); }
+function renderAuth() {
+  const logged = !!(session && session.access_token);
+  $("btnOpenAuth").classList.toggle("hide", logged);
+  ["btnOpenUpload", "btnProfile"].forEach((id) => $(id).classList.toggle("hide", !logged));
+  if (logged) { $("hAv").innerHTML = avatarHtml(profile && profile.avatar_url, profile && profile.username, 26); $("hName").textContent = (profile && profile.username) || "Perfil"; }
+}
+
+async function authCall(path, body) {
+  const r = await fetch(URL_BASE + "/auth/v1/" + path, { method: "POST", headers: { apikey: KEY, "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  const d = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(d.msg || d.error_description || d.message || ("Error " + r.status));
+  return d;
+}
+async function refreshIfNeeded() {
+  if (!session || !session.refresh_token) return;
+  if (session.expires_at && session.expires_at - Math.floor(Date.now() / 1000) > 60) return;
+  try { saveSession(await authCall("token?grant_type=refresh_token", { refresh_token: session.refresh_token })); } catch (e) { saveSession(null); }
+}
+
+async function loadProfile() {
+  if (!session) return;
+  const r = await fetch(URL_BASE + "/rest/v1/profiles?select=*&id=eq." + session.user.id, { headers: headers() });
+  const d = await r.json().catch(() => []);
+  profile = d[0] || null;
+  if (!profile) {
+    const name = "user_" + session.user.id.slice(0, 6);
+    await fetch(URL_BASE + "/rest/v1/profiles", { method: "POST", headers: headers({ "Content-Type": "application/json", Prefer: "resolution=merge-duplicates,return=minimal" }), body: JSON.stringify({ id: session.user.id, username: name }) });
+    profile = { id: session.user.id, username: name, avatar_url: null };
+  }
+  renderAuth();
+}
+
+async function uploadFile(bucket, path, file) {
+  const r = await fetch(URL_BASE + "/storage/v1/object/" + bucket + "/" + path, { method: "POST", headers: headers({ "Content-Type": file.type || "application/octet-stream" }), body: file });
+  if (!r.ok) { const e = await r.json().catch(() => ({})); throw new Error(e.message || e.error || ("Error al subir (" + r.status + ")")); }
+  return URL_BASE + "/storage/v1/object/public/" + bucket + "/" + path;
+}
+function storagePath(url, bucket) { const p = "/storage/v1/object/public/" + bucket + "/"; const i = (url || "").indexOf(p); return i < 0 ? null : decodeURIComponent(url.slice(i + p.length)); }
+async function removeFiles(bucket, urls) {
+  const prefixes = urls.map((u) => storagePath(u, bucket)).filter(Boolean);
+  if (!prefixes.length) return;
+  await fetch(URL_BASE + "/storage/v1/object/" + bucket, { method: "DELETE", headers: headers({ "Content-Type": "application/json" }), body: JSON.stringify({ prefixes }) }).catch(() => {});
+}
+async function patchMod(id, body) {
+  const r = await fetch(URL_BASE + "/rest/v1/mods?id=eq." + id, { method: "PATCH", headers: headers({ "Content-Type": "application/json", Prefer: "return=minimal" }), body: JSON.stringify(body) });
+  if (!r.ok) { const e = await r.json().catch(() => ({})); throw new Error(e.message || ("Error " + r.status)); }
+}
+
+function renderMods() {
+  const q = $("q").value.trim().toLowerCase();
+  const items = allMods.filter((m) => ((m.title || "") + " " + authorOf(m) + " " + (m.description || "")).toLowerCase().includes(q));
+  $("count").textContent = allMods.length + (allMods.length === 1 ? " mod" : " mods");
+  if (!items.length) { $("list").innerHTML = "<div class='empty'>" + (allMods.length ? "Sin resultados." : "Todavía no hay mods publicados.") + "</div>"; return; }
+  $("list").innerHTML = items.map((m) => {
+    const img = (m.images || [])[0];
+    return `<div class="card" data-id="${esc(m.id)}">
+      <div class="cover">${safeUrl(img) ? `<img src="${esc(img)}" alt="" loading="lazy">` : esc((m.title || "?").charAt(0).toUpperCase())}</div>
+      <div class="body"><h3>${esc(m.title)}</h3>
+        <div class="who"><span>${esc(authorOf(m))}</span></div>
+        <div class="stats"><span>⬇ ${m.downloads || 0}</span><span>👁 ${m.views || 0}</span><span>${new Date(m.created_at).toLocaleDateString()}</span></div>
+      </div></div>`;
+  }).join("");
+}
+
+async function loadMods() {
+  try {
+    const r = await fetch(URL_BASE + "/rest/v1/mods?select=*&approved=eq.true&hidden=eq.false&order=created_at.desc", { headers: headers() });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.message || ("Error " + r.status));
+    allMods = Array.isArray(d) ? d : []; 
+    renderMods();
+  } catch (e) { 
+    $("list").innerHTML = "<div class='empty'>No se pudieron cargar los mods: " + esc(e.message) + "</div>"; 
+  }
+}
+
+async function loadMine() {
+  if (!session) return;
+  const r = await fetch(URL_BASE + "/rest/v1/mods?select=*&user_id=eq." + session.user.id + "&order=created_at.desc", { headers: headers() });
+  const d = await r.json().catch(() => []);
+  mine = Array.isArray(d) ? d : [];
+}
+
+function rpc(fn, id) { return fetch(URL_BASE + "/rest/v1/rpc/" + fn, { method: "POST", headers: headers({ "Content-Type": "application/json" }), body: JSON.stringify({ mod_id: id }) }).catch(() => {}); }
+
+function openDetail(id) {
+  const m = allMods.find((x) => x.id === id); if (!m) return;
+  const dict = i18nDict[currentLang];
+  rpc("increment_views", id); m.views = (m.views || 0) + 1; renderMods();
+  const link = safeUrl(m.file_url) || safeUrl(m.external_url);
+  const imgs = (m.images || []).filter(safeUrl);
+  $("detBody").innerHTML = `
+    ${imgs.length ? `<div class="gallery">${imgs.map((u) => `<img src="${esc(u)}" alt="">`).join("")}</div>` : ""}
+    <h2 style="margin:0 0 6px">${esc(m.title)}</h2>
+    <div class="who" style="margin-bottom:8px"><span>${esc(authorOf(m))}</span></div>
+    <div class="stats" style="margin-bottom:10px"><span>⬇ <b id="dlCount">${m.downloads || 0}</b></span><span>👁 ${m.views}</span><span>${new Date(m.created_at).toLocaleDateString()}</span></div>
+    <p class="desc">${esc(m.description)}</p>
+    ${link ? `<a id="dlBtn" class="btn pri" style="display:block;margin-top:10px;" href="${esc(link)}" target="_blank" rel="noopener">${dict.download}</a>` : ""}
+    ${isOwner(m) ? `<div class="acts" style="margin-top:12px"><button class="btn sm" data-act="edit" data-id="${esc(m.id)}">${dict.edit}</button><button class="btn sm" data-act="hide" data-id="${esc(m.id)}">${dict.hide}</button><button class="btn sm danger" data-act="del" data-id="${esc(m.id)}">${dict.delete}</button></div>` : ""}`;
+  const b = $("dlBtn");
+  if (b) b.onclick = () => { rpc("increment_downloads", id); m.downloads = (m.downloads || 0) + 1; $("dlCount").textContent = m.downloads; renderMods(); };
+  $("detDlg").showModal();
+}
+$("list").onclick = (e) => { const c = e.target.closest(".card"); if (c) openDetail(c.dataset.id); };
+
+function renderMine() {
+  const dict = i18nDict[currentLang];
+  if (!mine.length) { $("mineList").innerHTML = "<p class='hint'>Todavía no has subido mods.</p>"; return; }
+  $("mineList").innerHTML = mine.map((m) => {
+    const st = m.hidden ? ["off", "Oculto"] : ["ok", "Publicado"];
+    return `<div class="mine"><span class="chip ${st[0]}">${st[1]}</span><h3>${esc(m.title)}</h3>
+      <div class="stats"><span>⬇ ${m.downloads || 0}</span><span>👁 ${m.views || 0}</span></div>
+      <div class="acts"><button class="btn sm" data-act="edit" data-id="${esc(m.id)}">${dict.edit}</button>
+      <button class="btn sm" data-act="hide" data-id="${esc(m.id)}">${m.hidden ? dict.show : dict.hide}</button>
+      <button class="btn sm danger" data-act="del" data-id="${esc(m.id)}">${dict.delete}</button></div></div>`;
+  }).join("");
+}
+async function openMine() { await refreshIfNeeded(); await loadMine(); renderMine(); if (!$("mineDlg").open) $("mineDlg").showModal(); }
+const findMod = (id) => mine.find((x) => x.id === id) || allMods.find((x) => x.id === id);
+
+async function toggleHide(m) {
+  try {
+    await patchMod(m.id, { hidden: !m.hidden });
+    toast(m.hidden ? "Tu mod volvió a ser visible." : "Tu mod quedó oculto.");
+    await Promise.all([loadMods(), loadMine()]); renderMine(); if ($("detDlg").open) $("detDlg").close();
+  } catch (e) { toast("Error: " + e.message); }
+}
+async function deleteMod(m) {
+  if (!confirm("¿Eliminar \"" + m.title + "\" para siempre? Esta acción no se puede deshacer.")) return;
+  try {
+    const r = await fetch(URL_BASE + "/rest/v1/mods?id=eq." + m.id, { method: "DELETE", headers: headers({ Prefer: "return=minimal" }) });
+    if (!r.ok) { const e = await r.json().catch(() => ({})); throw new Error(e.message || ("Error " + r.status)); }
+    await removeFiles("mods", [m.file_url]); await removeFiles("images", m.images || []);
+    toast("Mod eliminado.");
+    await Promise.all([loadMods(), loadMine()]); renderMine(); if ($("detDlg").open) $("detDlg").close();
+  } catch (e) { toast("Error: " + e.message); }
+}
+function renderEditThumbs() {
+  $("eThumbs").innerHTML = editImgs.map((u, i) => `<span class="thumb"><img src="${esc(u)}" alt=""><button data-rm="${i}" type="button">✕</button></span>`).join("");
+}
+function openEdit(m) {
+  editing = m; editImgs = (m.images || []).slice();
+  $("eTitle").value = m.title || ""; $("eDesc").value = m.description || ""; $("eExt").value = m.external_url || "";
+  $("eImgs").value = ""; $("eFile").value = "";
+  $("eImgName").textContent = i18nDict[currentLang].addImgsHint; $("eFileName").textContent = i18nDict[currentLang].replaceFileHint;
+  renderEditThumbs();
+  if ($("detDlg").open) $("detDlg").close();
+  $("editDlg").showModal();
+}
+$("eThumbs").onclick = (e) => { const b = e.target.closest("[data-rm]"); if (b) { editImgs.splice(+b.dataset.rm, 1); renderEditThumbs(); } };
+$("eImgs").onchange = () => { const n = $("eImgs").files.length; $("eImgName").textContent = n ? n + " nueva(s)" : i18nDict[currentLang].addImgsHint; };
+$("eFile").onchange = () => { const f = $("eFile").files[0]; $("eFileName").textContent = f ? f.name : i18nDict[currentLang].replaceFileHint; };
+
+$("btnSaveEdit").onclick = async () => {
+  const m = editing; if (!m) return;
+  const title = $("eTitle").value.trim(), description = $("eDesc").value.trim(), ext = $("eExt").value.trim();
+  const newImgs = Array.from($("eImgs").files), newFile = $("eFile").files[0];
+  if (!title) return toast("Escribe un título.");
+  if (editImgs.length + newImgs.length > 5) return toast("Máximo 5 imágenes en total.");
+  if (newImgs.some((i) => i.size > MAX_IMG)) return toast("Cada imagen debe pesar menos de 5 MB.");
+  if (newFile && newFile.size > MAX_FILE) return toast("El archivo supera los 50 MB. Usa un enlace externo.");
+  if (newFile && !/\.(zip|7z|rar)$/i.test(newFile.name)) return toast("Solo se permiten .zip, .7z o .rar.");
+  if (ext && !safeUrl(ext)) return toast("El enlace debe empezar con http:// o https://");
+  if (!newFile && !m.file_url && !ext) return toast("El mod necesita un archivo o un enlace externo.");
+  await refreshIfNeeded(); if (!session) return toast("Inicia sesión primero.");
+
+  const btn = $("btnSaveEdit"); btn.disabled = true; btn.textContent = "Guardando...";
+  try {
+    const uid = session.user.id, stamp = Date.now();
+    const images = editImgs.slice();
+    for (let i = 0; i < newImgs.length; i++) images.push(await uploadFile("images", uid + "/" + stamp + "_" + i + "_" + safeName(newImgs[i].name), newImgs[i]));
+    let fileUrl = m.file_url;
+    if (newFile) fileUrl = await uploadFile("mods", uid + "/" + stamp + "_" + safeName(newFile.name), newFile);
+    const extVal = ext || null;
+    await patchMod(m.id, { title, description, images, file_url: fileUrl, external_url: extVal });
+    const removedImgs = (m.images || []).filter((u) => !images.includes(u));
+    if (removedImgs.length) await removeFiles("images", removedImgs);
+    if (newFile && m.file_url) await removeFiles("mods", [m.file_url]);
+    $("editDlg").close();
+    toast("Cambios guardados correctamente.");
+    await Promise.all([loadMods(), loadMine()]); if ($("mineDlg").open) renderMine();
+  } catch (e) { toast("Error: " + e.message); } finally { btn.disabled = false; btn.textContent = i18nDict[currentLang].btnSave; }
+};
+
+function onAction(e) {
+  const b = e.target.closest("[data-act]"); if (!b) return;
+  const m = findMod(b.dataset.id); if (!m) return;
+  if (b.dataset.act === "edit") openEdit(m);
+  else if (b.dataset.act === "hide") toggleHide(m);
+  else if (b.dataset.act === "del") deleteMod(m);
+}
+$("mineList").onclick = onAction;
+$("detBody").onclick = onAction;
+
+document.querySelectorAll("[data-close]").forEach((b) => (b.onclick = () => b.closest("dialog").close()));
+$("btnOpenAuth").onclick = () => $("authDlg").showModal();
+$("btnOpenUpload").onclick = () => $("upDlg").showModal();
+$("btnMine").onclick = () => { $("profDlg").close(); openMine(); };
+$("btnProfile").onclick = () => { $("pName").value = (profile && profile.username) || ""; $("pAv").innerHTML = avatarHtml(profile && profile.avatar_url, profile && profile.username, 56); $("pFile").value = ""; $("profDlg").showModal(); };
+$("q").oninput = renderMods;
+$("pFile").onchange = () => { const f = $("pFile").files[0]; if (f) $("pAv").innerHTML = `<img class="av" src="${URL.createObjectURL(f)}" width="56" height="56" alt="">`; };
+$("file").onchange = () => { const f = $("file").files[0]; $("fileName").textContent = f ? f.name : i18nDict[currentLang].upFileHint; };
+$("imgs").onchange = () => {
+  const fs = Array.from($("imgs").files).slice(0, 5);
+  $("imgName").textContent = fs.length ? fs.length + " imagen(es) elegida(s)" : i18nDict[currentLang].upImgsHint;
+  $("imgPrev").innerHTML = fs.map((f) => `<img src="${URL.createObjectURL(f)}" alt="">`).join("");
+};
+
+$("btnSignup").onclick = async () => {
+  const email = $("email").value.trim(), password = $("password").value;
+  if (!email || password.length < 6) return toast("Escribe un correo válido y una contraseña de 6 o más caracteres.");
+  try {
+    const d = await authCall("signup", { email, password }); $("authDlg").close();
+    if (d.access_token) { saveSession(d); await loadProfile(); toast("Cuenta creada. Ya iniciaste sesión."); }
+    else toast("Cuenta creada. Revisa tu correo para confirmarla.");
+  } catch (e) { toast("Error: " + e.message); }
+};
+$("btnLogin").onclick = async () => {
+  const email = $("email").value.trim(), password = $("password").value;
+  if (!email || !password) return toast("Escribe tu correo y contraseña.");
+  try { saveSession(await authCall("token?grant_type=password", { email, password })); await loadProfile(); $("authDlg").close(); toast("Sesión iniciada."); loadMods(); }
+  catch (e) { toast("Error: " + e.message); }
+};
+$("btnLogout").onclick = () => { saveSession(null); $("profDlg").close(); toast("Sesión cerrada."); };
+
+$("btnSaveProf").onclick = async () => {
+  await refreshIfNeeded(); if (!session) return toast("Inicia sesión primero.");
+  const name = $("pName").value.trim(); if (!name) return toast("Escribe un nombre de usuario.");
+  const f = $("pFile").files[0]; if (f && f.size > MAX_IMG) return toast("La foto supera los 5 MB.");
+  const btn = $("btnSaveProf"); btn.disabled = true; btn.textContent = "Guardando...";
+  try {
+    let avatar = profile && profile.avatar_url;
+    if (f) avatar = await uploadFile("images", session.user.id + "/avatar_" + Date.now() + "_" + safeName(f.name), f);
+    const r = await fetch(URL_BASE + "/rest/v1/profiles?id=eq." + session.user.id, { method: "PATCH", headers: headers({ "Content-Type": "application/json", Prefer: "return=minimal" }), body: JSON.stringify({ username: name, avatar_url: avatar }) });
+    if (!r.ok) { const e = await r.json().catch(() => ({})); throw new Error(e.message || ("Error " + r.status)); }
+    profile = Object.assign(profile || {}, { username: name, avatar_url: avatar }); renderAuth(); loadMods();
+    $("profDlg").close(); toast("Perfil actualizado.");
+  } catch (e) { toast("Error: " + e.message); } finally { btn.disabled = false; btn.textContent = i18nDict[currentLang].btnSave; }
+};
+
+$("btnUpload").onclick = async () => {
+  const title = $("title").value.trim(), description = $("desc").value.trim();
+  const file = $("file").files[0], ext = $("ext").value.trim();
+  const imgs = Array.from($("imgs").files).slice(0, 5);
+  if (!title) return toast("Escribe un título.");
+  if (!file && !ext) return toast("Sube un archivo o pega un enlace externo.");
+  if (file && file.size > MAX_FILE) return toast("El archivo supera los 50 MB. Usa un enlace externo.");
+  if (file && !/\.(zip|7z|rar)$/i.test(file.name)) return toast("Solo se permiten .zip, .7z o .rar.");
+  if (ext && !safeUrl(ext)) return toast("El enlace debe empezar con http:// o https://");
+  if (imgs.some((i) => i.size > MAX_IMG)) return toast("Cada imagen debe pesar menos de 5 MB.");
+  await refreshIfNeeded(); if (!session) return toast("Inicia sesión primero.");
+  if (!profile) await loadProfile();
+
+  const btn = $("btnUpload"); btn.disabled = true; btn.textContent = "Subiendo...";
+  try {
+    const uid = session.user.id, stamp = Date.now();
+    const imageUrls = [];
+    for (let i = 0; i < imgs.length; i++) imageUrls.push(await uploadFile("images", uid + "/" + stamp + "_" + i + "_" + safeName(imgs[i].name), imgs[i]));
+    const fileUrl = file ? await uploadFile("mods", uid + "/" + stamp + "_" + safeName(file.name), file) : null;
+    
+    const ins = await fetch(URL_BASE + "/rest/v1/mods", { method: "POST", headers: headers({ "Content-Type": "application/json", Prefer: "return=minimal" }),
+      body: JSON.stringify({ title, description, author: (profile && profile.username) || "Anónimo", file_url: fileUrl, external_url: ext || null, images: imageUrls, approved: true }) });
+    
+    if (!ins.ok) { const e = await ins.json().catch(() => ({})); throw new Error(e.message || ("Error al guardar (" + ins.status + ")")); }
+    $("upDlg").close(); toast("¡Mod subido y publicado con éxito!");
+    ["title", "desc", "ext"].forEach((id) => ($(id).value = "")); $("file").value = ""; $("imgs").value = "";
+    $("fileName").textContent = i18nDict[currentLang].upFileHint; $("imgName").textContent = i18nDict[currentLang].upImgsHint; $("imgPrev").innerHTML = "";
+    loadMods();
+  } catch (e) { toast("Error: " + e.message); } finally { btn.disabled = false; btn.textContent = i18nDict[currentLang].btnSubmitMod; }
+};
+
+// Inicialización
+applyI18n();
+renderAuth();
+refreshIfNeeded().then(loadProfile);
+loadMods();
+</script>
+</body>
+</html>
