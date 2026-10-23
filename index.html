@@ -6,79 +6,74 @@
 <meta name="google" content="notranslate">
 <title>PDMM+ Mods</title>
 <style>
-  :root { --bg:#0e1116; --card:#171b22; --line:#262c36; --fg:#e8ecf1; --mut:#8b95a5;
-          --acc:#39c5bb; --acc2:#ff5fa2; }
+  :root { --bg:#0e1116; --card:#171b22; --line:#262c36; --fg:#e8ecf1; --mut:#8b95a5; --acc:#39c5bb; --acc2:#ff5fa2; }
   @media (prefers-color-scheme: light) {
-    :root { --bg:#f5f7fa; --card:#ffffff; --line:#e2e6ec; --fg:#16191f; --mut:#667085; }
+    :root { --bg:#f5f7fa; --card:#fff; --line:#e2e6ec; --fg:#16191f; --mut:#667085; }
   }
   * { box-sizing:border-box; }
-  body { margin:0; font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
-         background:var(--bg); color:var(--fg); line-height:1.45; }
-  header { position:sticky; top:0; z-index:20; display:flex; align-items:center; gap:8px;
-           padding:10px 16px; background:color-mix(in srgb, var(--bg) 85%, transparent);
-           backdrop-filter:blur(10px); border-bottom:1px solid var(--line); }
-  .logo { font-weight:800; font-size:20px; letter-spacing:.3px; margin-right:auto;
-          background:linear-gradient(90deg,var(--acc),var(--acc2)); -webkit-background-clip:text;
-          background-clip:text; color:transparent; }
-  .btn { border:1px solid var(--line); background:var(--card); color:var(--fg); padding:9px 14px;
-         border-radius:10px; font-size:15px; font-weight:600; cursor:pointer; }
+  body { margin:0; font-family:system-ui,-apple-system,"Segoe UI",sans-serif; background:var(--bg); color:var(--fg); line-height:1.45; }
+  header { position:sticky; top:0; z-index:20; display:flex; align-items:center; gap:8px; padding:10px 14px;
+    background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:blur(10px); border-bottom:1px solid var(--line); }
+  .logo { font-weight:800; font-size:19px; margin-right:auto; background:linear-gradient(90deg,var(--acc),var(--acc2));
+    -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .btn { border:1px solid var(--line); background:var(--card); color:var(--fg); padding:9px 13px; border-radius:10px;
+    font-size:14px; font-weight:600; cursor:pointer; text-decoration:none; display:inline-block; text-align:center; }
   .btn.pri { border:none; color:#06201e; background:linear-gradient(90deg,var(--acc),#6fe0d6); }
   .btn:disabled { opacity:.6; }
   .hide { display:none !important; }
-  main { max-width:880px; margin:0 auto; padding:18px 16px 60px; }
-  .hero h1 { margin:6px 0 4px; font-size:26px; }
-  .hero p { margin:0 0 16px; color:var(--mut); }
+  .av { border-radius:50%; object-fit:cover; display:grid; place-items:center; font-weight:800; color:#06201e;
+    background:linear-gradient(135deg,var(--acc),var(--acc2)); flex:none; overflow:hidden; }
+  main { max-width:900px; margin:0 auto; padding:16px 14px 60px; }
+  .hero h1 { margin:6px 0 4px; font-size:25px; }
+  .hero p { margin:0 0 14px; color:var(--mut); }
   .bar { display:flex; gap:10px; align-items:center; margin-bottom:14px; }
   .bar input { flex:1; }
   .count { color:var(--mut); font-size:14px; white-space:nowrap; }
   input, textarea { width:100%; padding:11px 12px; border-radius:10px; border:1px solid var(--line);
-         background:var(--bg); color:var(--fg); font-size:16px; font-family:inherit; }
-  input:focus, textarea:focus { outline:2px solid var(--acc); outline-offset:0; }
+    background:var(--bg); color:var(--fg); font-size:16px; font-family:inherit; }
+  input:focus, textarea:focus { outline:2px solid var(--acc); }
   .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:12px; }
-  .card { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px;
-          display:flex; flex-direction:column; gap:8px; }
-  .top { display:flex; gap:10px; align-items:center; }
-  .av { width:42px; height:42px; border-radius:12px; display:grid; place-items:center; font-weight:800;
-        font-size:18px; color:#06201e; background:linear-gradient(135deg,var(--acc),var(--acc2)); flex:none; }
-  .card h3 { margin:0; font-size:17px; word-break:break-word; }
-  .meta { color:var(--mut); font-size:13px; }
-  .card p { margin:0; font-size:14px; color:var(--fg); opacity:.9; word-break:break-word; }
-  .card a.dl { margin-top:auto; text-align:center; text-decoration:none; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:14px; overflow:hidden; display:flex; flex-direction:column; cursor:pointer; }
+  .cover { aspect-ratio:16/9; background:linear-gradient(135deg,#39c5bb33,#ff5fa233); display:grid; place-items:center;
+    font-size:42px; font-weight:800; color:var(--mut); overflow:hidden; }
+  .cover img { width:100%; height:100%; object-fit:cover; }
+  .body { padding:12px; display:flex; flex-direction:column; gap:7px; flex:1; }
+  .body h3 { margin:0; font-size:17px; word-break:break-word; }
+  .who { display:flex; align-items:center; gap:7px; color:var(--mut); font-size:13px; }
+  .stats { display:flex; gap:14px; color:var(--mut); font-size:13px; }
   .empty { grid-column:1/-1; text-align:center; color:var(--mut); padding:36px 8px; }
-  dialog { width:min(92vw,420px); border:1px solid var(--line); border-radius:16px; padding:18px;
-           background:var(--card); color:var(--fg); }
-  dialog::backdrop { background:rgba(0,0,0,.6); }
+  dialog { width:min(94vw,460px); max-height:90vh; border:1px solid var(--line); border-radius:16px; padding:18px; background:var(--card); color:var(--fg); }
+  dialog::backdrop { background:rgba(0,0,0,.65); }
   dialog h2 { margin:0 0 10px; }
-  dialog .row { display:flex; flex-direction:column; gap:8px; }
-  dialog .acts { display:flex; gap:8px; margin-top:12px; }
-  dialog .acts .btn { flex:1; }
-  .filebtn { display:block; padding:12px; text-align:center; border:2px dashed var(--line);
-             border-radius:10px; color:var(--mut); cursor:pointer; word-break:break-all; }
+  .row { display:flex; flex-direction:column; gap:8px; }
+  .acts { display:flex; gap:8px; margin-top:12px; }
+  .acts .btn { flex:1; }
+  .filebtn { display:block; padding:12px; text-align:center; border:2px dashed var(--line); border-radius:10px; color:var(--mut); cursor:pointer; word-break:break-all; }
   .filebtn input { display:none; }
-  .hint { color:var(--mut); font-size:13px; margin:6px 0 0; }
-  #toast { position:fixed; left:50%; bottom:22px; transform:translateX(-50%); z-index:50;
-           max-width:90vw; padding:12px 16px; border-radius:12px; font-weight:600; display:none;
-           background:var(--acc2); color:#fff; box-shadow:0 6px 24px rgba(0,0,0,.35); }
+  .hint { color:var(--mut); font-size:13px; margin:2px 0; }
+  .thumbs { display:flex; gap:6px; flex-wrap:wrap; }
+  .thumbs img { width:64px; height:64px; object-fit:cover; border-radius:8px; border:1px solid var(--line); }
+  .gallery { display:flex; gap:8px; overflow-x:auto; scroll-snap-type:x mandatory; margin-bottom:10px; }
+  .gallery img { height:210px; border-radius:10px; scroll-snap-align:start; flex:none; max-width:100%; object-fit:contain; background:var(--bg); }
+  .desc { white-space:pre-wrap; word-break:break-word; }
+  #toast { position:fixed; left:50%; bottom:22px; transform:translateX(-50%); z-index:50; max-width:90vw; padding:12px 16px;
+    border-radius:12px; font-weight:600; display:none; background:var(--acc2); color:#fff; box-shadow:0 6px 24px rgba(0,0,0,.35); }
 </style>
 </head>
 <body>
 <header>
   <div class="logo">PDMM+ Mods</div>
-  <span id="who" class="meta hide"></span>
-  <button id="btnOpenUpload" class="btn pri hide">Subir mod</button>
+  <button id="btnProfile" class="btn hide" style="padding:4px 10px;display:flex;align-items:center;gap:7px">
+    <span id="hAv"></span><span id="hName" style="max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
+  </button>
+  <button id="btnOpenUpload" class="btn pri hide">Subir</button>
   <button id="btnOpenAuth" class="btn">Entrar</button>
   <button id="btnLogout" class="btn hide">Salir</button>
 </header>
 
 <main>
-  <div class="hero">
-    <h1>Mods de Project Diva</h1>
-    <p>Descubre y comparte mods hechos por la comunidad.</p>
-  </div>
-  <div class="bar">
-    <input id="q" type="search" placeholder="Buscar por título, autor o descripción">
-    <span id="count" class="count"></span>
-  </div>
+  <div class="hero"><h1>Mods de Project Diva</h1><p>Descubre y comparte mods hechos por la comunidad.</p></div>
+  <div class="bar"><input id="q" type="search" placeholder="Buscar mods"><span id="count" class="count"></span></div>
   <div id="list" class="grid"><div class="empty">Cargando...</div></div>
 </main>
 
@@ -88,220 +83,222 @@
     <input id="email" type="email" placeholder="Correo electrónico" autocomplete="email">
     <input id="password" type="password" placeholder="Contraseña (mín. 6 caracteres)" autocomplete="current-password">
   </div>
-  <div class="acts">
-    <button id="btnLogin" class="btn pri">Iniciar sesión</button>
-    <button id="btnSignup" class="btn">Crear cuenta</button>
-  </div>
+  <div class="acts"><button id="btnLogin" class="btn pri">Iniciar sesión</button><button id="btnSignup" class="btn">Crear cuenta</button></div>
   <div class="acts"><button class="btn" data-close>Cerrar</button></div>
+</dialog>
+
+<dialog id="profDlg">
+  <h2>Mi perfil</h2>
+  <div class="row">
+    <div style="display:flex;align-items:center;gap:12px"><span id="pAv"></span>
+      <label class="btn" style="cursor:pointer">Cambiar foto<input id="pFile" type="file" accept="image/*" class="hide"></label></div>
+    <input id="pName" placeholder="Nombre de usuario" maxlength="30">
+    <p class="hint">Este nombre se muestra como autor de tus mods. Foto máx. 5 MB.</p>
+  </div>
+  <div class="acts"><button id="btnSaveProf" class="btn pri">Guardar</button><button class="btn" data-close>Cerrar</button></div>
 </dialog>
 
 <dialog id="upDlg">
   <h2>Subir un mod</h2>
   <div class="row">
-    <input id="title" placeholder="Título del mod">
-    <input id="author" placeholder="Autor / creador">
+    <input id="title" placeholder="Título del mod" maxlength="80">
     <textarea id="desc" rows="3" placeholder="Descripción"></textarea>
-    <label class="filebtn"><span id="fileName">Toca para elegir archivo (.zip, .7z, .rar)</span>
-      <input id="file" type="file" accept=".zip,.7z,.rar"></label>
+    <label class="filebtn"><span id="imgName">Imágenes del mod (hasta 5)</span><input id="imgs" type="file" accept="image/*" multiple></label>
+    <div id="imgPrev" class="thumbs"></div>
+    <label class="filebtn"><span id="fileName">Archivo del mod (.zip, .7z, .rar, máx. 50 MB)</span><input id="file" type="file" accept=".zip,.7z,.rar"></label>
+    <p class="hint" style="text-align:center">— o, si pesa más de 50 MB —</p>
+    <input id="ext" type="url" placeholder="Enlace de descarga externo (Mega, Drive, etc.)">
   </div>
-  <p class="hint">Máximo 50 MB. Tu mod se publicará cuando sea aprobado.</p>
-  <div class="acts">
-    <button id="btnUpload" class="btn pri">Subir mod</button>
-    <button class="btn" data-close>Cancelar</button>
-  </div>
+  <p class="hint">Tu mod se publicará cuando sea aprobado.</p>
+  <div class="acts"><button id="btnUpload" class="btn pri">Subir mod</button><button class="btn" data-close>Cancelar</button></div>
 </dialog>
 
+<dialog id="detDlg"><div id="detBody"></div><div class="acts"><button class="btn" data-close>Cerrar</button></div></dialog>
 <div id="toast"></div>
 
 <script>
 const URL_BASE = "https://nidlcakntjjzgkjlejbk.supabase.co";
 const KEY = "sb_publishable_TVKTwGkcuLX_eXNon8IQjg_Jor-NquZ";
-const MAX_BYTES = 50 * 1024 * 1024;
+const MAX_FILE = 50 * 1024 * 1024, MAX_IMG = 5 * 1024 * 1024;
 const $ = (id) => document.getElementById(id);
 
-let session = null;
-let allMods = [];
+let session = null, profile = null, allMods = [];
 try { session = JSON.parse(localStorage.getItem("pdmm_session") || "null"); } catch (e) {}
 
-function toast(text) {
-  const t = $("toast");
-  t.textContent = text;
-  t.style.display = "block";
-  clearTimeout(toast.t);
-  toast.t = setTimeout(() => (t.style.display = "none"), 6000);
-}
-
+function toast(t) { const el = $("toast"); el.textContent = t; el.style.display = "block"; clearTimeout(toast.t); toast.t = setTimeout(() => (el.style.display = "none"), 6000); }
 window.addEventListener("error", (e) => toast("Error en la página: " + e.message));
 window.addEventListener("unhandledrejection", (e) => toast("Error: " + ((e.reason && e.reason.message) || e.reason)));
 
-function esc(s) {
-  const d = document.createElement("div");
-  d.textContent = s == null ? "" : s;
-  return d.innerHTML;
+function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c])); }
+function safeUrl(u) { return /^https?:\/\//i.test(u || "") ? u : ""; }
+function headers(extra) { const tk = session && session.access_token ? session.access_token : KEY; return Object.assign({ apikey: KEY, Authorization: "Bearer " + tk }, extra || {}); }
+function avatarHtml(url, name, size) {
+  const s = size || 28;
+  if (safeUrl(url)) return `<img class="av" src="${esc(url)}" width="${s}" height="${s}" alt="">`;
+  return `<span class="av" style="width:${s}px;height:${s}px;font-size:${Math.round(s * .45)}px">${esc((name || "?").charAt(0).toUpperCase())}</span>`;
 }
 
-function headers(extra) {
-  const token = session && session.access_token ? session.access_token : KEY;
-  return Object.assign({ apikey: KEY, Authorization: "Bearer " + token }, extra || {});
-}
-
-function saveSession(s) {
-  session = s;
-  if (s) localStorage.setItem("pdmm_session", JSON.stringify(s));
-  else localStorage.removeItem("pdmm_session");
-  renderAuth();
-}
-
+function saveSession(s) { session = s; if (s) localStorage.setItem("pdmm_session", JSON.stringify(s)); else { localStorage.removeItem("pdmm_session"); profile = null; } renderAuth(); }
 function renderAuth() {
   const logged = !!(session && session.access_token);
   $("btnOpenAuth").classList.toggle("hide", logged);
-  $("btnOpenUpload").classList.toggle("hide", !logged);
-  $("btnLogout").classList.toggle("hide", !logged);
-  $("who").classList.toggle("hide", !logged);
-  if (logged) $("who").textContent = (session.user && session.user.email) || "";
+  ["btnOpenUpload", "btnLogout", "btnProfile"].forEach((id) => $(id).classList.toggle("hide", !logged));
+  if (logged) { $("hAv").innerHTML = avatarHtml(profile && profile.avatar_url, profile && profile.username, 26); $("hName").textContent = (profile && profile.username) || "Perfil"; }
 }
 
 async function authCall(path, body) {
-  const r = await fetch(URL_BASE + "/auth/v1/" + path, {
-    method: "POST",
-    headers: { apikey: KEY, "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
-  const data = await r.json().catch(() => ({}));
-  if (!r.ok) throw new Error(data.msg || data.error_description || data.message || ("Error " + r.status));
-  return data;
+  const r = await fetch(URL_BASE + "/auth/v1/" + path, { method: "POST", headers: { apikey: KEY, "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  const d = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(d.msg || d.error_description || d.message || ("Error " + r.status));
+  return d;
 }
-
 async function refreshIfNeeded() {
   if (!session || !session.refresh_token) return;
-  const now = Math.floor(Date.now() / 1000);
-  if (session.expires_at && session.expires_at - now > 60) return;
-  try {
-    const d = await authCall("token?grant_type=refresh_token", { refresh_token: session.refresh_token });
-    saveSession(d);
-  } catch (e) { saveSession(null); }
+  if (session.expires_at && session.expires_at - Math.floor(Date.now() / 1000) > 60) return;
+  try { saveSession(await authCall("token?grant_type=refresh_token", { refresh_token: session.refresh_token })); } catch (e) { saveSession(null); }
 }
+
+async function loadProfile() {
+  if (!session) return;
+  const r = await fetch(URL_BASE + "/rest/v1/profiles?select=*&id=eq." + session.user.id, { headers: headers() });
+  const d = await r.json().catch(() => []);
+  profile = d[0] || null;
+  if (!profile) {
+    const name = "usuario" + session.user.id.slice(0, 6);
+    await fetch(URL_BASE + "/rest/v1/profiles", { method: "POST", headers: headers({ "Content-Type": "application/json", Prefer: "resolution=merge-duplicates,return=minimal" }), body: JSON.stringify({ id: session.user.id, username: name }) });
+    profile = { id: session.user.id, username: name, avatar_url: null };
+  }
+  renderAuth();
+}
+
+async function uploadFile(bucket, path, file) {
+  const r = await fetch(URL_BASE + "/storage/v1/object/" + bucket + "/" + path, { method: "POST", headers: headers({ "Content-Type": file.type || "application/octet-stream" }), body: file });
+  if (!r.ok) { const e = await r.json().catch(() => ({})); throw new Error(e.message || e.error || ("Error al subir (" + r.status + ")")); }
+  return URL_BASE + "/storage/v1/object/public/" + bucket + "/" + path;
+}
+const safeName = (n) => n.replace(/[^a-zA-Z0-9._-]/g, "_");
 
 function renderMods() {
   const q = $("q").value.trim().toLowerCase();
-  const items = allMods.filter((m) =>
-    ((m.title || "") + " " + (m.author || "") + " " + (m.description || "")).toLowerCase().includes(q));
+  const items = allMods.filter((m) => ((m.title || "") + " " + authorOf(m) + " " + (m.description || "")).toLowerCase().includes(q));
   $("count").textContent = allMods.length + (allMods.length === 1 ? " mod" : " mods");
-  const list = $("list");
-  if (!items.length) {
-    list.innerHTML = "<div class='empty'>" + (allMods.length ? "No hay resultados para tu búsqueda." : "Todavía no hay mods publicados.") + "</div>";
-    return;
-  }
-  list.innerHTML = items.map((m) => `
-    <div class="card">
-      <div class="top">
-        <div class="av">${esc((m.title || "?").trim().charAt(0).toUpperCase())}</div>
-        <div>
-          <h3>${esc(m.title)}</h3>
-          <div class="meta">por ${esc(m.author)} · ${new Date(m.created_at).toLocaleDateString("es")}</div>
-        </div>
-      </div>
-      ${m.description ? "<p>" + esc(m.description) + "</p>" : ""}
-      <a class="btn pri dl" href="${esc(m.file_url)}" target="_blank" rel="noopener">Descargar</a>
-    </div>`).join("");
+  if (!items.length) { $("list").innerHTML = "<div class='empty'>" + (allMods.length ? "Sin resultados." : "Todavía no hay mods publicados.") + "</div>"; return; }
+  $("list").innerHTML = items.map((m) => {
+    const img = (m.images || [])[0];
+    return `<div class="card" data-id="${esc(m.id)}">
+      <div class="cover">${safeUrl(img) ? `<img src="${esc(img)}" alt="" loading="lazy">` : esc((m.title || "?").charAt(0).toUpperCase())}</div>
+      <div class="body"><h3>${esc(m.title)}</h3>
+        <div class="who">${avatarHtml(m.profiles && m.profiles.avatar_url, authorOf(m), 22)}<span>${esc(authorOf(m))}</span></div>
+        <div class="stats"><span>⬇ ${m.downloads || 0}</span><span>👁 ${m.views || 0}</span><span>${new Date(m.created_at).toLocaleDateString("es")}</span></div>
+      </div></div>`;
+  }).join("");
 }
+const authorOf = (m) => (m.profiles && m.profiles.username) || m.author || "Anónimo";
 
 async function loadMods() {
   try {
-    const r = await fetch(URL_BASE + "/rest/v1/mods?select=*&approved=eq.true&order=created_at.desc", { headers: headers() });
-    const data = await r.json();
-    if (!r.ok) throw new Error(data.message || ("Error " + r.status));
-    allMods = data;
-    renderMods();
-  } catch (e) {
-    $("list").innerHTML = "<div class='empty'>No se pudieron cargar los mods: " + esc(e.message) + "</div>";
-  }
+    const r = await fetch(URL_BASE + "/rest/v1/mods?select=*,profiles(username,avatar_url)&approved=eq.true&order=created_at.desc", { headers: headers() });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.message || ("Error " + r.status));
+    allMods = d; renderMods();
+  } catch (e) { $("list").innerHTML = "<div class='empty'>No se pudieron cargar los mods: " + esc(e.message) + "</div>"; }
 }
+
+function rpc(fn, id) { return fetch(URL_BASE + "/rest/v1/rpc/" + fn, { method: "POST", headers: headers({ "Content-Type": "application/json" }), body: JSON.stringify({ mod_id: id }) }).catch(() => {}); }
+
+function openDetail(id) {
+  const m = allMods.find((x) => x.id === id); if (!m) return;
+  rpc("increment_views", id); m.views = (m.views || 0) + 1; renderMods();
+  const link = safeUrl(m.file_url) || safeUrl(m.external_url);
+  const imgs = (m.images || []).filter(safeUrl);
+  $("detBody").innerHTML = `
+    ${imgs.length ? `<div class="gallery">${imgs.map((u) => `<img src="${esc(u)}" alt="">`).join("")}</div>` : ""}
+    <h2 style="margin:0 0 6px">${esc(m.title)}</h2>
+    <div class="who" style="margin-bottom:8px">${avatarHtml(m.profiles && m.profiles.avatar_url, authorOf(m), 26)}<span>${esc(authorOf(m))}</span></div>
+    <div class="stats" style="margin-bottom:10px"><span>⬇ <b id="dlCount">${m.downloads || 0}</b></span><span>👁 ${m.views}</span><span>${new Date(m.created_at).toLocaleDateString("es")}</span></div>
+    <p class="desc">${esc(m.description)}</p>
+    ${link ? `<a id="dlBtn" class="btn pri" style="display:block" href="${esc(link)}" target="_blank" rel="noopener">Descargar</a>` : ""}`;
+  const b = $("dlBtn");
+  if (b) b.onclick = () => { rpc("increment_downloads", id); m.downloads = (m.downloads || 0) + 1; $("dlCount").textContent = m.downloads; renderMods(); };
+  $("detDlg").showModal();
+}
+$("list").onclick = (e) => { const c = e.target.closest(".card"); if (c) openDetail(c.dataset.id); };
 
 document.querySelectorAll("[data-close]").forEach((b) => (b.onclick = () => b.closest("dialog").close()));
 $("btnOpenAuth").onclick = () => $("authDlg").showModal();
 $("btnOpenUpload").onclick = () => $("upDlg").showModal();
+$("btnProfile").onclick = () => { $("pName").value = (profile && profile.username) || ""; $("pAv").innerHTML = avatarHtml(profile && profile.avatar_url, profile && profile.username, 56); $("pFile").value = ""; $("profDlg").showModal(); };
 $("q").oninput = renderMods;
-$("file").onchange = () => {
-  const f = $("file").files[0];
-  $("fileName").textContent = f ? f.name : "Toca para elegir archivo (.zip, .7z, .rar)";
+$("pFile").onchange = () => { const f = $("pFile").files[0]; if (f) $("pAv").innerHTML = `<img class="av" src="${URL.createObjectURL(f)}" width="56" height="56" alt="">`; };
+$("file").onchange = () => { const f = $("file").files[0]; $("fileName").textContent = f ? f.name : "Archivo del mod (.zip, .7z, .rar, máx. 50 MB)"; };
+$("imgs").onchange = () => {
+  const fs = Array.from($("imgs").files).slice(0, 5);
+  $("imgName").textContent = fs.length ? fs.length + " imagen(es) elegida(s)" : "Imágenes del mod (hasta 5)";
+  $("imgPrev").innerHTML = fs.map((f) => `<img src="${URL.createObjectURL(f)}" alt="">`).join("");
 };
 
 $("btnSignup").onclick = async () => {
   const email = $("email").value.trim(), password = $("password").value;
   if (!email || password.length < 6) return toast("Escribe un correo válido y una contraseña de 6 o más caracteres.");
   try {
-    const d = await authCall("signup", { email, password });
-    $("authDlg").close();
-    if (d.access_token) { saveSession(d); toast("Cuenta creada. Ya iniciaste sesión."); }
+    const d = await authCall("signup", { email, password }); $("authDlg").close();
+    if (d.access_token) { saveSession(d); await loadProfile(); toast("Cuenta creada. Ya iniciaste sesión."); }
     else toast("Cuenta creada. Revisa tu correo (y spam) para confirmarla y luego inicia sesión.");
   } catch (e) { toast("Error: " + e.message); }
 };
-
 $("btnLogin").onclick = async () => {
   const email = $("email").value.trim(), password = $("password").value;
   if (!email || !password) return toast("Escribe tu correo y contraseña.");
-  try {
-    const d = await authCall("token?grant_type=password", { email, password });
-    saveSession(d);
-    $("authDlg").close();
-    toast("Sesión iniciada.");
-  } catch (e) { toast("Error: " + e.message); }
+  try { saveSession(await authCall("token?grant_type=password", { email, password })); await loadProfile(); $("authDlg").close(); toast("Sesión iniciada."); }
+  catch (e) { toast("Error: " + e.message); }
 };
-
 $("btnLogout").onclick = () => { saveSession(null); toast("Sesión cerrada."); };
 
-$("btnUpload").onclick = async () => {
-  const title = $("title").value.trim();
-  const author = $("author").value.trim();
-  const description = $("desc").value.trim();
-  const file = $("file").files[0];
-  if (!title || !author || !file) return toast("Completa título, autor y archivo.");
-  if (file.size > MAX_BYTES) return toast("El archivo supera los 50 MB.");
-  if (!/\.(zip|7z|rar)$/i.test(file.name)) return toast("Solo se permiten .zip, .7z o .rar.");
-  await refreshIfNeeded();
-  if (!session) return toast("Inicia sesión primero.");
-
-  const btn = $("btnUpload");
-  btn.disabled = true; btn.textContent = "Subiendo...";
+$("btnSaveProf").onclick = async () => {
+  await refreshIfNeeded(); if (!session) return toast("Inicia sesión primero.");
+  const name = $("pName").value.trim(); if (!name) return toast("Escribe un nombre de usuario.");
+  const f = $("pFile").files[0]; if (f && f.size > MAX_IMG) return toast("La foto supera los 5 MB.");
+  const btn = $("btnSaveProf"); btn.disabled = true; btn.textContent = "Guardando...";
   try {
-    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-    const path = session.user.id + "/" + Date.now() + "_" + safeName;
+    let avatar = profile && profile.avatar_url;
+    if (f) avatar = await uploadFile("images", session.user.id + "/avatar_" + Date.now() + "_" + safeName(f.name), f);
+    const r = await fetch(URL_BASE + "/rest/v1/profiles?id=eq." + session.user.id, { method: "PATCH", headers: headers({ "Content-Type": "application/json", Prefer: "return=minimal" }), body: JSON.stringify({ username: name, avatar_url: avatar }) });
+    if (!r.ok) { const e = await r.json().catch(() => ({})); throw new Error(e.message || ("Error " + r.status)); }
+    profile = Object.assign(profile || {}, { username: name, avatar_url: avatar }); renderAuth(); loadMods();
+    $("profDlg").close(); toast("Perfil actualizado.");
+  } catch (e) { toast("Error: " + e.message); } finally { btn.disabled = false; btn.textContent = "Guardar"; }
+};
 
-    const up = await fetch(URL_BASE + "/storage/v1/object/mods/" + path, {
-      method: "POST",
-      headers: headers({ "Content-Type": file.type || "application/octet-stream" }),
-      body: file,
-    });
-    if (!up.ok) {
-      const e = await up.json().catch(() => ({}));
-      throw new Error(e.message || e.error || ("Error al subir el archivo (" + up.status + ")"));
-    }
+$("btnUpload").onclick = async () => {
+  const title = $("title").value.trim(), description = $("desc").value.trim();
+  const file = $("file").files[0], ext = $("ext").value.trim();
+  const imgs = Array.from($("imgs").files).slice(0, 5);
+  if (!title) return toast("Escribe un título.");
+  if (!file && !ext) return toast("Sube un archivo o pega un enlace externo.");
+  if (file && file.size > MAX_FILE) return toast("El archivo supera los 50 MB. Usa un enlace externo.");
+  if (file && !/\.(zip|7z|rar)$/i.test(file.name)) return toast("Solo se permiten .zip, .7z o .rar.");
+  if (ext && !safeUrl(ext)) return toast("El enlace debe empezar con http:// o https://");
+  if (imgs.some((i) => i.size > MAX_IMG)) return toast("Cada imagen debe pesar menos de 5 MB.");
+  await refreshIfNeeded(); if (!session) return toast("Inicia sesión primero.");
+  if (!profile) await loadProfile();
 
-    const fileUrl = URL_BASE + "/storage/v1/object/public/mods/" + path;
-    const ins = await fetch(URL_BASE + "/rest/v1/mods", {
-      method: "POST",
-      headers: headers({ "Content-Type": "application/json", Prefer: "return=minimal" }),
-      body: JSON.stringify({ title, author, description, file_url: fileUrl }),
-    });
-    if (!ins.ok) {
-      const e = await ins.json().catch(() => ({}));
-      throw new Error(e.message || ("Error al guardar (" + ins.status + ")"));
-    }
-
-    $("upDlg").close();
-    toast("¡Mod enviado! Se publicará cuando sea aprobado.");
-    $("title").value = ""; $("author").value = ""; $("desc").value = ""; $("file").value = "";
-    $("fileName").textContent = "Toca para elegir archivo (.zip, .7z, .rar)";
-  } catch (e) {
-    toast("Error: " + e.message);
-  } finally {
-    btn.disabled = false; btn.textContent = "Subir mod";
-  }
+  const btn = $("btnUpload"); btn.disabled = true; btn.textContent = "Subiendo...";
+  try {
+    const uid = session.user.id, stamp = Date.now();
+    const imageUrls = [];
+    for (let i = 0; i < imgs.length; i++) imageUrls.push(await uploadFile("images", uid + "/" + stamp + "_" + i + "_" + safeName(imgs[i].name), imgs[i]));
+    const fileUrl = file ? await uploadFile("mods", uid + "/" + stamp + "_" + safeName(file.name), file) : null;
+    const ins = await fetch(URL_BASE + "/rest/v1/mods", { method: "POST", headers: headers({ "Content-Type": "application/json", Prefer: "return=minimal" }),
+      body: JSON.stringify({ title, description, author: (profile && profile.username) || "Anónimo", file_url: fileUrl, external_url: ext || null, images: imageUrls }) });
+    if (!ins.ok) { const e = await ins.json().catch(() => ({})); throw new Error(e.message || ("Error al guardar (" + ins.status + ")")); }
+    $("upDlg").close(); toast("¡Mod enviado! Se publicará cuando sea aprobado.");
+    ["title", "desc", "ext"].forEach((id) => ($(id).value = "")); $("file").value = ""; $("imgs").value = "";
+    $("fileName").textContent = "Archivo del mod (.zip, .7z, .rar, máx. 50 MB)"; $("imgName").textContent = "Imágenes del mod (hasta 5)"; $("imgPrev").innerHTML = "";
+  } catch (e) { toast("Error: " + e.message); } finally { btn.disabled = false; btn.textContent = "Subir mod"; }
 };
 
 renderAuth();
-refreshIfNeeded().then(renderAuth);
+refreshIfNeeded().then(loadProfile);
 loadMods();
 </script>
 </body>
