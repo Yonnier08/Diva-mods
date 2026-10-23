@@ -36,7 +36,7 @@
 
   .header-acts { display:flex; align-items:center; gap:8px; margin-left:auto; }
 
-  /* Menú Lateral (Sidebar Drawer) */
+  /* Menú Lateral */
   .sidebar-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(3px); z-index:40; opacity:0; pointer-events:none; transition:opacity 0.2s ease; }
   .sidebar-overlay.open { opacity:1; pointer-events:auto; }
   
@@ -49,7 +49,7 @@
   .sidebar-links button:hover { background:rgba(255,255,255,0.04); color:var(--fg); }
   .sidebar-links button.on { color:var(--acc); background:rgba(47,212,198,0.08); }
 
-  /* Barra de búsqueda desplegable */
+  /* Búsqueda */
   .search-container { max-width:1200px; margin:0 auto; padding:0 16px; overflow:hidden; max-height:0; transition:max-height 0.25s ease, padding 0.25s ease; }
   .search-container.open { max-height:70px; padding:12px 16px 4px; }
 
@@ -69,13 +69,19 @@
   input, textarea, select { width:100%; padding:10px 12px; border-radius:6px; border:1px solid var(--line); background:var(--surface); color:var(--fg); font-size:15px; font-family:inherit; }
   input:focus, textarea:focus, select:focus { outline:2px solid var(--acc); outline-offset:-1px; }
 
-  .toolbar { display:flex; align-items:center; justify-content:space-between; gap:10px; margin:16px 0 14px; border-bottom:1px solid var(--line); padding-bottom:8px; }
+  /* Filtros por Categoría y Orden */
+  .filter-bar { display:flex; gap:6px; overflow-x:auto; padding-bottom:8px; margin-bottom:12px; }
+  .cat-chip { border:1px solid var(--line); background:var(--surface); color:var(--mut); padding:5px 12px; border-radius:16px; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap; transition:all 0.15s; }
+  .cat-chip:hover { color:var(--fg); border-color:var(--mut); }
+  .cat-chip.on { background:var(--acc); color:var(--acc-fg); border-color:var(--acc); }
+
+  .toolbar { display:flex; align-items:center; justify-content:space-between; gap:10px; margin:8px 0 14px; border-bottom:1px solid var(--line); padding-bottom:8px; }
   .tabs { display:flex; gap:4px; }
   .tabs button { background:none; border:none; border-bottom:2px solid transparent; color:var(--mut); font-size:14px; font-weight:600; padding:8px 12px; cursor:pointer; font-family:inherit; margin-bottom:-9px; }
   .tabs button.on { color:var(--fg); border-bottom-color:var(--acc); }
   .count { color:var(--mut); font-size:13px; }
 
-  /* Cuadrícula Adaptativa */
+  /* Cuadrícula */
   .gb-grid { display:grid; grid-template-columns:repeat(2, 1fr); gap:12px; }
   @media (min-width: 680px) { .gb-grid { grid-template-columns:repeat(3, 1fr); gap:16px; } }
   @media (min-width: 1024px) { .gb-grid { grid-template-columns:repeat(4, 1fr); gap:18px; } }
@@ -86,6 +92,8 @@
   .gb-thumb { position:relative; width:100%; aspect-ratio:16/9; background:#000; overflow:hidden; display:grid; place-items:center; }
   .gb-thumb img.cover { width:100%; height:100%; object-fit:cover; display:block; transition:transform 0.2s ease; }
   .gb-card:hover .gb-thumb img.cover { transform:scale(1.03); }
+  
+  .badge-cat { position:absolute; bottom:8px; right:8px; background:rgba(0,0,0,0.85); backdrop-filter:blur(4px); color:var(--acc); border:1px solid var(--acc); font-size:10.5px; font-weight:700; padding:2px 6px; border-radius:4px; text-transform:uppercase; z-index:2; }
   .author-badge { position:absolute; top:8px; left:8px; display:flex; align-items:center; gap:5px; background:rgba(0,0,0,0.8); backdrop-filter:blur(4px); padding:3px 8px; border-radius:12px; border:1px solid rgba(255,255,255,0.12); font-size:11.5px; color:#fff; cursor:pointer; z-index:2; }
   .author-badge:hover { background:rgba(0,0,0,0.95); border-color:var(--acc); }
 
@@ -137,7 +145,7 @@
   <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.35-4.35" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
 </defs></svg>
 
-<!-- Menú Lateral (Sidebar) -->
+<!-- Menú Lateral -->
 <div id="sidebarOverlay" class="sidebar-overlay"></div>
 <aside id="sidebar" class="sidebar">
   <div class="sidebar-header">
@@ -172,13 +180,22 @@
       <button id="btnOpenAuth" class="btn pri" data-i18n="btn_auth">Entrar</button>
     </div>
   </div>
-  <!-- Barra de búsqueda desplegable -->
   <div id="searchContainer" class="search-container">
     <input id="q" type="search" data-i18n-ph="search_ph" placeholder="Buscar mods por título, autor o descripción...">
   </div>
 </header>
   
 <main>
+  <!-- Barra de Filtros por Categoría -->
+  <div class="filter-bar" id="catFilters">
+    <button class="cat-chip on" data-cat="all" data-i18n="cat_all">Todos</button>
+    <button class="cat-chip" data-cat="songs" data-i18n="cat_songs">Canciones</button>
+    <button class="cat-chip" data-cat="modules" data-i18n="cat_modules">Módulos</button>
+    <button class="cat-chip" data-cat="ui" data-i18n="cat_ui">UI / Interfaz</button>
+    <button class="cat-chip" data-cat="patches" data-i18n="cat_patches">Parches / Scripts</button>
+    <button class="cat-chip" data-cat="other" data-i18n="cat_other">Otros</button>
+  </div>
+
   <div class="toolbar">
     <div class="tabs" id="tabs">
       <button data-sort="created_at" class="on" data-i18n="sort_recent">Recientes</button>
@@ -263,6 +280,13 @@
   <h2 data-i18n="upload_title">Subir un mod</h2>
   <div class="row">
     <input id="title" data-i18n-ph="ph_mod_title" placeholder="Título del mod" maxlength="80">
+    <select id="category">
+      <option value="songs" data-i18n="cat_songs">Canciones</option>
+      <option value="modules" data-i18n="cat_modules">Módulos</option>
+      <option value="ui" data-i18n="cat_ui">UI / Interfaz</option>
+      <option value="patches" data-i18n="cat_patches">Parches / Scripts</option>
+      <option value="other" selected data-i18n="cat_other">Otros</option>
+    </select>
     <textarea id="desc" rows="4" data-i18n-ph="ph_mod_desc" placeholder="Descripción"></textarea>
     <label class="filebtn"><span id="imgName" data-i18n="img_placeholder">Imágenes del mod (hasta 5)</span><input id="imgs" type="file" accept="image/*" multiple></label>
     <div id="imgPrev" class="thumbs"></div>
@@ -278,6 +302,13 @@
   <h2 data-i18n="edit_mod_title">Editar mod</h2>
   <div class="row">
     <input id="eTitle" data-i18n-ph="ph_mod_title" placeholder="Título del mod" maxlength="80">
+    <select id="eCategory">
+      <option value="songs" data-i18n="cat_songs">Canciones</option>
+      <option value="modules" data-i18n="cat_modules">Módulos</option>
+      <option value="ui" data-i18n="cat_ui">UI / Interfaz</option>
+      <option value="patches" data-i18n="cat_patches">Parches / Scripts</option>
+      <option value="other" data-i18n="cat_other">Otros</option>
+    </select>
     <textarea id="eDesc" rows="4" data-i18n-ph="ph_mod_desc" placeholder="Descripción"></textarea>
     <div id="eThumbs" class="thumbs"></div>
     <label class="filebtn"><span id="eImgName" data-i18n="add_more_imgs">Agregar imágenes (máx. 5 en total)</span><input id="eImgs" type="file" accept="image/*" multiple></label>
@@ -296,140 +327,47 @@ const KEY = "sb_publishable_TVKTwGkcuLX_eXNon8IQjg_Jor-NquZ";
 const MAX_FILE = 50 * 1024 * 1024, MAX_IMG = 5 * 1024 * 1024;
 const $ = (id) => document.getElementById(id);
 
-// Sistema de Traducciones (i18n)
+// i18n
 const i18n = {
   es: {
-    nav_title: "Navegación",
-    nav_mods: "Mods",
-    nav_rules: "Reglas",
-    nav_info: "Información",
-    nav_settings: "Ajustes",
-    search_ph: "Buscar mods por título, autor o descripción...",
-    sort_recent: "Recientes",
-    sort_downloads: "Descargas",
-    sort_views: "Vistas",
-    loading: "Cargando...",
-    btn_upload: "Subir",
-    btn_auth: "Entrar",
-    auth_title: "Cuenta",
-    ph_email: "Correo electrónico",
-    ph_pass: "Contraseña (mín. 6 caracteres)",
-    btn_login: "Iniciar sesión",
-    btn_signup: "Crear cuenta",
-    btn_close: "Cerrar",
-    edit_page_title: "Editar página",
-    ph_title: "Título",
-    ph_text: "Texto",
-    btn_edit: "Editar",
-    btn_save: "Guardar",
-    btn_cancel: "Cancelar",
-    settings_title: "Ajustes",
-    settings_theme: "Tema",
-    settings_lang: "Idioma / Language",
-    theme_dark: "Oscuro",
-    theme_light: "Claro",
-    edit_profile: "Editar perfil",
-    change_photo: "Cambiar foto",
-    ph_username: "Nombre de usuario",
-    ph_bio: "Cuéntanos sobre ti",
-    my_mods: "Mis mods",
-    upload_title: "Subir un mod",
-    ph_mod_title: "Título del mod",
-    ph_mod_desc: "Descripción",
-    img_placeholder: "Imágenes del mod (hasta 5)",
-    file_placeholder: "Archivo del mod (.zip, .7z, .rar, máx. 50 MB)",
-    or_external: "— o, si pesa más de 50 MB —",
-    ph_ext_url: "Enlace de descarga externo (Mega, Drive, etc.)",
-    instant_publish: "Tu mod se publicará de inmediato.",
-    btn_upload_mod: "Subir mod",
-    edit_mod_title: "Editar mod",
-    add_more_imgs: "Agregar imágenes (máx. 5 en total)",
-    replace_file: "Reemplazar archivo (opcional, máx. 50 MB)",
-    ph_ext_url_opt: "Enlace de descarga externo (opcional)",
-    btn_save_changes: "Guardar cambios",
-    anon: "Anónimo",
-    download_btn: "Descargar",
-    member_since: "Miembro desde",
-    moderator: "Moderador",
-    no_bio: "Este perfil todavía no tiene descripción.",
-    no_bio_own: "Todavía no escribiste nada sobre ti. Toca Editar perfil para agregarlo.",
-    downloads_word: "descargas",
-    logout: "Cerrar sesión",
-    edit: "Editar",
-    hide: "Ocultar",
-    show: "Mostrar",
-    delete: "Eliminar",
-    published: "Publicado",
-    hidden: "Oculto"
+    nav_title: "Navegación", nav_mods: "Mods", nav_rules: "Reglas", nav_info: "Información", nav_settings: "Ajustes",
+    search_ph: "Buscar mods por título, autor o descripción...", sort_recent: "Recientes", sort_downloads: "Descargas", sort_views: "Vistas",
+    loading: "Cargando...", btn_upload: "Subir", btn_auth: "Entrar", auth_title: "Cuenta", ph_email: "Correo electrónico",
+    ph_pass: "Contraseña (mín. 6 caracteres)", btn_login: "Iniciar sesión", btn_signup: "Crear cuenta", btn_close: "Cerrar",
+    edit_page_title: "Editar página", ph_title: "Título", ph_text: "Texto", btn_edit: "Editar", btn_save: "Guardar", btn_cancel: "Cancelar",
+    settings_title: "Ajustes", settings_theme: "Tema", settings_lang: "Idioma / Language", theme_dark: "Oscuro", theme_light: "Claro",
+    edit_profile: "Editar perfil", change_photo: "Cambiar foto", ph_username: "Nombre de usuario", ph_bio: "Cuéntanos sobre ti", my_mods: "Mis mods",
+    upload_title: "Subir un mod", ph_mod_title: "Título del mod", ph_mod_desc: "Descripción", img_placeholder: "Imágenes del mod (hasta 5)",
+    file_placeholder: "Archivo del mod (.zip, .7z, .rar, máx. 50 MB)", or_external: "— o, si pesa más de 50 MB —", ph_ext_url: "Enlace de descarga externo (Mega, Drive, etc.)",
+    instant_publish: "Tu mod se publicará de inmediato.", btn_upload_mod: "Subir mod", edit_mod_title: "Editar mod", add_more_imgs: "Agregar imágenes (máx. 5 en total)",
+    replace_file: "Reemplazar archivo (opcional, máx. 50 MB)", ph_ext_url_opt: "Enlace de descarga externo (opcional)", btn_save_changes: "Guardar cambios",
+    anon: "Anónimo", download_btn: "Descargar", member_since: "Miembro desde", moderator: "Moderador", no_bio: "Este perfil todavía no tiene descripción.",
+    no_bio_own: "Todavía no escribiste nada sobre ti. Toca Editar perfil para agregarlo.", downloads_word: "descargas", logout: "Cerrar sesión",
+    edit: "Editar", hide: "Ocultar", show: "Mostrar", delete: "Eliminar", published: "Publicado", hidden: "Oculto",
+    cat_all: "Todos", cat_songs: "Canciones", cat_modules: "Módulos", cat_ui: "UI / Interfaz", cat_patches: "Parches / Scripts", cat_other: "Otros"
   },
   en: {
-    nav_title: "Navigation",
-    nav_mods: "Mods",
-    nav_rules: "Rules",
-    nav_info: "Information",
-    nav_settings: "Settings",
-    search_ph: "Search mods by title, author or description...",
-    sort_recent: "Recent",
-    sort_downloads: "Downloads",
-    sort_views: "Views",
-    loading: "Loading...",
-    btn_upload: "Upload",
-    btn_auth: "Log in",
-    auth_title: "Account",
-    ph_email: "Email",
-    ph_pass: "Password (min. 6 characters)",
-    btn_login: "Log in",
-    btn_signup: "Sign up",
-    btn_close: "Close",
-    edit_page_title: "Edit page",
-    ph_title: "Title",
-    ph_text: "Text",
-    btn_edit: "Edit",
-    btn_save: "Save",
-    btn_cancel: "Cancel",
-    settings_title: "Settings",
-    settings_theme: "Theme",
-    settings_lang: "Language",
-    theme_dark: "Dark",
-    theme_light: "Light",
-    edit_profile: "Edit profile",
-    change_photo: "Change photo",
-    ph_username: "Username",
-    ph_bio: "Tell us about yourself",
-    my_mods: "My mods",
-    upload_title: "Upload a mod",
-    ph_mod_title: "Mod title",
-    ph_mod_desc: "Description",
-    img_placeholder: "Mod images (up to 5)",
-    file_placeholder: "Mod file (.zip, .7z, .rar, max 50 MB)",
-    or_external: "— or, if larger than 50 MB —",
-    ph_ext_url: "External download link (Mega, Drive, etc.)",
-    instant_publish: "Your mod will be published immediately.",
-    btn_upload_mod: "Upload mod",
-    edit_mod_title: "Edit mod",
-    add_more_imgs: "Add images (max 5 total)",
-    replace_file: "Replace file (optional, max 50 MB)",
-    ph_ext_url_opt: "External download link (optional)",
-    btn_save_changes: "Save changes",
-    anon: "Anonymous",
-    download_btn: "Download",
-    member_since: "Member since",
-    moderator: "Moderator",
-    no_bio: "This profile has no description yet.",
-    no_bio_own: "You haven't written anything about yourself yet. Tap Edit profile to add it.",
-    downloads_word: "downloads",
-    logout: "Log out",
-    edit: "Edit",
-    hide: "Hide",
-    show: "Show",
-    delete: "Delete",
-    published: "Published",
-    hidden: "Hidden"
+    nav_title: "Navigation", nav_mods: "Mods", nav_rules: "Rules", nav_info: "Information", nav_settings: "Settings",
+    search_ph: "Search mods by title, author or description...", sort_recent: "Recent", sort_downloads: "Downloads", sort_views: "Views",
+    loading: "Loading...", btn_upload: "Upload", btn_auth: "Log in", auth_title: "Account", ph_email: "Email",
+    ph_pass: "Password (min. 6 characters)", btn_login: "Log in", btn_signup: "Sign up", btn_close: "Close",
+    edit_page_title: "Edit page", ph_title: "Title", ph_text: "Text", btn_edit: "Edit", btn_save: "Save", btn_cancel: "Cancel",
+    settings_title: "Settings", settings_theme: "Theme", settings_lang: "Language", theme_dark: "Dark", theme_light: "Light",
+    edit_profile: "Edit profile", change_photo: "Change photo", ph_username: "Username", ph_bio: "Tell us about yourself", my_mods: "My mods",
+    upload_title: "Upload a mod", ph_mod_title: "Mod title", ph_mod_desc: "Description", img_placeholder: "Mod images (up to 5)",
+    file_placeholder: "Mod file (.zip, .7z, .rar, max 50 MB)", or_external: "— or, if larger than 50 MB —", ph_ext_url: "External download link (Mega, Drive, etc.)",
+    instant_publish: "Your mod will be published immediately.", btn_upload_mod: "Upload mod", edit_mod_title: "Edit mod", add_more_imgs: "Add images (max 5 total)",
+    replace_file: "Replace file (optional, max 50 MB)", ph_ext_url_opt: "External download link (optional)", btn_save_changes: "Save changes",
+    anon: "Anonymous", download_btn: "Download", member_since: "Member since", moderator: "Moderator", no_bio: "This profile has no description yet.",
+    no_bio_own: "You haven't written anything about yourself yet. Tap Edit profile to add it.", downloads_word: "downloads", logout: "Log out",
+    edit: "Edit", hide: "Hide", show: "Show", delete: "Delete", published: "Published", hidden: "Hidden",
+    cat_all: "All", cat_songs: "Songs", cat_modules: "Modules", cat_ui: "UI / Interface", cat_patches: "Patches / Scripts", cat_other: "Other"
   }
 };
 
 let currentLang = localStorage.getItem("pdmm_lang") || "es";
 let currentTheme = localStorage.getItem("pdmm_theme") || "dark";
+let selectedCat = "all";
 
 function setLanguage(lang) {
   currentLang = lang;
@@ -567,9 +505,12 @@ async function patchMod(id, body) {
 
 function gbItemHtml(m) {
   const img = (m.images || [])[0];
+  const catKey = "cat_" + (m.category || "other");
+  const catLabel = i18n[currentLang][catKey] || m.category || "Otro";
   return `<div class="gb-card" data-id="${esc(m.id)}">
     <div class="gb-thumb">
       ${safeUrl(img) ? `<img class="cover" src="${esc(img)}" alt="" loading="lazy">` : `<div style="font-size:28px;color:var(--mut)">🎵</div>`}
+      <span class="badge-cat">${esc(catLabel)}</span>
       <div class="author-badge" data-user="${esc(m.user_id)}">
         ${avatarHtml(m.profiles && m.profiles.avatar_url, authorOf(m), 16)}
         <span>${esc(authorOf(m))}</span>
@@ -588,12 +529,24 @@ function gbItemHtml(m) {
 
 function renderMods() {
   const q = $("q").value.trim().toLowerCase();
-  const items = allMods.filter((m) => ((m.title || "") + " " + authorOf(m) + " " + (m.description || "")).toLowerCase().includes(q));
+  const items = allMods.filter((m) => {
+    const matchQuery = ((m.title || "") + " " + authorOf(m) + " " + (m.description || "")).toLowerCase().includes(q);
+    const matchCat = selectedCat === "all" || (m.category || "other") === selectedCat;
+    return matchQuery && matchCat;
+  });
+  
   items.sort((a, b) => sortBy === "created_at" ? new Date(b.created_at) - new Date(a.created_at) : (b[sortBy] || 0) - (a[sortBy] || 0));
   const tLang = i18n[currentLang];
-  $("count").textContent = allMods.length + " " + (allMods.length === 1 ? (currentLang === 'es' ? "mod" : "mod") : (currentLang === 'es' ? "mods" : "mods"));
-  $("list").innerHTML = items.length ? items.map(gbItemHtml).join("") : "<div class='empty'>" + (allMods.length ? (currentLang === 'es' ? "Sin resultados." : "No results.") : tLang.loading) + "</div>";
+  $("count").textContent = items.length + " " + (items.length === 1 ? "mod" : "mods");
+  $("list").innerHTML = items.length ? items.map(gbItemHtml).join("") : "<div class='empty'>" + (allMods.length ? (currentLang === 'es' ? "Sin resultados para este filtro." : "No results for this filter.") : tLang.loading) + "</div>";
 }
+
+$("catFilters").onclick = (e) => {
+  const b = e.target.closest("[data-cat]"); if (!b) return;
+  selectedCat = b.dataset.cat;
+  document.querySelectorAll("#catFilters .cat-chip").forEach((x) => x.classList.toggle("on", x === b));
+  renderMods();
+};
 
 $("tabs").onclick = (e) => {
   const b = e.target.closest("[data-sort]"); if (!b) return;
@@ -737,6 +690,7 @@ function renderEditThumbs() {
 function openEdit(m) {
   editing = m; editImgs = (m.images || []).slice();
   $("eTitle").value = m.title || ""; 
+  $("eCategory").value = m.category || "other";
   $("eDesc").value = m.description || ""; 
   $("eExt").value = m.external_url || "";
   $("eImgs").value = ""; 
@@ -752,7 +706,7 @@ $("eFile").onchange = () => {};
 
 $("btnSaveEdit").onclick = async () => {
   const m = editing; if (!m) return;
-  const title = $("eTitle").value.trim(), description = $("eDesc").value.trim(), ext = $("eExt").value.trim();
+  const title = $("eTitle").value.trim(), category = $("eCategory").value, description = $("eDesc").value.trim(), ext = $("eExt").value.trim();
   const newImgs = Array.from($("eImgs").files), newFile = $("eFile").files[0];
   
   if (!title) return toast("Título requerido.");
@@ -770,7 +724,7 @@ $("btnSaveEdit").onclick = async () => {
       fileUrl = await uploadFile("mods", uid + "/" + stamp + "_" + safeName(newFile.name), newFile);
     }
     
-    await patchMod(m.id, { title, description, images, file_url: fileUrl, external_url: ext || null });
+    await patchMod(m.id, { title, category, description, images, file_url: fileUrl, external_url: ext || null });
     $("editDlg").close(); 
     toast("Guardado.");
     await Promise.all([loadMods(), loadMine()]); 
@@ -826,7 +780,7 @@ $("btnPgSave").onclick = async () => {
   } catch (e) { toast("Error"); }
 };
 
-/* Menú Lateral y Ajustes */
+/* Sidebar y Ajustes */
 const toggleSidebar = (open) => {
   $("sidebar").classList.toggle("open", open);
   $("sidebarOverlay").classList.toggle("open", open);
@@ -902,7 +856,7 @@ $("btnSaveProf").onclick = async () => {
 };
 
 $("btnUpload").onclick = async () => {
-  const title = $("title").value.trim(), description = $("desc").value.trim();
+  const title = $("title").value.trim(), category = $("category").value, description = $("desc").value.trim();
   const file = $("file").files[0], ext = $("ext").value.trim();
   const imgs = Array.from($("imgs").files).slice(0, 5);
   if (!title) return;
@@ -916,7 +870,7 @@ $("btnUpload").onclick = async () => {
     const fileUrl = file ? await uploadFile("mods", uid + "/" + stamp + "_" + safeName(file.name), file) : null;
     
     await fetch(URL_BASE + "/rest/v1/mods", { method: "POST", headers: headers({ "Content-Type": "application/json", Prefer: "return=minimal" }),
-      body: JSON.stringify({ title, description, author: (profile && profile.username) || "Anónimo", file_url: fileUrl, external_url: ext || null, images: imageUrls, approved: true, user_id: session.user.id }) });
+      body: JSON.stringify({ title, category, description, author: (profile && profile.username) || "Anónimo", file_url: fileUrl, external_url: ext || null, images: imageUrls, approved: true, user_id: session.user.id }) });
     
     $("upDlg").close();
     ["title", "desc", "ext"].forEach((id) => ($(id).value = "")); $("file").value = ""; $("imgs").value = "";
@@ -924,7 +878,7 @@ $("btnUpload").onclick = async () => {
   } catch (e) { toast("Error"); }
 };
 
-// Inicialización de Idioma y Tema guardados
+// Inicialización
 setTheme(currentTheme);
 setLanguage(currentLang);
 
