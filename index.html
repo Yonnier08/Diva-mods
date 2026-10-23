@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PDMM+ Mods</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <style>
   :root { --bg:#fff; --fg:#1a1a1a; --card:#f4f4f6; --acc:#e0457b; --mut:#666; }
   @media (prefers-color-scheme: dark) {
@@ -25,7 +24,8 @@
   .mut { color:var(--mut); font-size:14px; }
   a.dl { display:inline-block; margin-top:8px; padding:8px 14px; background:var(--acc);
     color:#fff; border-radius:8px; text-decoration:none; font-weight:600; }
-  #msg { padding:10px; border-radius:8px; margin-bottom:12px; display:none; background:var(--card); }
+  #msg { position:sticky; top:0; z-index:10; padding:12px; border-radius:8px; margin-bottom:12px;
+    display:none; background:var(--acc); color:#fff; font-weight:600; }
 </style>
 </head>
 <body>
@@ -33,7 +33,7 @@
   <h1>PDMM+ Mods</h1>
   <div id="msg"></div>
 
-  <section id="authBox">
+  <section>
     <h2>Cuenta</h2>
     <div id="loggedOut">
       <input id="email" type="email" placeholder="Correo electrónico" autocomplete="email">
@@ -64,29 +64,166 @@
 </main>
 
 <script>
-const SUPABASE_URL = "https://nidlcakntjjzgkjlejbk.supabase.co";
-const SUPABASE_KEY = "sb_publishable_TVKTwGkcuLX_eXNon8IQjg_Jor-NquZ";
-const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const URL_BASE = "https://nidlcakntjjzgkjlejbk.supabase.co";
+const KEY = "sb_publishable_TVKTwGkcuLX_eXNon8IQjg_Jor-NquZ";
 const MAX_BYTES = 50 * 1024 * 1024;
-
 const $ = (id) => document.getElementById(id);
+
+let session = null;
+try { session = JSON.parse(localStorage.getItem("pdmm_session") || "null"); } catch (e) {}
 
 function showMsg(text) {
   const m = $("msg");
   m.textContent = text;
   m.style.display = "block";
-  setTimeout(() => (m.style.display = "none"), 6000);
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  clearTimeout(showMsg.t);
+  showMsg.t = setTimeout(() => (m.style.display = "none"), 9000);
 }
+
+window.addEventListener("error", (e) => showMsg("Error en la página: " + e.message));
+window.addEventListener("unhandledrejection", (e) => showMsg("Error: " + (e.reason && e.reason.message || e.reason)));
 
 function esc(s) {
   const d = document.createElement("div");
-  d.textContent = s ?? "";
+  d.textContent = s == null ? "" : s;
   return d.innerHTML;
 }
 
-async function refreshSession() {
-  const { data } = await db.auth.getSession();
-  const user = data.session?.user;
-  $("loggedOut").style.display = user ? "none" : "block";
-  $("loggedIn").style.display = user ? "block" : "none";
-  $("uploadBox").style.display = user ? "bl
+function headers(extra) {
+  const token = session && session.access_token ? session.access_token : KEY;
+  return Object.assign({ apikey: KEY, Authorization: "Bearer " + token }, extra || {});
+}
+
+function saveSession(s) {
+  session = s;
+  if (s) localStorage.setItem("pdmm_session", JSON.stringify(s));
+  else localStorage.removeItem("pdmm_session");
+  renderAuth();
+}
+
+function renderAuth() {
+  const logged = !!(session && session.access_token);
+  $("loggedOut").style.display = logged ? "none" : "block";
+  $("loggedIn").style.display = logged ? "block" : "none";
+  $("uploadBox").style.display = logged ? "block" : "none";
+  if (logged) $("userEmail").textContent = (session.user && session.user.email) || "";
+}
+
+async function authCall(path, body) {
+  const r = await fetch(URL_BASE + "/auth/v1/" + path, {
+    method: "POST",
+    headers: { apikey: KEY, "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  const data = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(data.msg || data.error_description || data.message || ("Error " + r.status));
+  return data;
+}
+
+async function refreshIfNeeded() {
+  if (!session || !session.refresh_token) return;
+  const now = Math.floor(Date.now() / 1000);
+  if (session.expires_at && session.expires_at - now > 60) return;
+  try {
+    const d = await authCall("token?grant_type=refresh_token", { refresh_token: session.refresh_token });
+    saveSession(d);
+  } catch (e) { saveSession(null); }
+}
+
+async function loadMods() {
+  const list = $("list");
+  try {
+    const r = await fetch(URL_BASE + "/rest/v1/mods?select=*&approved=eq.true&order=created_at.desc", { headers: headers() });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.message || ("Error " + r.status));
+    if (!data.length) { list.innerHTML = "<p class='mut'>Todavía no hay mods publicados.</p>"; return; }
+    list.innerHTML = data.map((m) => `
+      <div class="mod">
+        <h3>${esc(m.title)}</h3>
+        <div class="mut">por ${esc(m.author)} · ${new Date(m.created_at).toLocaleDateString("es")}</div>
+        <p>${esc(m.description)}</p>
+        <a class="dl" href="${esc(m.file_url)}" target="_blank" rel="noopener">Descargar</a>
+      </div>`).join("");
+  } catch (e) {
+    list.innerHTML = "<p class='mut'>No se pudieron cargar los mods: " + esc(e.message) + "</p>";
+  }
+}
+
+$("btnSignup").onclick = async () => {
+  const email = $("email").value.trim(), password = $("password").value;
+  if (!email || password.length < 6) return showMsg("Escribe un correo válido y una contraseña de 6 o más caracteres.");
+  showMsg("Creando cuenta...");
+  try {
+    const d = await authCall("signup", { email, password });
+    if (d.access_token) { saveSession(d); showMsg("Cuenta creada. Ya iniciaste sesión."); }
+    else showMsg("Cuenta creada. Revisa tu correo (y spam) para confirmarla y luego inicia sesión.");
+  } catch (e) { showMsg("Error: " + e.message); }
+};
+
+$("btnLogin").onclick = async () => {
+  const email = $("email").value.trim(), password = $("password").value;
+  if (!email || !password) return showMsg("Escribe tu correo y contraseña.");
+  showMsg("Iniciando sesión...");
+  try {
+    const d = await authCall("token?grant_type=password", { email, password });
+    saveSession(d);
+    showMsg("Sesión iniciada.");
+  } catch (e) { showMsg("Error: " + e.message); }
+};
+
+$("btnLogout").onclick = () => saveSession(null);
+
+$("btnUpload").onclick = async () => {
+  const title = $("title").value.trim();
+  const author = $("author").value.trim();
+  const description = $("desc").value.trim();
+  const file = $("file").files[0];
+  if (!title || !author || !file) return showMsg("Completa título, autor y archivo.");
+  if (file.size > MAX_BYTES) return showMsg("El archivo supera los 50 MB.");
+  if (!/\.(zip|7z|rar)$/i.test(file.name)) return showMsg("Solo se permiten .zip, .7z o .rar.");
+  await refreshIfNeeded();
+  if (!session) return showMsg("Inicia sesión primero.");
+
+  const btn = $("btnUpload");
+  btn.disabled = true; btn.textContent = "Subiendo...";
+  try {
+    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+    const path = session.user.id + "/" + Date.now() + "_" + safeName;
+
+    const up = await fetch(URL_BASE + "/storage/v1/object/mods/" + path, {
+      method: "POST",
+      headers: headers({ "Content-Type": file.type || "application/octet-stream" }),
+      body: file,
+    });
+    if (!up.ok) {
+      const e = await up.json().catch(() => ({}));
+      throw new Error(e.message || e.error || ("Error al subir el archivo (" + up.status + ")"));
+    }
+
+    const fileUrl = URL_BASE + "/storage/v1/object/public/mods/" + path;
+    const ins = await fetch(URL_BASE + "/rest/v1/mods", {
+      method: "POST",
+      headers: headers({ "Content-Type": "application/json", Prefer: "return=minimal" }),
+      body: JSON.stringify({ title, author, description, file_url: fileUrl }),
+    });
+    if (!ins.ok) {
+      const e = await ins.json().catch(() => ({}));
+      throw new Error(e.message || ("Error al guardar (" + ins.status + ")"));
+    }
+
+    showMsg("¡Mod enviado! Se publicará cuando sea aprobado.");
+    $("title").value = ""; $("author").value = ""; $("desc").value = ""; $("file").value = "";
+  } catch (e) {
+    showMsg("Error: " + e.message);
+  } finally {
+    btn.disabled = false; btn.textContent = "Subir mod";
+  }
+};
+
+renderAuth();
+refreshIfNeeded().then(renderAuth);
+loadMods();
+</script>
+</body>
+</html>
