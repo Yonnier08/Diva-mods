@@ -1,3 +1,7 @@
+¡Excelente! Para cumplir con lo que pides, vamos a realizar dos mejoras clave:
+ * Insignia de "Autor" en los comentarios: Cuando el creador del mod escriba un comentario o responda, aparecerá automáticamente una etiqueta distintiva de Autor junto a su nombre para que los demás usuarios sepan que es el creador respondiendo.
+ * Contador en las tarjetas de vista previa: Las tarjetas principales en la cuadrícula ahora mostrarán los contadores de Likes ❤️ y Comentarios 💬 junto a las descargas y vistas.
+Aquí tienes el archivo index.html completo y actualizado con estas funciones:
 <!DOCTYPE html>
 <html lang="es" data-theme="dark">
 <head>
@@ -96,8 +100,8 @@
   .gb-title { margin:0; font-size:14.5px; font-weight:700; color:var(--yellow); line-height:1.35; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; word-break:break-word; }
   .gb-card:hover .gb-title { text-decoration:underline; }
 
-  .gb-stats { display:flex; align-items:center; gap:12px; color:var(--mut); font-size:12px; margin-top:auto; padding-top:4px; }
-  .gb-stats span { display:inline-flex; align-items:center; gap:4px; }
+  .gb-stats { display:flex; align-items:center; gap:10px; color:var(--mut); font-size:11.5px; margin-top:auto; padding-top:4px; flex-wrap:wrap; }
+  .gb-stats span { display:inline-flex; align-items:center; gap:3px; }
 
   .empty { grid-column:1/-1; text-align:center; color:var(--mut); padding:48px 8px; font-size:15px; }
 
@@ -168,6 +172,7 @@
   <symbol id="i-dl" viewBox="0 0 16 16"><path d="M8 2v8m0 0L5 7m3 3l3-3M3 13h10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-eye" viewBox="0 0 16 16"><path d="M1.5 8S4 3.5 8 3.5 14.5 8 14.5 8 12 12.5 8 12.5 1.5 8 1.5 8z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="8" cy="8" r="2" fill="none" stroke="currentColor" stroke-width="1.5"/></symbol>
   <symbol id="i-heart" viewBox="0 0 16 16"><path d="M8 14s-5.5-3.5-7-6.5C-.2 4.5 1.5 1.5 4.5 2 6.2 2.3 7.3 3.5 8 4.2c.7-.7 1.8-1.9 3.5-2.2 3-.5 4.7 2.5 3.5 5.5-1.5 3-7 6.5-7 6.5z" fill="currentColor"/></symbol>
+  <symbol id="i-comm" viewBox="0 0 16 16"><path d="M14 2H2a1 1 0 00-1 1v9a1 1 0 001 1h3l3 3 3-3h3a1 1 0 001-1V3a1 1 0 00-1-1z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-menu" viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
   <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.35-4.35" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
   <symbol id="i-back" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
@@ -465,6 +470,9 @@ const DEFAULT_PAGES = {
 
 let session = null, profile = null, isMod = false, allMods = [], mine = [], userMods = [];
 let editing = null, editImgs = [], pages = JSON.parse(JSON.stringify(DEFAULT_PAGES)), curPage = null;
+let modLikesMap = {}, modCommentsMap = {};
+let currentMod = null;
+
 try { session = JSON.parse(localStorage.getItem("pdmm_session") || "null"); } catch (e) {}
 
 function toast(t) { const el = $("toast"); if (!el) return; el.textContent = t; el.style.display = "block"; clearTimeout(toast.t); toast.t = setTimeout(() => (el.style.display = "none"), 5000); }
@@ -571,10 +579,35 @@ async function patchMod(id, body) {
   if (!r.ok) { const e = await r.json().catch(() => ({})); throw new Error(e.message || ("Error " + r.status)); }
 }
 
+// Cargar contadores globales de likes y comentarios para las tarjetas
+async function loadSocialCounts() {
+  try {
+    const [rL, rC] = await Promise.all([
+      fetch(URL_BASE + "/rest/v1/mod_likes?select=mod_id", { headers: headers() }),
+      fetch(URL_BASE + "/rest/v1/mod_comments?select=mod_id", { headers: headers() })
+    ]);
+    const likes = await rL.json();
+    const comments = await rC.json();
+    
+    modLikesMap = {};
+    modCommentsMap = {};
+
+    if (Array.isArray(likes)) {
+      likes.forEach(l => { modLikesMap[l.mod_id] = (modLikesMap[l.mod_id] || 0) + 1; });
+    }
+    if (Array.isArray(comments)) {
+      comments.forEach(c => { modCommentsMap[c.mod_id] = (modCommentsMap[c.mod_id] || 0) + 1; });
+    }
+  } catch(e) {}
+}
+
 function gbItemHtml(m) {
   const img = (m.images || [])[0];
   const catKey = "cat_" + (m.category || "other");
   const catLabel = i18n[currentLang][catKey] || m.category || "Otro";
+  const likesCount = modLikesMap[m.id] || 0;
+  const commsCount = modCommentsMap[m.id] || 0;
+
   return `<div class="gb-card" data-id="${esc(m.id)}">
     <div class="gb-thumb">
       ${safeUrl(img) ? `<img class="cover" src="${esc(img)}" alt="" loading="lazy">` : `<div style="font-size:28px;color:var(--mut)">🎵</div>`}
@@ -588,7 +621,8 @@ function gbItemHtml(m) {
       <h3 class="gb-title">${esc(m.title)}</h3>
       <div class="gb-stats">
         <span>${ic("i-dl")} ${m.downloads || 0}</span>
-        <span>${ic("i-eye")} ${m.views || 0}</span>
+        <span>${ic("i-heart")} ${likesCount}</span>
+        <span>${ic("i-comm")} ${commsCount}</span>
         <span style="margin-left:auto">${fmtDate(m.created_at)}</span>
       </div>
     </div>
@@ -628,6 +662,7 @@ $("sortSelect").onchange = (e) => {
 
 async function loadMods() {
   try {
+    await loadSocialCounts();
     const r = await fetch(URL_BASE + "/rest/v1/mods?select=*,profiles(username,avatar_url)&approved=eq.true&hidden=eq.false&order=created_at.desc", { headers: headers() });
     const d = await r.json();
     if (!r.ok) throw new Error(d.message || ("Error " + r.status));
@@ -668,18 +703,18 @@ async function toggleLike(modId, btn) {
     } else {
       await fetch(URL_BASE + "/rest/v1/mod_likes", { method: "POST", headers: headers({ "Content-Type": "application/json" }), body: JSON.stringify({ mod_id: modId, user_id: myUid }) });
     }
+    await loadSocialCounts();
     await loadModSocialData(modId);
+    renderMods();
   } catch(e) { toast("Error con el like"); } finally { btn.disabled = false; }
 }
 
 async function loadComments(modId) {
   try {
-    // 1. Obtener los comentarios del mod
     const rC = await fetch(URL_BASE + "/rest/v1/mod_comments?select=*&mod_id=eq." + modId + "&order=created_at.asc", { headers: headers() });
     const comments = await rC.json();
     if (!rC.ok || !Array.isArray(comments) || !comments.length) return [];
 
-    // 2. Obtener los perfiles de los autores de esos comentarios
     const userIds = [...new Set(comments.map(c => c.user_id))];
     const rP = await fetch(URL_BASE + "/rest/v1/profiles?select=id,username,avatar_url&id=in.(" + userIds.join(",") + ")", { headers: headers() });
     const profiles = await rP.json().catch(() => []);
@@ -689,13 +724,11 @@ async function loadComments(modId) {
       profiles.forEach(p => { profMap[p.id] = p; });
     }
 
-    // 3. Unir comentario con el perfil del usuario
     return comments.map(c => ({
       ...c,
       profile: profMap[c.user_id] || { username: "Usuario", avatar_url: null }
     }));
   } catch(e) { 
-    console.error("Error cargando comentarios:", e);
     return []; 
   }
 }
@@ -732,7 +765,9 @@ async function postComment(modId) {
 
     input.value = "";
     toast("Comentario publicado.");
+    await loadSocialCounts();
     await loadModSocialData(modId);
+    renderMods();
   } catch(e) { 
     toast("Error: " + e.message); 
   } finally {
@@ -758,11 +793,15 @@ async function loadModSocialData(id) {
     cList.innerHTML = comments.length ? comments.map(c => {
       const uName = c.profile.username || "Usuario";
       const uAv = c.profile.avatar_url;
+      const isAuthor = currentMod && c.user_id === currentMod.user_id;
+      const authorBadge = isAuthor ? `<span class="chip ok" style="font-size:9px;padding:1px 5px;margin:0">Autor</span>` : '';
+
       return `
         <div class="comment-item">
           <div class="comment-head">
             ${avatarHtml(uAv, uName, 20)}
             <span class="comment-user">${esc(uName)}</span>
+            ${authorBadge}
             <span class="comment-time">${fmtDate(c.created_at)}</span>
           </div>
           <div>${esc(c.content)}</div>
@@ -777,6 +816,7 @@ function openModPage(id) {
   const m = allMods.find((x) => x.id === id) || userMods.find((x) => x.id === id); 
   if (!m) return;
 
+  currentMod = m;
   window.location.hash = "mod=" + id;
   rpc("increment_views", id); m.views = (m.views || 0) + 1; renderMods();
 
@@ -811,7 +851,7 @@ function openModPage(id) {
     <div class="comments-sec">
       <h3 style="font-size:17px;margin:0 0 12px">Comentarios</h3>
       <div class="comment-box">
-        <input id="cInput" placeholder="Escribe un comentario o sugerencia constructiva..." maxlength="250">
+        <input id="cInput" placeholder="Escribe un comentario o respuesta..." maxlength="250">
         <button id="btnPostC" class="btn pri sm">Enviar</button>
       </div>
       <div id="commentsList">Cargando comentarios...</div>
@@ -829,6 +869,7 @@ function openModPage(id) {
 }
 
 function closeModPage() {
+  currentMod = null;
   window.location.hash = "";
   $("modPageContainer").classList.add("hide");
   $("mainView").classList.remove("hide");
@@ -1160,3 +1201,4 @@ loadMods();
 </script>
 </body>
 </html>
+
