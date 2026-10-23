@@ -69,17 +69,12 @@
   input, textarea, select { width:100%; padding:10px 12px; border-radius:6px; border:1px solid var(--line); background:var(--surface); color:var(--fg); font-size:15px; font-family:inherit; }
   input:focus, textarea:focus, select:focus { outline:2px solid var(--acc); outline-offset:-1px; }
 
-  /* Filtros por Categoría y Orden */
-  .filter-bar { display:flex; gap:6px; overflow-x:auto; padding-bottom:8px; margin-bottom:12px; }
-  .cat-chip { border:1px solid var(--line); background:var(--surface); color:var(--mut); padding:5px 12px; border-radius:16px; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap; transition:all 0.15s; }
-  .cat-chip:hover { color:var(--fg); border-color:var(--mut); }
-  .cat-chip.on { background:var(--acc); color:var(--acc-fg); border-color:var(--acc); }
-
-  .toolbar { display:flex; align-items:center; justify-content:space-between; gap:10px; margin:8px 0 14px; border-bottom:1px solid var(--line); padding-bottom:8px; }
-  .tabs { display:flex; gap:4px; }
-  .tabs button { background:none; border:none; border-bottom:2px solid transparent; color:var(--mut); font-size:14px; font-weight:600; padding:8px 12px; cursor:pointer; font-family:inherit; margin-bottom:-9px; }
-  .tabs button.on { color:var(--fg); border-bottom-color:var(--acc); }
-  .count { color:var(--mut); font-size:13px; }
+  /* Barra de Control (Filtros desplegables y Contador) */
+  .control-bar { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:18px; border-bottom:1px solid var(--line); padding-bottom:12px; }
+  .control-group { display:flex; align-items:center; gap:10px; flex-wrap:wrap; flex:1; }
+  .select-wrapper { display:flex; align-items:center; gap:6px; width:auto; }
+  .select-wrapper select { width:auto; padding:7px 12px; font-size:13.5px; font-weight:600; cursor:pointer; }
+  .count { color:var(--mut); font-size:13px; margin-left:auto; white-space:nowrap; }
 
   /* Cuadrícula */
   .gb-grid { display:grid; grid-template-columns:repeat(2, 1fr); gap:12px; }
@@ -186,24 +181,35 @@
 </header>
   
 <main>
-  <!-- Barra de Filtros por Categoría -->
-  <div class="filter-bar" id="catFilters">
-    <button class="cat-chip on" data-cat="all" data-i18n="cat_all">Todos</button>
-    <button class="cat-chip" data-cat="songs" data-i18n="cat_songs">Canciones</button>
-    <button class="cat-chip" data-cat="modules" data-i18n="cat_modules">Módulos</button>
-    <button class="cat-chip" data-cat="ui" data-i18n="cat_ui">UI / Interfaz</button>
-    <button class="cat-chip" data-cat="patches" data-i18n="cat_patches">Parches / Scripts</button>
-    <button class="cat-chip" data-cat="other" data-i18n="cat_other">Otros</button>
-  </div>
+  <!-- Barra de Filtros Desplegables -->
+  <div class="control-bar">
+    <div class="control-group">
+      <!-- Selector de Categoría -->
+      <div class="select-wrapper">
+        <select id="catSelect">
+          <option value="all" data-i18n="cat_all">Todas las categorías</option>
+          <option value="songs" data-i18n="cat_songs">Canciones</option>
+          <option value="modules" data-i18n="cat_modules">Módulos</option>
+          <option value="ui" data-i18n="cat_ui">UI / Interfaz</option>
+          <option value="patches" data-i18n="cat_patches">Parches / Scripts</option>
+          <option value="other" data-i18n="cat_other">Otros</option>
+        </select>
+      </div>
 
-  <div class="toolbar">
-    <div class="tabs" id="tabs">
-      <button data-sort="created_at" class="on" data-i18n="sort_recent">Recientes</button>
-      <button data-sort="downloads" data-i18n="sort_downloads">Descargas</button>
-      <button data-sort="views" data-i18n="sort_views">Vistas</button>
+      <!-- Selector de Orden -->
+      <div class="select-wrapper">
+        <select id="sortSelect">
+          <option value="created_at_desc" data-i18n="sort_recent_desc">Más recientes primero</option>
+          <option value="created_at_asc" data-i18n="sort_recent_asc">Más antiguos primero</option>
+          <option value="downloads_desc" data-i18n="sort_downloads_desc">Más descargados</option>
+          <option value="views_desc" data-i18n="sort_views_desc">Más vistos</option>
+        </select>
+      </div>
     </div>
+    
     <span id="count" class="count"></span>
   </div>
+
   <div id="list" class="gb-grid"><div class="empty" data-i18n="loading">Cargando...</div></div>
 </main>
 
@@ -331,7 +337,9 @@ const $ = (id) => document.getElementById(id);
 const i18n = {
   es: {
     nav_title: "Navegación", nav_mods: "Mods", nav_rules: "Reglas", nav_info: "Información", nav_settings: "Ajustes",
-    search_ph: "Buscar mods por título, autor o descripción...", sort_recent: "Recientes", sort_downloads: "Descargas", sort_views: "Vistas",
+    search_ph: "Buscar mods por título, autor o descripción...",
+    sort_recent_desc: "Más recientes primero", sort_recent_asc: "Más antiguos primero",
+    sort_downloads_desc: "Más descargados", sort_views_desc: "Más vistos",
     loading: "Cargando...", btn_upload: "Subir", btn_auth: "Entrar", auth_title: "Cuenta", ph_email: "Correo electrónico",
     ph_pass: "Contraseña (mín. 6 caracteres)", btn_login: "Iniciar sesión", btn_signup: "Crear cuenta", btn_close: "Cerrar",
     edit_page_title: "Editar página", ph_title: "Título", ph_text: "Texto", btn_edit: "Editar", btn_save: "Guardar", btn_cancel: "Cancelar",
@@ -344,11 +352,13 @@ const i18n = {
     anon: "Anónimo", download_btn: "Descargar", member_since: "Miembro desde", moderator: "Moderador", no_bio: "Este perfil todavía no tiene descripción.",
     no_bio_own: "Todavía no escribiste nada sobre ti. Toca Editar perfil para agregarlo.", downloads_word: "descargas", logout: "Cerrar sesión",
     edit: "Editar", hide: "Ocultar", show: "Mostrar", delete: "Eliminar", published: "Publicado", hidden: "Oculto",
-    cat_all: "Todos", cat_songs: "Canciones", cat_modules: "Módulos", cat_ui: "UI / Interfaz", cat_patches: "Parches / Scripts", cat_other: "Otros"
+    cat_all: "Todas las categorías", cat_songs: "Canciones", cat_modules: "Módulos", cat_ui: "UI / Interfaz", cat_patches: "Parches / Scripts", cat_other: "Otros"
   },
   en: {
     nav_title: "Navigation", nav_mods: "Mods", nav_rules: "Rules", nav_info: "Information", nav_settings: "Settings",
-    search_ph: "Search mods by title, author or description...", sort_recent: "Recent", sort_downloads: "Downloads", sort_views: "Views",
+    search_ph: "Search mods by title, author or description...",
+    sort_recent_desc: "Newest first", sort_recent_asc: "Oldest first",
+    sort_downloads_desc: "Most downloaded", sort_views_desc: "Most viewed",
     loading: "Loading...", btn_upload: "Upload", btn_auth: "Log in", auth_title: "Account", ph_email: "Email",
     ph_pass: "Password (min. 6 characters)", btn_login: "Log in", btn_signup: "Sign up", btn_close: "Close",
     edit_page_title: "Edit page", ph_title: "Title", ph_text: "Text", btn_edit: "Edit", btn_save: "Save", btn_cancel: "Cancel",
@@ -361,13 +371,14 @@ const i18n = {
     anon: "Anonymous", download_btn: "Download", member_since: "Member since", moderator: "Moderator", no_bio: "This profile has no description yet.",
     no_bio_own: "You haven't written anything about yourself yet. Tap Edit profile to add it.", downloads_word: "downloads", logout: "Log out",
     edit: "Edit", hide: "Hide", show: "Show", delete: "Delete", published: "Published", hidden: "Hidden",
-    cat_all: "All", cat_songs: "Songs", cat_modules: "Modules", cat_ui: "UI / Interface", cat_patches: "Patches / Scripts", cat_other: "Other"
+    cat_all: "All categories", cat_songs: "Songs", cat_modules: "Modules", cat_ui: "UI / Interface", cat_patches: "Patches / Scripts", cat_other: "Other"
   }
 };
 
 let currentLang = localStorage.getItem("pdmm_lang") || "es";
 let currentTheme = localStorage.getItem("pdmm_theme") || "dark";
 let selectedCat = "all";
+let sortOrder = "created_at_desc";
 
 function setLanguage(lang) {
   currentLang = lang;
@@ -396,7 +407,7 @@ const DEFAULT_PAGES = {
 };
 
 let session = null, profile = null, isMod = false, allMods = [], mine = [], userMods = [];
-let editing = null, editImgs = [], sortBy = "created_at", pages = JSON.parse(JSON.stringify(DEFAULT_PAGES)), curPage = null;
+let editing = null, editImgs = [], pages = JSON.parse(JSON.stringify(DEFAULT_PAGES)), curPage = null;
 try { session = JSON.parse(localStorage.getItem("pdmm_session") || "null"); } catch (e) {}
 
 function toast(t) { const el = $("toast"); if (!el) return; el.textContent = t; el.style.display = "block"; clearTimeout(toast.t); toast.t = setTimeout(() => (el.style.display = "none"), 5000); }
@@ -535,23 +546,27 @@ function renderMods() {
     return matchQuery && matchCat;
   });
   
-  items.sort((a, b) => sortBy === "created_at" ? new Date(b.created_at) - new Date(a.created_at) : (b[sortBy] || 0) - (a[sortBy] || 0));
+  // Ordenamiento dinámico
+  items.sort((a, b) => {
+    if (sortOrder === "created_at_desc") return new Date(b.created_at) - new Date(a.created_at);
+    if (sortOrder === "created_at_asc") return new Date(a.created_at) - new Date(b.created_at);
+    if (sortOrder === "downloads_desc") return (b.downloads || 0) - (a.downloads || 0);
+    if (sortOrder === "views_desc") return (b.views || 0) - (a.views || 0);
+    return 0;
+  });
+
   const tLang = i18n[currentLang];
   $("count").textContent = items.length + " " + (items.length === 1 ? "mod" : "mods");
   $("list").innerHTML = items.length ? items.map(gbItemHtml).join("") : "<div class='empty'>" + (allMods.length ? (currentLang === 'es' ? "Sin resultados para este filtro." : "No results for this filter.") : tLang.loading) + "</div>";
 }
 
-$("catFilters").onclick = (e) => {
-  const b = e.target.closest("[data-cat]"); if (!b) return;
-  selectedCat = b.dataset.cat;
-  document.querySelectorAll("#catFilters .cat-chip").forEach((x) => x.classList.toggle("on", x === b));
+$("catSelect").onchange = (e) => {
+  selectedCat = e.target.value;
   renderMods();
 };
 
-$("tabs").onclick = (e) => {
-  const b = e.target.closest("[data-sort]"); if (!b) return;
-  sortBy = b.dataset.sort;
-  document.querySelectorAll("#tabs button").forEach((x) => x.classList.toggle("on", x === b));
+$("sortSelect").onchange = (e) => {
+  sortOrder = e.target.value;
   renderMods();
 };
 
@@ -859,23 +874,32 @@ $("btnUpload").onclick = async () => {
   const title = $("title").value.trim(), category = $("category").value, description = $("desc").value.trim();
   const file = $("file").files[0], ext = $("ext").value.trim();
   const imgs = Array.from($("imgs").files).slice(0, 5);
-  if (!title) return;
-  await refreshIfNeeded(); if (!session) return;
+  if (!title) return toast("Escribe un título.");
+  await refreshIfNeeded(); if (!session) return toast("Inicia sesión primero.");
   if (!profile) await loadProfile();
 
+  const btn = $("btnUpload"); btn.disabled = true; btn.textContent = "Subiendo...";
   try {
     const uid = session.user.id, stamp = Date.now();
     const imageUrls = [];
     for (let i = 0; i < imgs.length; i++) imageUrls.push(await uploadFile("images", uid + "/" + stamp + "_" + i + "_" + safeName(imgs[i].name), imgs[i]));
     const fileUrl = file ? await uploadFile("mods", uid + "/" + stamp + "_" + safeName(file.name), file) : null;
     
-    await fetch(URL_BASE + "/rest/v1/mods", { method: "POST", headers: headers({ "Content-Type": "application/json", Prefer: "return=minimal" }),
+    const ins = await fetch(URL_BASE + "/rest/v1/mods", { method: "POST", headers: headers({ "Content-Type": "application/json", Prefer: "return=minimal" }),
       body: JSON.stringify({ title, category, description, author: (profile && profile.username) || "Anónimo", file_url: fileUrl, external_url: ext || null, images: imageUrls, approved: true, user_id: session.user.id }) });
     
+    if (!ins.ok) { const e = await ins.json().catch(() => ({})); throw new Error(e.message || ("Error al guardar (" + ins.status + ")")); }
+
     $("upDlg").close();
+    toast("¡Mod publicado!");
     ["title", "desc", "ext"].forEach((id) => ($(id).value = "")); $("file").value = ""; $("imgs").value = "";
     loadMods();
-  } catch (e) { toast("Error"); }
+  } catch (e) { 
+    toast("Error: " + e.message); 
+  } finally { 
+    btn.disabled = false; 
+    btn.textContent = currentLang === 'es' ? "Subir mod" : "Upload mod"; 
+  }
 };
 
 // Inicialización
