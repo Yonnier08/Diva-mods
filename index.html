@@ -17,12 +17,11 @@
   body { margin:0; font-family:"Inter","Segoe UI",Roboto,system-ui,sans-serif; background:var(--bg); color:var(--fg); line-height:1.45; }
   .ic { width:13px; height:13px; vertical-align:-1px; flex:none; }
   
-  /* Navbar */
+  /* Navbar con el logo original */
   header { position:sticky; top:0; z-index:20; background:var(--bg); border-bottom:1px solid var(--line); }
   .top { display:flex; align-items:center; gap:10px; padding:8px 14px; }
-  .brand { display:flex; align-items:center; gap:8px; text-decoration:none; margin-right:auto; }
-  .brand-logo-img { height:32px; width:auto; object-fit:contain; border-radius:4px; }
-  .brand-title { font-weight:800; font-size:18px; color:var(--fg); letter-spacing:-0.5px; }
+  .brand { display:flex; align-items:center; text-decoration:none; margin-right:auto; }
+  .brand img { height:32px; width:auto; object-fit:contain; display:block; }
 
   nav { display:flex; gap:4px; padding:0 10px; overflow-x:auto; border-top:1px solid rgba(255,255,255,0.03); }
   nav button { background:none; border:none; border-bottom:2px solid transparent; color:var(--mut); font-size:14px; font-weight:600; padding:8px 12px; cursor:pointer; font-family:inherit; }
@@ -47,7 +46,7 @@
   .tabs button.on { color:var(--fg); border-bottom-color:var(--acc); }
   .count { color:var(--mut); font-size:12.5px; }
 
-  /* Estilo Estilo GameBanana (Cuadrícula de 2 columnas) */
+  /* Estilo GameBanana (Cuadrícula de 2 columnas) */
   .gb-grid { display:grid; grid-template-columns:repeat(2, 1fr); gap:12px; }
   @media (min-width: 768px) { .gb-grid { grid-template-columns:repeat(3, 1fr); gap:14px; } }
 
@@ -101,12 +100,9 @@
 
 <header>
   <div class="top">
-    <!-- Logo SVG con fallback a imagen -->
+    <!-- Logo original con la imagen 'logo.png' -->
     <a class="brand" href="./">
-      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--acc)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-      </svg>
-      <span class="brand-title">PDMM+ Mods</span>
+      <img src="logo.png" alt="Project Diva Logo">
     </a>
 
     <button id="btnProfile" class="btn hide" style="padding:4px 10px;display:flex;align-items:center;gap:6px">
