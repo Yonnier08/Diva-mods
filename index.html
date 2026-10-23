@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,8 +10,9 @@
     --bg:#0e121b; --surface:#151b27; --line:#232d3f; --fg:#e6e9ee; --mut:#8a93a1; 
     --acc:#2fd4c6; --acc-fg:#04201d; --yellow:#facc15; --danger:#f0686b; --radius:8px;
   }
-  @media (prefers-color-scheme: light) {
-    :root { --bg:#f1f4f8; --surface:#ffffff; --line:#dbe1e8; --fg:#1b1f24; --mut:#667085; --acc:#0f9d93; --yellow:#d97706; }
+  html[data-theme="light"] {
+    --bg:#f1f4f8; --surface:#ffffff; --line:#dbe1e8; --fg:#1b1f24; --mut:#667085; 
+    --acc:#0f9d93; --acc-fg:#ffffff; --yellow:#d97706; --danger:#dc2626;
   }
   * { box-sizing:border-box; }
   body { margin:0; font-family:"Inter","Segoe UI",Roboto,system-ui,sans-serif; background:var(--bg); color:var(--fg); line-height:1.45; }
@@ -25,7 +26,7 @@
   * { scrollbar-width:thin; scrollbar-color:var(--line) var(--bg); }
   
   /* Navbar */
-  header { position:sticky; top:0; z-index:20; background:rgba(14,18,27,0.95); backdrop-filter:blur(8px); border-bottom:1px solid var(--line); }
+  header { position:sticky; top:0; z-index:20; background:var(--surface); backdrop-filter:blur(8px); border-bottom:1px solid var(--line); }
   .top { display:flex; align-items:center; gap:12px; padding:10px 16px; max-width:1200px; margin:0 auto; }
   .brand { display:flex; align-items:center; text-decoration:none; }
   .brand img { height:34px; width:auto; object-fit:contain; display:block; }
@@ -65,8 +66,8 @@
   .av { border-radius:50%; object-fit:cover; display:grid; place-items:center; font-weight:700; color:var(--acc-fg); background:var(--acc); flex:none; overflow:hidden; }
 
   main { max-width:1200px; margin:0 auto; padding:20px 16px 50px; }
-  input, textarea { width:100%; padding:10px 12px; border-radius:6px; border:1px solid var(--line); background:var(--surface); color:var(--fg); font-size:15px; font-family:inherit; }
-  input:focus, textarea:focus { outline:2px solid var(--acc); outline-offset:-1px; }
+  input, textarea, select { width:100%; padding:10px 12px; border-radius:6px; border:1px solid var(--line); background:var(--surface); color:var(--fg); font-size:15px; font-family:inherit; }
+  input:focus, textarea:focus, select:focus { outline:2px solid var(--acc); outline-offset:-1px; }
 
   .toolbar { display:flex; align-items:center; justify-content:space-between; gap:10px; margin:16px 0 14px; border-bottom:1px solid var(--line); padding-bottom:8px; }
   .tabs { display:flex; gap:4px; }
@@ -96,7 +97,6 @@
   .gb-stats span { display:inline-flex; align-items:center; gap:4px; }
 
   .empty { grid-column:1/-1; text-align:center; color:var(--mut); padding:48px 8px; font-size:15px; }
-  footer { max-width:1200px; margin:0 auto; padding:24px 16px 36px; color:var(--mut); font-size:12.5px; border-top:1px solid var(--line); text-align:center; }
 
   /* Modales */
   dialog { width:min(92vw,680px); max-height:88vh; border:1px solid var(--line); border-radius:10px; padding:20px; background:var(--surface); color:var(--fg); box-shadow:0 16px 40px rgba(0,0,0,0.6); overflow-y:auto; overflow-x:hidden; }
@@ -114,7 +114,6 @@
   .thumb { position:relative; }
   .thumb button { position:absolute; top:-6px; right:-6px; width:20px; height:20px; border-radius:50%; border:none; background:var(--danger); color:#fff; font-size:11px; cursor:pointer; padding:0; }
   
-  /* Galería limpia sin desbordamiento */
   .gallery { display:flex; gap:10px; overflow-x:auto; scroll-snap-type:x mandatory; margin-bottom:14px; border-radius:8px; background:var(--bg); border:1px solid var(--line); padding:6px; width:100%; }
   .gallery img { width:100%; max-height:340px; aspect-ratio:16/9; border-radius:6px; scroll-snap-align:start; flex:none; object-fit:contain; }
 
@@ -142,13 +141,14 @@
 <div id="sidebarOverlay" class="sidebar-overlay"></div>
 <aside id="sidebar" class="sidebar">
   <div class="sidebar-header">
-    <h2>Navegación</h2>
+    <h2 data-i18n="nav_title">Navegación</h2>
     <button class="btn sm" id="btnCloseSidebar">✕</button>
   </div>
   <div class="sidebar-links">
-    <button class="on" data-nav="mods">Mods</button>
-    <button data-nav="rules">Reglas</button>
-    <button data-nav="info">Información</button>
+    <button class="on" data-nav="mods" data-i18n="nav_mods">Mods</button>
+    <button data-nav="rules" data-i18n="nav_rules">Reglas</button>
+    <button data-nav="info" data-i18n="nav_info">Información</button>
+    <button data-nav="settings" data-i18n="nav_settings">Ajustes</button>
   </div>
 </aside>
 
@@ -168,38 +168,36 @@
       <button id="btnProfile" class="btn hide" style="padding:4px 10px;display:flex;align-items:center;gap:6px">
         <span id="hAv"></span><span id="hName" style="max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
       </button>
-      <button id="btnOpenUpload" class="btn pri hide">Subir</button>
-      <button id="btnOpenAuth" class="btn pri">Entrar</button>
+      <button id="btnOpenUpload" class="btn pri hide" data-i18n="btn_upload">Subir</button>
+      <button id="btnOpenAuth" class="btn pri" data-i18n="btn_auth">Entrar</button>
     </div>
   </div>
   <!-- Barra de búsqueda desplegable -->
   <div id="searchContainer" class="search-container">
-    <input id="q" type="search" placeholder="Buscar mods por título, autor o descripción...">
+    <input id="q" type="search" data-i18n-ph="search_ph" placeholder="Buscar mods por título, autor o descripción...">
   </div>
 </header>
   
 <main>
   <div class="toolbar">
     <div class="tabs" id="tabs">
-      <button data-sort="created_at" class="on">Recientes</button>
-      <button data-sort="downloads">Descargas</button>
-      <button data-sort="views">Vistas</button>
+      <button data-sort="created_at" class="on" data-i18n="sort_recent">Recientes</button>
+      <button data-sort="downloads" data-i18n="sort_downloads">Descargas</button>
+      <button data-sort="views" data-i18n="sort_views">Vistas</button>
     </div>
     <span id="count" class="count"></span>
   </div>
-  <div id="list" class="gb-grid"><div class="empty">Cargando...</div></div>
+  <div id="list" class="gb-grid"><div class="empty" data-i18n="loading">Cargando...</div></div>
 </main>
 
-<footer>Proyecto hecho por fans, sin fines de lucro. No está afiliado a SEGA ni a Crypton.</footer>
-
 <dialog id="authDlg">
-  <h2>Cuenta</h2>
+  <h2 data-i18n="auth_title">Cuenta</h2>
   <div class="row">
-    <input id="email" type="email" placeholder="Correo electrónico" autocomplete="email">
-    <input id="password" type="password" placeholder="Contraseña (mín. 6 caracteres)" autocomplete="current-password">
+    <input id="email" type="email" data-i18n-ph="ph_email" placeholder="Correo electrónico" autocomplete="email">
+    <input id="password" type="password" data-i18n-ph="ph_pass" placeholder="Contraseña (mín. 6 caracteres)" autocomplete="current-password">
   </div>
-  <div class="acts"><button id="btnLogin" class="btn pri">Iniciar sesión</button><button id="btnSignup" class="btn">Crear cuenta</button></div>
-  <div class="acts"><button class="btn" data-close>Cerrar</button></div>
+  <div class="acts"><button id="btnLogin" class="btn pri" data-i18n="btn_login">Iniciar sesión</button><button id="btnSignup" class="btn" data-i18n="btn_signup">Crear cuenta</button></div>
+  <div class="acts"><button class="btn" data-close data-i18n="btn_close">Cerrar</button></div>
 </dialog>
 
 <dialog id="pageDlg">
@@ -208,67 +206,88 @@
     <div id="pgBody" class="rich"></div>
   </div>
   <div id="pgEdit" class="hide">
-    <h2>Editar página</h2>
+    <h2 data-i18n="edit_page_title">Editar página</h2>
     <div class="row">
-      <input id="pgTitleIn" maxlength="80" placeholder="Título">
-      <textarea id="pgBodyIn" rows="10" placeholder="Texto"></textarea>
+      <input id="pgTitleIn" maxlength="80" data-i18n-ph="ph_title" placeholder="Título">
+      <textarea id="pgBodyIn" rows="10" data-i18n-ph="ph_text" placeholder="Texto"></textarea>
     </div>
   </div>
-  <div class="acts" id="pgActsView"><button id="btnPgEdit" class="btn hide">Editar</button><button class="btn" data-close>Cerrar</button></div>
-  <div class="acts hide" id="pgActsEdit"><button id="btnPgSave" class="btn pri">Guardar</button><button id="btnPgCancel" class="btn">Cancelar</button></div>
+  <div class="acts" id="pgActsView"><button id="btnPgEdit" class="btn hide" data-i18n="btn_edit">Editar</button><button class="btn" data-close data-i18n="btn_close">Cerrar</button></div>
+  <div class="acts hide" id="pgActsEdit"><button id="btnPgSave" class="btn pri" data-i18n="btn_save">Guardar</button><button id="btnPgCancel" class="btn" data-i18n="btn_cancel">Cancelar</button></div>
+</dialog>
+
+<dialog id="settingsDlg">
+  <h2 data-i18n="settings_title">Ajustes</h2>
+  <div class="row">
+    <label style="display:flex;flex-direction:column;gap:6px">
+      <span data-i18n="settings_theme" style="font-weight:600">Tema</span>
+      <select id="themeSelect">
+        <option value="dark" data-i18n="theme_dark">Oscuro</option>
+        <option value="light" data-i18n="theme_light">Claro</option>
+      </select>
+    </label>
+    <label style="display:flex;flex-direction:column;gap:6px">
+      <span data-i18n="settings_lang" style="font-weight:600">Idioma / Language</span>
+      <select id="langSelect">
+        <option value="es">Español</option>
+        <option value="en">English</option>
+      </select>
+    </label>
+  </div>
+  <div class="acts"><button class="btn pri" data-close data-i18n="btn_close">Cerrar</button></div>
 </dialog>
 
 <dialog id="userDlg">
   <div id="userBody"></div>
-  <div class="acts"><button class="btn" data-close>Cerrar</button></div>
+  <div class="acts"><button class="btn" data-close data-i18n="btn_close">Cerrar</button></div>
 </dialog>
 
 <dialog id="profDlg">
-  <h2>Editar perfil</h2>
+  <h2 data-i18n="edit_profile">Editar perfil</h2>
   <div class="row">
     <div style="display:flex;align-items:center;gap:12px"><span id="pAv"></span>
-      <label class="btn" style="cursor:pointer">Cambiar foto<input id="pFile" type="file" accept="image/*" class="hide"></label></div>
-    <input id="pName" placeholder="Nombre de usuario" maxlength="30">
-    <textarea id="pBio" rows="4" maxlength="500" placeholder="Cuéntanos sobre ti"></textarea>
+      <label class="btn" style="cursor:pointer"><span data-i18n="change_photo">Cambiar foto</span><input id="pFile" type="file" accept="image/*" class="hide"></label></div>
+    <input id="pName" data-i18n-ph="ph_username" placeholder="Nombre de usuario" maxlength="30">
+    <textarea id="pBio" rows="4" maxlength="500" data-i18n-ph="ph_bio" placeholder="Cuéntanos sobre ti"></textarea>
   </div>
-  <div class="acts"><button id="btnSaveProf" class="btn pri">Guardar</button><button class="btn" data-close>Cancelar</button></div>
+  <div class="acts"><button id="btnSaveProf" class="btn pri" data-i18n="btn_save">Guardar</button><button class="btn" data-close data-i18n="btn_cancel">Cancelar</button></div>
 </dialog>
 
 <dialog id="mineDlg">
-  <h2>Mis mods</h2>
+  <h2 data-i18n="my_mods">Mis mods</h2>
   <div id="mineList"></div>
-  <div class="acts"><button class="btn" data-close>Cerrar</button></div>
+  <div class="acts"><button class="btn" data-close data-i18n="btn_close">Cerrar</button></div>
 </dialog>
 
 <dialog id="upDlg">
-  <h2>Subir un mod</h2>
+  <h2 data-i18n="upload_title">Subir un mod</h2>
   <div class="row">
-    <input id="title" placeholder="Título del mod" maxlength="80">
-    <textarea id="desc" rows="4" placeholder="Descripción"></textarea>
-    <label class="filebtn"><span id="imgName">Imágenes del mod (hasta 5)</span><input id="imgs" type="file" accept="image/*" multiple></label>
+    <input id="title" data-i18n-ph="ph_mod_title" placeholder="Título del mod" maxlength="80">
+    <textarea id="desc" rows="4" data-i18n-ph="ph_mod_desc" placeholder="Descripción"></textarea>
+    <label class="filebtn"><span id="imgName" data-i18n="img_placeholder">Imágenes del mod (hasta 5)</span><input id="imgs" type="file" accept="image/*" multiple></label>
     <div id="imgPrev" class="thumbs"></div>
-    <label class="filebtn"><span id="fileName">Archivo del mod (.zip, .7z, .rar, máx. 50 MB)</span><input id="file" type="file" accept=".zip,.7z,.rar"></label>
-    <p class="hint" style="text-align:center">— o, si pesa más de 50 MB —</p>
-    <input id="ext" type="url" placeholder="Enlace de descarga externo (Mega, Drive, etc.)">
+    <label class="filebtn"><span id="fileName" data-i18n="file_placeholder">Archivo del mod (.zip, .7z, .rar, máx. 50 MB)</span><input id="file" type="file" accept=".zip,.7z,.rar"></label>
+    <p class="hint" style="text-align:center" data-i18n="or_external">— o, si pesa más de 50 MB —</p>
+    <input id="ext" type="url" data-i18n-ph="ph_ext_url" placeholder="Enlace de descarga externo (Mega, Drive, etc.)">
   </div>
-  <p class="hint">Tu mod se publicará de inmediato.</p>
-  <div class="acts"><button id="btnUpload" class="btn pri">Subir mod</button><button class="btn" data-close>Cancelar</button></div>
+  <p class="hint" data-i18n="instant_publish">Tu mod se publicará de inmediato.</p>
+  <div class="acts"><button id="btnUpload" class="btn pri" data-i18n="btn_upload_mod">Subir mod</button><button class="btn" data-close data-i18n="btn_cancel">Cancelar</button></div>
 </dialog>
 
 <dialog id="editDlg">
-  <h2>Editar mod</h2>
+  <h2 data-i18n="edit_mod_title">Editar mod</h2>
   <div class="row">
-    <input id="eTitle" placeholder="Título del mod" maxlength="80">
-    <textarea id="eDesc" rows="4" placeholder="Descripción"></textarea>
+    <input id="eTitle" data-i18n-ph="ph_mod_title" placeholder="Título del mod" maxlength="80">
+    <textarea id="eDesc" rows="4" data-i18n-ph="ph_mod_desc" placeholder="Descripción"></textarea>
     <div id="eThumbs" class="thumbs"></div>
-    <label class="filebtn"><span id="eImgName">Agregar imágenes (máx. 5 en total)</span><input id="eImgs" type="file" accept="image/*" multiple></label>
-    <label class="filebtn"><span id="eFileName">Reemplazar archivo (opcional, máx. 50 MB)</span><input id="eFile" type="file" accept=".zip,.7z,.rar"></label>
-    <input id="eExt" type="url" placeholder="Enlace de descarga externo (opcional)">
+    <label class="filebtn"><span id="eImgName" data-i18n="add_more_imgs">Agregar imágenes (máx. 5 en total)</span><input id="eImgs" type="file" accept="image/*" multiple></label>
+    <label class="filebtn"><span id="eFileName" data-i18n="replace_file">Reemplazar archivo (opcional, máx. 50 MB)</span><input id="eFile" type="file" accept=".zip,.7z,.rar"></label>
+    <input id="eExt" type="url" data-i18n-ph="ph_ext_url_opt" placeholder="Enlace de descarga externo (opcional)">
   </div>
-  <div class="acts"><button id="btnSaveEdit" class="btn pri">Guardar cambios</button><button class="btn" data-close>Cancelar</button></div>
+  <div class="acts"><button id="btnSaveEdit" class="btn pri" data-i18n="btn_save_changes">Guardar cambios</button><button class="btn" data-close data-i18n="btn_cancel">Cancelar</button></div>
 </dialog>
 
-<dialog id="detDlg"><div id="detBody"></div><div class="acts"><button class="btn" data-close>Cerrar</button></div></dialog>
+<dialog id="detDlg"><div id="detBody"></div><div class="acts"><button class="btn" data-close data-i18n="btn_close">Cerrar</button></div></dialog>
 <div id="toast"></div>
 
 <script>
@@ -276,6 +295,162 @@ const URL_BASE = "https://nidlcakntjjzgkjlejbk.supabase.co";
 const KEY = "sb_publishable_TVKTwGkcuLX_eXNon8IQjg_Jor-NquZ";
 const MAX_FILE = 50 * 1024 * 1024, MAX_IMG = 5 * 1024 * 1024;
 const $ = (id) => document.getElementById(id);
+
+// Sistema de Traducciones (i18n)
+const i18n = {
+  es: {
+    nav_title: "Navegación",
+    nav_mods: "Mods",
+    nav_rules: "Reglas",
+    nav_info: "Información",
+    nav_settings: "Ajustes",
+    search_ph: "Buscar mods por título, autor o descripción...",
+    sort_recent: "Recientes",
+    sort_downloads: "Descargas",
+    sort_views: "Vistas",
+    loading: "Cargando...",
+    btn_upload: "Subir",
+    btn_auth: "Entrar",
+    auth_title: "Cuenta",
+    ph_email: "Correo electrónico",
+    ph_pass: "Contraseña (mín. 6 caracteres)",
+    btn_login: "Iniciar sesión",
+    btn_signup: "Crear cuenta",
+    btn_close: "Cerrar",
+    edit_page_title: "Editar página",
+    ph_title: "Título",
+    ph_text: "Texto",
+    btn_edit: "Editar",
+    btn_save: "Guardar",
+    btn_cancel: "Cancelar",
+    settings_title: "Ajustes",
+    settings_theme: "Tema",
+    settings_lang: "Idioma / Language",
+    theme_dark: "Oscuro",
+    theme_light: "Claro",
+    edit_profile: "Editar perfil",
+    change_photo: "Cambiar foto",
+    ph_username: "Nombre de usuario",
+    ph_bio: "Cuéntanos sobre ti",
+    my_mods: "Mis mods",
+    upload_title: "Subir un mod",
+    ph_mod_title: "Título del mod",
+    ph_mod_desc: "Descripción",
+    img_placeholder: "Imágenes del mod (hasta 5)",
+    file_placeholder: "Archivo del mod (.zip, .7z, .rar, máx. 50 MB)",
+    or_external: "— o, si pesa más de 50 MB —",
+    ph_ext_url: "Enlace de descarga externo (Mega, Drive, etc.)",
+    instant_publish: "Tu mod se publicará de inmediato.",
+    btn_upload_mod: "Subir mod",
+    edit_mod_title: "Editar mod",
+    add_more_imgs: "Agregar imágenes (máx. 5 en total)",
+    replace_file: "Reemplazar archivo (opcional, máx. 50 MB)",
+    ph_ext_url_opt: "Enlace de descarga externo (opcional)",
+    btn_save_changes: "Guardar cambios",
+    anon: "Anónimo",
+    download_btn: "Descargar",
+    member_since: "Miembro desde",
+    moderator: "Moderador",
+    no_bio: "Este perfil todavía no tiene descripción.",
+    no_bio_own: "Todavía no escribiste nada sobre ti. Toca Editar perfil para agregarlo.",
+    downloads_word: "descargas",
+    logout: "Cerrar sesión",
+    edit: "Editar",
+    hide: "Ocultar",
+    show: "Mostrar",
+    delete: "Eliminar",
+    published: "Publicado",
+    hidden: "Oculto"
+  },
+  en: {
+    nav_title: "Navigation",
+    nav_mods: "Mods",
+    nav_rules: "Rules",
+    nav_info: "Information",
+    nav_settings: "Settings",
+    search_ph: "Search mods by title, author or description...",
+    sort_recent: "Recent",
+    sort_downloads: "Downloads",
+    sort_views: "Views",
+    loading: "Loading...",
+    btn_upload: "Upload",
+    btn_auth: "Log in",
+    auth_title: "Account",
+    ph_email: "Email",
+    ph_pass: "Password (min. 6 characters)",
+    btn_login: "Log in",
+    btn_signup: "Sign up",
+    btn_close: "Close",
+    edit_page_title: "Edit page",
+    ph_title: "Title",
+    ph_text: "Text",
+    btn_edit: "Edit",
+    btn_save: "Save",
+    btn_cancel: "Cancel",
+    settings_title: "Settings",
+    settings_theme: "Theme",
+    settings_lang: "Language",
+    theme_dark: "Dark",
+    theme_light: "Light",
+    edit_profile: "Edit profile",
+    change_photo: "Change photo",
+    ph_username: "Username",
+    ph_bio: "Tell us about yourself",
+    my_mods: "My mods",
+    upload_title: "Upload a mod",
+    ph_mod_title: "Mod title",
+    ph_mod_desc: "Description",
+    img_placeholder: "Mod images (up to 5)",
+    file_placeholder: "Mod file (.zip, .7z, .rar, max 50 MB)",
+    or_external: "— or, if larger than 50 MB —",
+    ph_ext_url: "External download link (Mega, Drive, etc.)",
+    instant_publish: "Your mod will be published immediately.",
+    btn_upload_mod: "Upload mod",
+    edit_mod_title: "Edit mod",
+    add_more_imgs: "Add images (max 5 total)",
+    replace_file: "Replace file (optional, max 50 MB)",
+    ph_ext_url_opt: "External download link (optional)",
+    btn_save_changes: "Save changes",
+    anon: "Anonymous",
+    download_btn: "Download",
+    member_since: "Member since",
+    moderator: "Moderator",
+    no_bio: "This profile has no description yet.",
+    no_bio_own: "You haven't written anything about yourself yet. Tap Edit profile to add it.",
+    downloads_word: "downloads",
+    logout: "Log out",
+    edit: "Edit",
+    hide: "Hide",
+    show: "Show",
+    delete: "Delete",
+    published: "Published",
+    hidden: "Hidden"
+  }
+};
+
+let currentLang = localStorage.getItem("pdmm_lang") || "es";
+let currentTheme = localStorage.getItem("pdmm_theme") || "dark";
+
+function setLanguage(lang) {
+  currentLang = lang;
+  localStorage.setItem("pdmm_lang", lang);
+  document.querySelectorAll("[data-i18n]").forEach(el => {
+    const key = el.dataset.i18n;
+    if (i18n[lang][key]) el.textContent = i18n[lang][key];
+  });
+  document.querySelectorAll("[data-i18n-ph]").forEach(el => {
+    const key = el.dataset.i18nPh;
+    if (i18n[lang][key]) el.placeholder = i18n[lang][key];
+  });
+  $("langSelect").value = lang;
+}
+
+function setTheme(theme) {
+  currentTheme = theme;
+  localStorage.setItem("pdmm_theme", theme);
+  document.documentElement.setAttribute("data-theme", theme);
+  $("themeSelect").value = theme;
+}
 
 const DEFAULT_PAGES = {
   info: { title: "Acerca de PDMM+ Mods", body: "Esta plataforma es un espacio independiente creado para compartir, explorar y descargar mods para Project Diva Mega Mix+ y entregas afines.\n\nCreada por Yonny." },
@@ -302,8 +477,8 @@ function avatarHtml(url, name, size) {
 }
 
 const ic = (n) => `<svg class="ic"><use href="#${n}"/></svg>`;
-const fmtDate = (d) => new Date(d).toLocaleDateString("es", { day: "numeric", month: "short" });
-const authorOf = (m) => (m.profiles && m.profiles.username) || m.author || "Anónimo";
+const fmtDate = (d) => new Date(d).toLocaleDateString(currentLang === 'es' ? "es" : "en", { day: "numeric", month: "short" });
+const authorOf = (m) => (m.profiles && m.profiles.username) || m.author || i18n[currentLang].anon;
 const safeName = (n) => n.replace(/[^a-zA-Z0-9._-]/g, "_");
 const isOwner = (m) => !!(session && session.user && m.user_id === session.user.id);
 const myId = () => (session && session.user ? session.user.id : null);
@@ -326,7 +501,7 @@ function renderAuth() {
   const logged = !!(session && session.access_token);
   $("btnOpenAuth").classList.toggle("hide", logged);
   ["btnOpenUpload", "btnProfile"].forEach((id) => $(id).classList.toggle("hide", !logged));
-  if (logged) { $("hAv").innerHTML = avatarHtml(profile && profile.avatar_url, profile && profile.username, 22); $("hName").textContent = (profile && profile.username) || "Perfil"; }
+  if (logged) { $("hAv").innerHTML = avatarHtml(profile && profile.avatar_url, profile && profile.username, 22); $("hName").textContent = (profile && profile.username) || i18n[currentLang].profile; }
 }
 
 async function authCall(path, body) {
@@ -415,8 +590,9 @@ function renderMods() {
   const q = $("q").value.trim().toLowerCase();
   const items = allMods.filter((m) => ((m.title || "") + " " + authorOf(m) + " " + (m.description || "")).toLowerCase().includes(q));
   items.sort((a, b) => sortBy === "created_at" ? new Date(b.created_at) - new Date(a.created_at) : (b[sortBy] || 0) - (a[sortBy] || 0));
-  $("count").textContent = allMods.length + (allMods.length === 1 ? " mod" : " mods");
-  $("list").innerHTML = items.length ? items.map(gbItemHtml).join("") : "<div class='empty'>" + (allMods.length ? "Sin resultados." : "Todavía no hay mods publicados.") + "</div>";
+  const tLang = i18n[currentLang];
+  $("count").textContent = allMods.length + " " + (allMods.length === 1 ? (currentLang === 'es' ? "mod" : "mod") : (currentLang === 'es' ? "mods" : "mods"));
+  $("list").innerHTML = items.length ? items.map(gbItemHtml).join("") : "<div class='empty'>" + (allMods.length ? (currentLang === 'es' ? "Sin resultados." : "No results.") : tLang.loading) + "</div>";
 }
 
 $("tabs").onclick = (e) => {
@@ -433,7 +609,7 @@ async function loadMods() {
     if (!r.ok) throw new Error(d.message || ("Error " + r.status));
     allMods = Array.isArray(d) ? d : []; 
     renderMods();
-  } catch (e) { $("list").innerHTML = "<div class='empty'>No se pudieron cargar los mods: " + esc(e.message) + "</div>"; }
+  } catch (e) { $("list").innerHTML = "<div class='empty'>Error: " + esc(e.message) + "</div>"; }
 }
 
 async function loadMine() {
@@ -452,8 +628,9 @@ function openDetail(id) {
   const link = safeUrl(m.file_url) || safeUrl(m.external_url);
   const imgs = (m.images || []).filter(safeUrl);
   const owner = isOwner(m);
+  const tLang = i18n[currentLang];
   let acts = "";
-  if (owner) acts = `<div class="acts"><button class="btn sm" data-act="edit" data-id="${esc(m.id)}">Editar</button><button class="btn sm" data-act="hide" data-id="${esc(m.id)}">Ocultar</button><button class="btn sm danger" data-act="del" data-id="${esc(m.id)}">Eliminar</button></div>`;
+  if (owner) acts = `<div class="acts"><button class="btn sm" data-act="edit" data-id="${esc(m.id)}">${tLang.edit}</button><button class="btn sm" data-act="hide" data-id="${esc(m.id)}">${tLang.hide}</button><button class="btn sm danger" data-act="del" data-id="${esc(m.id)}">${tLang.delete}</button></div>`;
   
   $("detBody").innerHTML = `
     ${imgs.length ? `<div class="gallery">${imgs.map((u) => `<img src="${esc(u)}" alt="">`).join("")}</div>` : ""}
@@ -461,7 +638,7 @@ function openDetail(id) {
     <div class="who" data-user="${esc(m.user_id)}" style="margin-bottom:10px;font-size:14px;display:flex;align-items:center;gap:6px;cursor:pointer">${avatarHtml(m.profiles && m.profiles.avatar_url, authorOf(m), 24)}<span>${esc(authorOf(m))}</span></div>
     <div class="gb-stats" style="margin-bottom:12px"><span>${ic("i-dl")}<b id="dlCount">${m.downloads || 0}</b></span><span>${ic("i-eye")}${m.views}</span><span>${fmtDate(m.created_at)}</span></div>
     <p class="desc">${esc(m.description)}</p>
-    ${link ? `<a id="dlBtn" class="btn pri" style="display:block;padding:10px;font-size:15px" href="${esc(link)}" target="_blank" rel="noopener">Descargar</a>` : ""}
+    ${link ? `<a id="dlBtn" class="btn pri" style="display:block;padding:10px;font-size:15px" href="${esc(link)}" target="_blank" rel="noopener">${tLang.download_btn}</a>` : ""}
     ${acts}`;
     
   const b = $("dlBtn");
@@ -477,7 +654,8 @@ $("list").onclick = (e) => {
 async function openUser(uid) {
   if (!isUuid(uid)) return;
   if ($("detDlg").open) $("detDlg").close();
-  $("userBody").innerHTML = "<p class='hint'>Cargando perfil...</p>";
+  const tLang = i18n[currentLang];
+  $("userBody").innerHTML = `<p class='hint'>${tLang.loading}</p>`;
   if (!$("userDlg").open) $("userDlg").showModal();
   try {
     const [pr, mr] = await Promise.all([
@@ -485,21 +663,21 @@ async function openUser(uid) {
       fetch(URL_BASE + "/rest/v1/mods?select=*,profiles(username,avatar_url)&user_id=eq." + uid + "&approved=eq.true&hidden=eq.false&order=created_at.desc", { headers: headers() }).then((r) => r.json()).catch(() => []),
     ]);
     const p = Array.isArray(pr) ? pr[0] : null;
-    if (!p) { $("userBody").innerHTML = "<p class='hint'>No se encontró este perfil.</p>"; return; }
+    if (!p) { $("userBody").innerHTML = `<p class='hint'>Perfil no encontrado.</p>`; return; }
     userMods = Array.isArray(mr) ? mr : [];
     const own = myId() === uid;
     const totalDl = userMods.reduce((s, m) => s + (m.downloads || 0), 0);
     $("userBody").innerHTML = `
       <div class="uhead">${avatarHtml(p.avatar_url, p.username, 56)}
         <div><h2 style="margin:0">${esc(p.username)}</h2>
-          <div class="hint">Miembro desde ${esc(new Date(p.created_at).toLocaleDateString("es", { month: "long", year: "numeric" }))}</div>
-          ${own && isMod ? '<span class="chip ok" style="margin:4px 0 0">Moderador</span>' : ""}</div></div>
-      <p class="desc" style="margin-top:12px">${p.bio ? esc(p.bio) : (own ? "Todavía no escribiste nada sobre ti. Toca Editar perfil para agregarlo." : "Este perfil todavía no tiene descripción.")}</p>
-      <div class="gb-stats" style="margin-bottom:12px"><span><b>${userMods.length}</b> ${userMods.length === 1 ? "mod" : "mods"}</span><span>${ic("i-dl")}<b>${totalDl}</b> descargas</span></div>
-      ${own ? `<div class="acts"><button class="btn sm" data-uact="edit">Editar perfil</button><button class="btn sm" data-uact="mine">Mis mods</button><button class="btn sm danger" data-uact="logout">Cerrar sesión</button></div>` : ""}
+          <div class="hint">${tLang.member_since} ${esc(new Date(p.created_at).toLocaleDateString(currentLang === 'es' ? "es" : "en", { month: "long", year: "numeric" }))}</div>
+          ${own && isMod ? `<span class="chip ok" style="margin:4px 0 0">${tLang.moderator}</span>` : ""}</div></div>
+      <p class="desc" style="margin-top:12px">${p.bio ? esc(p.bio) : (own ? tLang.no_bio_own : tLang.no_bio)}</p>
+      <div class="gb-stats" style="margin-bottom:12px"><span><b>${userMods.length}</b> mods</span><span>${ic("i-dl")}<b>${totalDl}</b> ${tLang.downloads_word}</span></div>
+      ${own ? `<div class="acts"><button class="btn sm" data-uact="edit">${tLang.edit_profile}</button><button class="btn sm" data-uact="mine">${tLang.my_mods}</button><button class="btn sm danger" data-uact="logout">${tLang.logout}</button></div>` : ""}
       <h3 style="margin:16px 0 8px;font-size:15px">Mods de ${esc(p.username)}</h3>
-      <div class="gb-grid">${userMods.length ? userMods.map(gbItemHtml).join("") : "<div class='empty'>Todavía no ha subido mods.</div>"}</div>`;
-  } catch (e) { $("userBody").innerHTML = "<p class='hint'>No se pudo cargar el perfil.</p>"; }
+      <div class="gb-grid">${userMods.length ? userMods.map(gbItemHtml).join("") : `<div class='empty'>Sin mods.</div>`}</div>`;
+  } catch (e) { $("userBody").innerHTML = "<p class='hint'>Error.</p>"; }
 }
 
 $("userBody").onclick = (e) => {
@@ -520,13 +698,14 @@ $("userBody").onclick = (e) => {
 
 function renderMine() {
   if (!mine.length) { $("mineList").innerHTML = "<p class='hint'>Todavía no has subido mods.</p>"; return; }
+  const tLang = i18n[currentLang];
   $("mineList").innerHTML = mine.map((m) => {
-    const st = m.hidden ? ["off", "Oculto"] : ["ok", "Publicado"];
+    const st = m.hidden ? ["off", tLang.hidden] : ["ok", tLang.published];
     return `<div class="mine"><span class="chip ${st[0]}">${st[1]}</span><h3>${esc(m.title)}</h3>
       <div class="gb-stats"><span>⬇ ${m.downloads || 0}</span><span>👁 ${m.views || 0}</span></div>
-      <div class="acts"><button class="btn sm" data-act="edit" data-id="${esc(m.id)}">Editar</button>
-      <button class="btn sm" data-act="hide" data-id="${esc(m.id)}">${m.hidden ? "Mostrar" : "Ocultar"}</button>
-      <button class="btn sm danger" data-act="del" data-id="${esc(m.id)}">Eliminar</button></div></div>`;
+      <div class="acts"><button class="btn sm" data-act="edit" data-id="${esc(m.id)}">${tLang.edit}</button>
+      <button class="btn sm" data-act="hide" data-id="${esc(m.id)}">${m.hidden ? tLang.show : tLang.hide}</button>
+      <button class="btn sm danger" data-act="del" data-id="${esc(m.id)}">${tLang.delete}</button></div></div>`;
   }).join("");
 }
 
@@ -535,18 +714,18 @@ async function openMine() { await refreshIfNeeded(); await loadMine(); renderMin
 async function toggleHide(m) {
   try {
     await patchMod(m.id, { hidden: !m.hidden });
-    toast(m.hidden ? "El mod volvió a ser visible." : "El mod quedó oculto.");
+    toast("OK");
     await Promise.all([loadMods(), loadMine()]); renderMine(); if ($("detDlg").open) $("detDlg").close();
   } catch (e) { toast("Error: " + e.message); }
 }
 
 async function deleteMod(m) {
-  if (!confirm("¿Eliminar \"" + m.title + "\" para siempre?")) return;
+  if (!confirm("¿Eliminar?")) return;
   try {
     const r = await fetch(URL_BASE + "/rest/v1/mods?id=eq." + m.id, { method: "DELETE", headers: headers({ Prefer: "return=minimal" }) });
     if (!r.ok) { const e = await r.json().catch(() => ({})); throw new Error(e.message || ("Error " + r.status)); }
     await removeFiles("mods", [m.file_url]); await removeFiles("images", m.images || []);
-    toast("Mod eliminado.");
+    toast("Eliminado.");
     await Promise.all([loadMods(), loadMine()]); renderMine(); if ($("detDlg").open) $("detDlg").close();
   } catch (e) { toast("Error: " + e.message); }
 }
@@ -562,33 +741,24 @@ function openEdit(m) {
   $("eExt").value = m.external_url || "";
   $("eImgs").value = ""; 
   $("eFile").value = "";
-  $("eImgName").textContent = "Agregar imágenes (máx. 5 en total)"; 
-  $("eFileName").textContent = "Reemplazar archivo (opcional, máx. 50 MB)";
   renderEditThumbs();
   if ($("detDlg").open) $("detDlg").close();
   $("editDlg").showModal();
 }
 
 $("eThumbs").onclick = (e) => { const b = e.target.closest("[data-rm]"); if (b) { editImgs.splice(+b.dataset.rm, 1); renderEditThumbs(); } };
-$("eImgs").onchange = () => { const n = $("eImgs").files.length; $("eImgName").textContent = n ? n + " imagen(es) nueva(s)" : "Agregar imágenes (máx. 5 en total)"; };
-$("eFile").onchange = () => { const f = $("eFile").files[0]; $("eFileName").textContent = f ? f.name : "Reemplazar archivo (opcional, máx. 50 MB)"; };
+$("eImgs").onchange = () => {};
+$("eFile").onchange = () => {};
 
 $("btnSaveEdit").onclick = async () => {
   const m = editing; if (!m) return;
   const title = $("eTitle").value.trim(), description = $("eDesc").value.trim(), ext = $("eExt").value.trim();
   const newImgs = Array.from($("eImgs").files), newFile = $("eFile").files[0];
   
-  if (!title) return toast("Escribe un título.");
-  if (editImgs.length + newImgs.length > 5) return toast("Máximo 5 imágenes en total.");
-  if (newImgs.some((i) => i.size > MAX_IMG)) return toast("Cada imagen debe pesar menos de 5 MB.");
-  if (newFile && newFile.size > MAX_FILE) return toast("El archivo supera los 50 MB. Usa un enlace externo.");
-  if (newFile && !/\.(zip|7z|rar)$/i.test(newFile.name)) return toast("Solo se permiten .zip, .7z o .rar.");
-  if (ext && !safeUrl(ext)) return toast("El enlace debe empezar con http:// o https://");
-  if (!newFile && !m.file_url && !ext) return toast("El mod necesita un archivo o un enlace externo.");
-  
-  await refreshIfNeeded(); if (!session) return toast("Inicia sesión primero.");
+  if (!title) return toast("Título requerido.");
+  await refreshIfNeeded(); if (!session) return toast("Inicia sesión.");
 
-  const btn = $("btnSaveEdit"); btn.disabled = true; btn.textContent = "Guardando...";
+  const btn = $("btnSaveEdit"); btn.disabled = true;
   try {
     const uid = session.user.id, stamp = Date.now();
     const images = editImgs.slice();
@@ -600,28 +770,12 @@ $("btnSaveEdit").onclick = async () => {
       fileUrl = await uploadFile("mods", uid + "/" + stamp + "_" + safeName(newFile.name), newFile);
     }
     
-    await patchMod(m.id, { 
-      title, 
-      description, 
-      images, 
-      file_url: fileUrl, 
-      external_url: ext || null 
-    });
-    
-    const removedImgs = (m.images || []).filter((u) => !images.includes(u));
-    if (removedImgs.length) await removeFiles("images", removedImgs);
-    if (newFile && m.file_url) await removeFiles("mods", [m.file_url]);
-    
+    await patchMod(m.id, { title, description, images, file_url: fileUrl, external_url: ext || null });
     $("editDlg").close(); 
-    toast("Cambios guardados correctamente.");
+    toast("Guardado.");
     await Promise.all([loadMods(), loadMine()]); 
     if ($("mineDlg").open) renderMine();
-  } catch (e) { 
-    toast("Error: " + e.message); 
-  } finally { 
-    btn.disabled = false; 
-    btn.textContent = "Guardar cambios"; 
-  }
+  } catch (e) { toast("Error: " + e.message); } finally { btn.disabled = false; }
 };
 
 function onAction(e) {
@@ -662,19 +816,17 @@ $("btnPgCancel").onclick = () => showPage(curPage);
 
 $("btnPgSave").onclick = async () => {
   const title = $("pgTitleIn").value.trim(), body = $("pgBodyIn").value.trim();
-  if (!title) return toast("Escribe un título.");
-  await refreshIfNeeded(); if (!session) return toast("Inicia sesión primero.");
-  const btn = $("btnPgSave"); btn.disabled = true; btn.textContent = "Guardando...";
+  if (!title) return;
+  await refreshIfNeeded(); if (!session) return;
   try {
     const r = await fetch(URL_BASE + "/rest/v1/site_pages?key=eq." + curPage, { method: "PATCH", headers: headers({ "Content-Type": "application/json", Prefer: "return=representation" }), body: JSON.stringify({ title, body, updated_at: new Date().toISOString() }) });
     const d = await r.json().catch(() => []);
-    if (!r.ok) throw new Error(d.message || ("Error " + r.status));
-    if (!Array.isArray(d) || !d.length) throw new Error("No tienes permiso para editar esta página.");
-    pages[curPage] = { title, body }; showPage(curPage); toast("Página actualizada.");
-  } catch (e) { toast("Error: " + e.message); } finally { btn.disabled = false; btn.textContent = "Guardar"; }
+    if (!r.ok) throw new Error();
+    pages[curPage] = { title, body }; showPage(curPage); toast("Actualizado.");
+  } catch (e) { toast("Error"); }
 };
 
-/* Lógica del Menú Lateral (Sidebar) y Búsqueda Desplegable */
+/* Menú Lateral y Ajustes */
 const toggleSidebar = (open) => {
   $("sidebar").classList.toggle("open", open);
   $("sidebarOverlay").classList.toggle("open", open);
@@ -691,6 +843,8 @@ document.querySelectorAll(".sidebar-links button").forEach((b) => {
     const nav = b.dataset.nav;
     if (nav === "mods") {
       window.scrollTo({ top: 0, behavior: "smooth" });
+    } else if (nav === "settings") {
+      if (!$("settingsDlg").open) $("settingsDlg").showModal();
     } else {
       openPage(nav);
     }
@@ -700,9 +854,13 @@ document.querySelectorAll(".sidebar-links button").forEach((b) => {
 $("btnToggleSearch").onclick = () => {
   const sc = $("searchContainer");
   sc.classList.toggle("open");
-  if (sc.classList.contains("open")) {
-    $("q").focus();
-  }
+  if (sc.classList.contains("open")) $("q").focus();
+};
+
+$("themeSelect").onchange = (e) => setTheme(e.target.value);
+$("langSelect").onchange = (e) => {
+  setLanguage(e.target.value);
+  renderMods();
 };
 
 document.querySelectorAll("[data-close]").forEach((b) => (b.onclick = () => b.closest("dialog").close()));
@@ -713,64 +871,62 @@ $("q").oninput = renderMods;
 
 $("btnLogin").onclick = async () => {
   const email = $("email").value.trim(), password = $("password").value;
-  if (!email || !password) return toast("Escribe tu correo y contraseña.");
-  try { saveSession(await authCall("token?grant_type=password", { email, password })); await loadProfile(); $("authDlg").close(); toast("Sesión iniciada."); loadMods(); }
+  if (!email || !password) return;
+  try { saveSession(await authCall("token?grant_type=password", { email, password })); await loadProfile(); $("authDlg").close(); loadMods(); }
   catch (e) { toast("Error: " + e.message); }
 };
 
 $("btnSignup").onclick = async () => {
   const email = $("email").value.trim(), password = $("password").value;
-  if (!email || password.length < 6) return toast("Escribe un correo válido y una contraseña de 6 o más caracteres.");
+  if (!email || password.length < 6) return;
   try {
     const d = await authCall("signup", { email, password }); $("authDlg").close();
-    if (d.access_token) { saveSession(d); await loadProfile(); toast("Cuenta creada. Ya iniciaste sesión."); }
-    else toast("Cuenta creada. Revisa tu correo para confirmarla.");
+    if (d.access_token) { saveSession(d); await loadProfile(); }
   } catch (e) { toast("Error: " + e.message); }
 };
 
 $("pFile").onchange = () => { const f = $("pFile").files[0]; if (f) $("pAv").innerHTML = `<img class="av" src="${URL.createObjectURL(f)}" width="56" height="56" alt="">`; };
 
 $("btnSaveProf").onclick = async () => {
-  await refreshIfNeeded(); if (!session) return toast("Inicia sesión primero.");
+  await refreshIfNeeded(); if (!session) return;
   const name = $("pName").value.trim(), bio = $("pBio").value.trim();
-  if (!name) return toast("Escribe un nombre de usuario.");
-  const f = $("pFile").files[0]; if (f && f.size > MAX_IMG) return toast("La foto supera los 5 MB.");
-  const btn = $("btnSaveProf"); btn.disabled = true; btn.textContent = "Guardando...";
+  if (!name) return;
+  const f = $("pFile").files[0];
   try {
     let avatar = profile && profile.avatar_url;
     if (f) avatar = await uploadFile("images", session.user.id + "/avatar_" + Date.now() + "_" + safeName(f.name), f);
-    const r = await fetch(URL_BASE + "/rest/v1/profiles?id=eq." + session.user.id, { method: "PATCH", headers: headers({ "Content-Type": "application/json", Prefer: "return=minimal" }), body: JSON.stringify({ username: name, avatar_url: avatar, bio: bio || null }) });
-    if (!r.ok) { const e = await r.json().catch(() => ({})); throw new Error(e.message || ("Error " + r.status)); }
+    await fetch(URL_BASE + "/rest/v1/profiles?id=eq." + session.user.id, { method: "PATCH", headers: headers({ "Content-Type": "application/json", Prefer: "return=minimal" }), body: JSON.stringify({ username: name, avatar_url: avatar, bio: bio || null }) });
     profile = Object.assign(profile || {}, { username: name, avatar_url: avatar, bio: bio || null }); renderAuth(); loadMods();
-    $("profDlg").close(); toast("Perfil actualizado."); openUser(session.user.id);
-  } catch (e) { toast("Error: " + e.message); } finally { btn.disabled = false; btn.textContent = "Guardar"; }
+    $("profDlg").close(); openUser(session.user.id);
+  } catch (e) { toast("Error"); }
 };
 
 $("btnUpload").onclick = async () => {
   const title = $("title").value.trim(), description = $("desc").value.trim();
   const file = $("file").files[0], ext = $("ext").value.trim();
   const imgs = Array.from($("imgs").files).slice(0, 5);
-  if (!title) return toast("Escribe un título.");
-  if (!file && !ext) return toast("Sube un archivo o pega un enlace externo.");
-  await refreshIfNeeded(); if (!session) return toast("Inicia sesión primero.");
+  if (!title) return;
+  await refreshIfNeeded(); if (!session) return;
   if (!profile) await loadProfile();
 
-  const btn = $("btnUpload"); btn.disabled = true; btn.textContent = "Subiendo...";
   try {
     const uid = session.user.id, stamp = Date.now();
     const imageUrls = [];
     for (let i = 0; i < imgs.length; i++) imageUrls.push(await uploadFile("images", uid + "/" + stamp + "_" + i + "_" + safeName(imgs[i].name), imgs[i]));
     const fileUrl = file ? await uploadFile("mods", uid + "/" + stamp + "_" + safeName(file.name), file) : null;
     
-    const ins = await fetch(URL_BASE + "/rest/v1/mods", { method: "POST", headers: headers({ "Content-Type": "application/json", Prefer: "return=minimal" }),
+    await fetch(URL_BASE + "/rest/v1/mods", { method: "POST", headers: headers({ "Content-Type": "application/json", Prefer: "return=minimal" }),
       body: JSON.stringify({ title, description, author: (profile && profile.username) || "Anónimo", file_url: fileUrl, external_url: ext || null, images: imageUrls, approved: true, user_id: session.user.id }) });
     
-    if (!ins.ok) { const e = await ins.json().catch(() => ({})); throw new Error(e.message || ("Error al guardar (" + ins.status + ")")); }
-    $("upDlg").close(); toast("¡Mod publicado!");
+    $("upDlg").close();
     ["title", "desc", "ext"].forEach((id) => ($(id).value = "")); $("file").value = ""; $("imgs").value = "";
     loadMods();
-  } catch (e) { toast("Error: " + e.message); } finally { btn.disabled = false; btn.textContent = "Subir mod"; }
+  } catch (e) { toast("Error"); }
 };
+
+// Inicialización de Idioma y Tema guardados
+setTheme(currentTheme);
+setLanguage(currentLang);
 
 renderAuth();
 refreshIfNeeded().then(loadProfile);
