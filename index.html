@@ -61,11 +61,17 @@
   input, textarea, select { width:100%; padding:9px 11px; border-radius:5px; border:1px solid var(--line); background:var(--bg); color:var(--fg); font-size:15px; font-family:inherit; }
   input:focus, textarea:focus, select:focus { outline:2px solid var(--acc); outline-offset:-1px; }
 
-  .control-bar { display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:14px; padding-bottom:12px; border-bottom:1px solid var(--line); }
-  .control-group { display:flex; align-items:center; gap:8px; flex-wrap:wrap; flex:1; }
-  .select-wrapper { display:flex; align-items:center; width:auto; }
-  .select-wrapper select { width:auto; padding:6px 10px; font-size:14px; cursor:pointer; }
-  .count { color:var(--mut); font-size:13px; margin-left:auto; white-space:nowrap; }
+  .control-bar { display:flex; flex-direction:column; gap:8px; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid var(--line); }
+  .control-group { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .select-wrapper { min-width:0; }
+  .select-wrapper select { width:100%; padding:8px; font-size:13.5px; cursor:pointer; text-overflow:ellipsis; }
+  .count { color:var(--mut); font-size:13px; }
+  @media (min-width: 680px) {
+    .control-bar { flex-direction:row; align-items:center; justify-content:space-between; }
+    .control-group { display:flex; }
+    .select-wrapper select { width:auto; padding:7px 10px; font-size:14px; }
+    .count { margin-left:auto; }
+  }
 
   .gb-grid { display:grid; grid-template-columns:repeat(2, 1fr); gap:10px; }
   @media (min-width: 680px) { .gb-grid { grid-template-columns:repeat(3, 1fr); gap:14px; } }
