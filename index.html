@@ -117,7 +117,7 @@
   .comment-user { font-weight:700; font-size:13px; }
   .comment-time { color:var(--mut); font-size:11.5px; margin-left:auto; }
 
-  /* Modales sencillos para Formularios (Login, Subir, Ajustes) */
+  /* Modales sencillos para Formularios */
   dialog { 
     width: min(92vw, 600px); 
     max-height: 85vh; 
@@ -674,32 +674,57 @@ async function toggleLike(modId, btn) {
 
 async function loadComments(modId) {
   try {
-    const r = await fetch(URL_BASE + "/rest/v1/mod_comments?select=*,profiles(username,avatar_url)&mod_id=eq." + modId + "&order=created_at.asc", { headers: headers() });
+    const r = await fetch(URL_BASE + "/rest/v1/mod_comments?select=*,profiles:user_id(username,avatar_url)&mod_id=eq." + modId + "&order=created_at.asc", { headers: headers() });
     const d = await r.json();
+    if (!r.ok) {
+      console.error("Error cargando comentarios:", d);
+      return [];
+    }
     return Array.isArray(d) ? d : [];
-  } catch(e) { return []; }
+  } catch(e) { 
+    console.error("Catch comentarios:", e);
+    return []; 
+  }
 }
 
 async function postComment(modId) {
-  if (!session) return toast("Inicia sesión para comentar.");
+  if (!session || !session.user) return toast("Inicia sesión para comentar.");
   const input = $("cInput");
   const content = input.value.trim();
   if (!content) return;
 
   if (!checkRespect(content)) {
-    return toast("Manten un tono respetuoso y libre de insultos.");
+    return toast("Mantén un tono respetuoso y libre de insultos.");
   }
 
+  const btn = $("btnPostC");
+  btn.disabled = true;
+
   try {
-    await fetch(URL_BASE + "/rest/v1/mod_comments", {
+    const res = await fetch(URL_BASE + "/rest/v1/mod_comments", {
       method: "POST",
-      headers: headers({ "Content-Type": "application/json" }),
-      body: JSON.stringify({ mod_id: modId, user_id: session.user.id, content })
+      headers: headers({ "Content-Type": "application/json", Prefer: "return=representation" }),
+      body: JSON.stringify({ 
+        mod_id: modId, 
+        user_id: session.user.id, 
+        content: content 
+      })
     });
+
+    const data = await res.json().catch(() => ({}));
+
+    if (!res.ok) {
+      throw new Error(data.message || data.hint || "Error al guardar comentario");
+    }
+
     input.value = "";
-    await loadModSocialData(modId);
     toast("Comentario publicado.");
-  } catch(e) { toast("Error al publicar comentario."); }
+    await loadModSocialData(modId);
+  } catch(e) { 
+    toast("Error: " + e.message); 
+  } finally {
+    btn.disabled = false;
+  }
 }
 
 async function loadModSocialData(id) {
@@ -717,16 +742,20 @@ async function loadModSocialData(id) {
 
   const cList = $("commentsList");
   if (cList) {
-    cList.innerHTML = comments.length ? comments.map(c => `
-      <div class="comment-item">
-        <div class="comment-head">
-          ${avatarHtml(c.profiles && c.profiles.avatar_url, (c.profiles && c.profiles.username) || "Usuario", 20)}
-          <span class="comment-user">${esc((c.profiles && c.profiles.username) || "Usuario")}</span>
-          <span class="comment-time">${fmtDate(c.created_at)}</span>
+    cList.innerHTML = comments.length ? comments.map(c => {
+      const uName = (c.profiles && c.profiles.username) || "Usuario";
+      const uAv = c.profiles && c.profiles.avatar_url;
+      return `
+        <div class="comment-item">
+          <div class="comment-head">
+            ${avatarHtml(uAv, uName, 20)}
+            <span class="comment-user">${esc(uName)}</span>
+            <span class="comment-time">${fmtDate(c.created_at)}</span>
+          </div>
+          <div>${esc(c.content)}</div>
         </div>
-        <div>${esc(c.content)}</div>
-      </div>
-    `).join("") : `<p class="hint">Sé el primero en dejar un comentario respetuoso sobre este mod.</p>`;
+      `;
+    }).join("") : `<p class="hint">Sé el primero en dejar un comentario respetuoso sobre este mod.</p>`;
   }
 }
 
