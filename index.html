@@ -101,9 +101,25 @@
 
   .empty { grid-column:1/-1; text-align:center; color:var(--mut); padding:48px 8px; font-size:15px; }
 
-  /* Modales optimizados y seguros contra superposición */
+  /* Vista independiente del Mod */
+  .mod-page { background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:20px; margin-top:10px; }
+  .mod-header-row { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:16px; }
+
+  .like-btn { background:none; border:1px solid var(--line); color:var(--fg); padding:8px 16px; border-radius:20px; font-size:14px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:8px; transition:all 0.15s ease; }
+  .like-btn:hover { border-color:var(--danger); color:var(--danger); }
+  .like-btn.liked { background:rgba(240,104,107,0.15); border-color:var(--danger); color:var(--danger); }
+
+  .comments-sec { margin-top:30px; border-top:1px solid var(--line); padding-top:20px; }
+  .comment-box { display:flex; gap:10px; margin-bottom:20px; }
+  .comment-box input { flex:1; }
+  .comment-item { background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:12px 14px; margin-bottom:10px; font-size:14px; }
+  .comment-head { display:flex; align-items:center; gap:8px; margin-bottom:6px; }
+  .comment-user { font-weight:700; font-size:13px; }
+  .comment-time { color:var(--mut); font-size:11.5px; margin-left:auto; }
+
+  /* Modales sencillos para Formularios (Login, Subir, Ajustes) */
   dialog { 
-    width: min(92vw, 680px); 
+    width: min(92vw, 600px); 
     max-height: 85vh; 
     border: 1px solid var(--line); 
     border-radius: 10px; 
@@ -113,46 +129,15 @@
     box-shadow: 0 16px 40px rgba(0,0,0,0.6); 
     overflow: hidden; 
   }
-  
-  dialog[open] {
-    display: flex;
-    flex-direction: column;
-  }
-
+  dialog[open] { display: flex; flex-direction: column; }
   dialog::backdrop { background: rgba(0,0,0,.75); backdrop-filter: blur(4px); }
   dialog h2 { margin: 0 0 12px; font-size: 20px; flex-shrink: 0; }
   
-  .row, #pgView, #pgEdit, #userBody, #detBody, #mineList { 
-    overflow-y: auto; 
-    flex: 1; 
-    max-height: 55vh; 
-    padding-right: 4px; 
-    margin-bottom: 8px;
-  }
-  
+  .row, #pgView, #pgEdit, #userBody, #mineList { overflow-y: auto; flex: 1; max-height: 55vh; padding-right: 4px; margin-bottom: 8px; }
   .row { display: flex; flex-direction: column; gap: 10px; }
   
-  .acts { 
-    display: flex; 
-    gap: 10px; 
-    margin-top: 14px; 
-    flex-shrink: 0; 
-    flex-wrap: wrap; 
-  }
+  .acts { display: flex; gap: 10px; margin-top: 14px; flex-shrink: 0; flex-wrap: wrap; }
   .acts .btn { flex: 1; }
-
-  /* Estilos de Comentarios y Reacciones */
-  .like-btn { background:none; border:1px solid var(--line); color:var(--fg); padding:6px 12px; border-radius:20px; font-size:13px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:6px; transition:all 0.15s ease; }
-  .like-btn:hover { border-color:var(--danger); color:var(--danger); }
-  .like-btn.liked { background:rgba(240,104,107,0.15); border-color:var(--danger); color:var(--danger); }
-  
-  .comments-sec { margin-top:20px; border-top:1px solid var(--line); padding-top:16px; }
-  .comment-box { display:flex; gap:8px; margin-bottom:16px; }
-  .comment-box input { flex:1; }
-  .comment-item { background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:10px 12px; margin-bottom:8px; font-size:13.5px; }
-  .comment-head { display:flex; align-items:center; gap:8px; margin-bottom:4px; }
-  .comment-user { font-weight:700; font-size:12.5px; }
-  .comment-time { color:var(--mut); font-size:11px; margin-left:auto; }
 
   .filebtn { display:block; padding:14px; text-align:center; border:1px dashed var(--mut); border-radius:6px; color:var(--mut); cursor:pointer; font-size:13.5px; transition:border-color 0.15s, color 0.15s; }
   .filebtn:hover { border-color:var(--acc); color:var(--fg); }
@@ -163,10 +148,10 @@
   .thumb { position:relative; }
   .thumb button { position:absolute; top:-6px; right:-6px; width:20px; height:20px; border-radius:50%; border:none; background:var(--danger); color:#fff; font-size:11px; cursor:pointer; padding:0; }
   
-  .gallery { display:flex; gap:10px; overflow-x:auto; scroll-snap-type:x mandatory; margin-bottom:14px; border-radius:8px; background:var(--bg); border:1px solid var(--line); padding:6px; width:100%; }
-  .gallery img { width:100%; max-height:340px; aspect-ratio:16/9; border-radius:6px; scroll-snap-align:start; flex:none; object-fit:contain; }
+  .gallery { display:flex; gap:10px; overflow-x:auto; scroll-snap-type:x mandatory; margin-bottom:16px; border-radius:8px; background:var(--bg); border:1px solid var(--line); padding:8px; width:100%; }
+  .gallery img { width:100%; max-height:420px; aspect-ratio:16/9; border-radius:6px; scroll-snap-align:start; flex:none; object-fit:contain; }
 
-  .desc { white-space:pre-wrap; word-break:break-word; margin:12px 0 16px; font-size:14.5px; line-height:1.6; }
+  .desc { white-space:pre-wrap; word-break:break-word; margin:14px 0 20px; font-size:15px; line-height:1.6; }
   .mine { border:1px solid var(--line); border-radius:6px; padding:12px; margin-bottom:10px; background:rgba(255,255,255,0.01); }
   .chip { display:inline-block; font-size:11px; font-weight:700; padding:2px 7px; border-radius:4px; border:1px solid var(--line); margin-bottom:6px; }
   .chip.ok { color:var(--acc); border-color:var(--acc); }
@@ -185,6 +170,7 @@
   <symbol id="i-heart" viewBox="0 0 16 16"><path d="M8 14s-5.5-3.5-7-6.5C-.2 4.5 1.5 1.5 4.5 2 6.2 2.3 7.3 3.5 8 4.2c.7-.7 1.8-1.9 3.5-2.2 3-.5 4.7 2.5 3.5 5.5-1.5 3-7 6.5-7 6.5z" fill="currentColor"/></symbol>
   <symbol id="i-menu" viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
   <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.35-4.35" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
 </defs></svg>
 
 <!-- Menú Lateral -->
@@ -228,35 +214,46 @@
 </header>
   
 <main>
-  <div class="control-bar">
-    <div class="control-group">
-      <div class="select-wrapper">
-        <select id="catSelect">
-          <option value="all" data-i18n="cat_all">Todas las categorías</option>
-          <option value="songs" data-i18n="cat_songs">Canciones</option>
-          <option value="modules" data-i18n="cat_modules">Módulos</option>
-          <option value="ui" data-i18n="cat_ui">UI / Interfaz</option>
-          <option value="patches" data-i18n="cat_patches">Parches / Scripts</option>
-          <option value="edits_pv" data-i18n="cat_edits_pv">EDITS PV</option>
-          <option value="3dpv" data-i18n="cat_3dpv">3DPV</option>
-          <option value="other" data-i18n="cat_other">Otros</option>
-        </select>
-      </div>
+  <!-- Sección Principal: Lista de Mods -->
+  <div id="mainView">
+    <div class="control-bar">
+      <div class="control-group">
+        <div class="select-wrapper">
+          <select id="catSelect">
+            <option value="all" data-i18n="cat_all">Todas las categorías</option>
+            <option value="songs" data-i18n="cat_songs">Canciones</option>
+            <option value="modules" data-i18n="cat_modules">Módulos</option>
+            <option value="ui" data-i18n="cat_ui">UI / Interfaz</option>
+            <option value="patches" data-i18n="cat_patches">Parches / Scripts</option>
+            <option value="edits_pv" data-i18n="cat_edits_pv">EDITS PV</option>
+            <option value="3dpv" data-i18n="cat_3dpv">3DPV</option>
+            <option value="other" data-i18n="cat_other">Otros</option>
+          </select>
+        </div>
 
-      <div class="select-wrapper">
-        <select id="sortSelect">
-          <option value="created_at_desc" data-i18n="sort_recent_desc">Más recientes primero</option>
-          <option value="created_at_asc" data-i18n="sort_recent_asc">Más antiguos primero</option>
-          <option value="downloads_desc" data-i18n="sort_downloads_desc">Más descargados</option>
-          <option value="views_desc" data-i18n="sort_views_desc">Más vistos</option>
-        </select>
+        <div class="select-wrapper">
+          <select id="sortSelect">
+            <option value="created_at_desc" data-i18n="sort_recent_desc">Más recientes primero</option>
+            <option value="created_at_asc" data-i18n="sort_recent_asc">Más antiguos primero</option>
+            <option value="downloads_desc" data-i18n="sort_downloads_desc">Más descargados</option>
+            <option value="views_desc" data-i18n="sort_views_desc">Más vistos</option>
+          </select>
+        </div>
       </div>
+      
+      <span id="count" class="count"></span>
     </div>
-    
-    <span id="count" class="count"></span>
+
+    <div id="list" class="gb-grid"><div class="empty" data-i18n="loading">Cargando...</div></div>
   </div>
 
-  <div id="list" class="gb-grid"><div class="empty" data-i18n="loading">Cargando...</div></div>
+  <!-- Sección Independiente: Detalles del Mod -->
+  <div id="modPageContainer" class="hide">
+    <button id="btnBackToList" class="btn sm" style="margin-bottom:14px">
+      <svg class="ic"><use href="#i-back"/></svg> Volver a la lista
+    </button>
+    <div id="modPageContent" class="mod-page"></div>
+  </div>
 </main>
 
 <dialog id="authDlg">
@@ -374,7 +371,6 @@
   <div class="acts"><button id="btnSaveEdit" class="btn pri" data-i18n="btn_save_changes">Guardar cambios</button><button class="btn" data-close data-i18n="btn_cancel">Cancelar</button></div>
 </dialog>
 
-<dialog id="detDlg"><div id="detBody"></div><div class="acts"><button class="btn" data-close data-i18n="btn_close">Cerrar</button></div></dialog>
 <div id="toast"></div>
 
 <script>
@@ -383,7 +379,7 @@ const KEY = "sb_publishable_TVKTwGkcuLX_eXNon8IQjg_Jor-NquZ";
 const MAX_FILE = 50 * 1024 * 1024, MAX_IMG = 5 * 1024 * 1024;
 const $ = (id) => document.getElementById(id);
 
-// Filtro de palabras ofensivas para moderación automática
+// Filtro de respeto automático
 const BAD_WORDS = ["basura", "horrible", "mierda", "feo", "estúpido", "estupido", "malo", "inútil", "inutil", "hate", "shit", "garbage", "useless", "puto", "pendejo", "asco"];
 
 function checkRespect(text) {
@@ -637,6 +633,7 @@ async function loadMods() {
     if (!r.ok) throw new Error(d.message || ("Error " + r.status));
     allMods = Array.isArray(d) ? d : []; 
     renderMods();
+    checkUrlHash();
   } catch (e) { $("list").innerHTML = "<div class='empty'>Error: " + esc(e.message) + "</div>"; }
 }
 
@@ -650,7 +647,7 @@ async function loadMine() {
 function rpc(fn, id) { return fetch(URL_BASE + "/rest/v1/rpc/" + fn, { method: "POST", headers: headers({ "Content-Type": "application/json" }), body: JSON.stringify({ mod_id: id }) }).catch(() => {}); }
 const findMod = (id) => mine.find((x) => x.id === id) || allMods.find((x) => x.id === id) || userMods.find((x) => x.id === id);
 
-// Lógica de Likes y Comentarios
+// Social (Likes & Comentarios)
 async function getLikes(modId) {
   try {
     const r = await fetch(URL_BASE + "/rest/v1/mod_likes?select=user_id&mod_id=eq." + modId, { headers: headers() });
@@ -671,7 +668,7 @@ async function toggleLike(modId, btn) {
     } else {
       await fetch(URL_BASE + "/rest/v1/mod_likes", { method: "POST", headers: headers({ "Content-Type": "application/json" }), body: JSON.stringify({ mod_id: modId, user_id: myUid }) });
     }
-    await loadModDetailSocial(modId);
+    await loadModSocialData(modId);
   } catch(e) { toast("Error con el like"); } finally { btn.disabled = false; }
 }
 
@@ -690,7 +687,7 @@ async function postComment(modId) {
   if (!content) return;
 
   if (!checkRespect(content)) {
-    return toast("Por favor mantén un tono respetuoso y libre de insultos.");
+    return toast("Manten un tono respetuoso y libre de insultos.");
   }
 
   try {
@@ -700,11 +697,12 @@ async function postComment(modId) {
       body: JSON.stringify({ mod_id: modId, user_id: session.user.id, content })
     });
     input.value = "";
-    await loadModDetailSocial(modId);
+    await loadModSocialData(modId);
+    toast("Comentario publicado.");
   } catch(e) { toast("Error al publicar comentario."); }
 }
 
-async function loadModDetailSocial(id) {
+async function loadModSocialData(id) {
   const likes = await getLikes(id);
   const comments = await loadComments(id);
   const myUid = myId();
@@ -722,63 +720,103 @@ async function loadModDetailSocial(id) {
     cList.innerHTML = comments.length ? comments.map(c => `
       <div class="comment-item">
         <div class="comment-head">
-          ${avatarHtml(c.profiles && c.profiles.avatar_url, (c.profiles && c.profiles.username) || "Usuario", 18)}
+          ${avatarHtml(c.profiles && c.profiles.avatar_url, (c.profiles && c.profiles.username) || "Usuario", 20)}
           <span class="comment-user">${esc((c.profiles && c.profiles.username) || "Usuario")}</span>
           <span class="comment-time">${fmtDate(c.created_at)}</span>
         </div>
         <div>${esc(c.content)}</div>
       </div>
-    `).join("") : `<p class="hint" style="text-align:center">Sé el primero en dejar un comentario respetuoso.</p>`;
+    `).join("") : `<p class="hint">Sé el primero en dejar un comentario respetuoso sobre este mod.</p>`;
   }
 }
 
-async function openDetail(id) {
-  const m = allMods.find((x) => x.id === id) || userMods.find((x) => x.id === id); if (!m) return;
+// Abrir Mod en Vista de Página Independiente
+function openModPage(id) {
+  const m = allMods.find((x) => x.id === id) || userMods.find((x) => x.id === id); 
+  if (!m) return;
+
+  window.location.hash = "mod=" + id;
   rpc("increment_views", id); m.views = (m.views || 0) + 1; renderMods();
+
   const link = safeUrl(m.file_url) || safeUrl(m.external_url);
   const imgs = (m.images || []).filter(safeUrl);
   const owner = isOwner(m);
   const tLang = i18n[currentLang];
   let acts = "";
-  if (owner) acts = `<div class="acts" style="margin-top:10px"><button class="btn sm" data-act="edit" data-id="${esc(m.id)}">${tLang.edit}</button><button class="btn sm" data-act="hide" data-id="${esc(m.id)}">${tLang.hide}</button><button class="btn sm danger" data-act="del" data-id="${esc(m.id)}">${tLang.delete}</button></div>`;
-  
-  $("detBody").innerHTML = `
+  if (owner) acts = `<div class="acts" style="margin-top:12px"><button class="btn sm" data-act="edit" data-id="${esc(m.id)}">${tLang.edit}</button><button class="btn sm" data-act="hide" data-id="${esc(m.id)}">${tLang.hide}</button><button class="btn sm danger" data-act="del" data-id="${esc(m.id)}">${tLang.delete}</button></div>`;
+
+  $("modPageContent").innerHTML = `
     ${imgs.length ? `<div class="gallery">${imgs.map((u) => `<img src="${esc(u)}" alt="">`).join("")}</div>` : ""}
-    <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
-      <h2 style="margin:0;color:var(--yellow)">${esc(m.title)}</h2>
+    <div class="mod-header-row">
+      <div>
+        <h1 style="margin:0 0 6px;color:var(--yellow);font-size:24px">${esc(m.title)}</h1>
+        <div class="who" data-user="${esc(m.user_id)}" style="font-size:15px;display:flex;align-items:center;gap:8px;cursor:pointer">${avatarHtml(m.profiles && m.profiles.avatar_url, authorOf(m), 26)}<span>${esc(authorOf(m))}</span></div>
+      </div>
       <button id="btnLike" class="like-btn">${ic("i-heart")} <span>0 Likes</span></button>
     </div>
-    <div class="who" data-user="${esc(m.user_id)}" style="margin:8px 0 10px;font-size:14px;display:flex;align-items:center;gap:6px;cursor:pointer">${avatarHtml(m.profiles && m.profiles.avatar_url, authorOf(m), 24)}<span>${esc(authorOf(m))}</span></div>
-    <div class="gb-stats" style="margin-bottom:12px"><span>${ic("i-dl")}<b id="dlCount">${m.downloads || 0}</b></span><span>${ic("i-eye")}${m.views}</span><span>${fmtDate(m.created_at)}</span></div>
+
+    <div class="gb-stats" style="margin-bottom:16px;font-size:13.5px">
+      <span>${ic("i-dl")}<b id="dlCount">${m.downloads || 0}</b> descargas</span>
+      <span>${ic("i-eye")}${m.views} vistas</span>
+      <span>${fmtDate(m.created_at)}</span>
+    </div>
+
     <p class="desc">${esc(m.description)}</p>
-    ${link ? `<a id="dlBtn" class="btn pri" style="display:block;padding:10px;font-size:15px;text-align:center" href="${esc(link)}" target="_blank" rel="noopener">${tLang.download_btn}</a>` : ""}
+
+    ${link ? `<a id="dlBtn" class="btn pri" style="display:inline-flex;padding:12px 24px;font-size:16px;width:100%;max-width:300px" href="${esc(link)}" target="_blank" rel="noopener">${tLang.download_btn}</a>` : ""}
     ${acts}
-    
+
     <div class="comments-sec">
-      <h3 style="font-size:15px;margin:0 0 10px">Comentarios</h3>
+      <h3 style="font-size:17px;margin:0 0 12px">Comentarios</h3>
       <div class="comment-box">
         <input id="cInput" placeholder="Escribe un comentario o sugerencia constructiva..." maxlength="250">
         <button id="btnPostC" class="btn pri sm">Enviar</button>
       </div>
       <div id="commentsList">Cargando comentarios...</div>
     </div>`;
-    
+
+  $("mainView").classList.add("hide");
+  $("modPageContainer").classList.remove("hide");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+
   const b = $("dlBtn");
   if (b) b.onclick = () => { rpc("increment_downloads", id); m.downloads = (m.downloads || 0) + 1; $("dlCount").textContent = m.downloads; renderMods(); };
   $("btnPostC").onclick = () => postComment(id);
 
-  $("detDlg").showModal();
-  loadModDetailSocial(id);
+  loadModSocialData(id);
 }
+
+function closeModPage() {
+  window.location.hash = "";
+  $("modPageContainer").classList.add("hide");
+  $("mainView").classList.remove("hide");
+}
+
+$("btnBackToList").onclick = closeModPage;
+
+function checkUrlHash() {
+  const hash = window.location.hash;
+  if (hash.startsWith("#mod=")) {
+    const id = hash.replace("#mod=", "");
+    if (id) openModPage(id);
+  } else {
+    closeModPage();
+  }
+}
+window.onhashchange = checkUrlHash;
 
 $("list").onclick = (e) => {
   const u = e.target.closest("[data-user]"); if (u) { openUser(u.dataset.user); return; }
-  const c = e.target.closest(".gb-card"); if (c) openDetail(c.dataset.id);
+  const c = e.target.closest(".gb-card"); if (c) openModPage(c.dataset.id);
+};
+
+$("modPageContent").onclick = (e) => {
+  const u = e.target.closest("[data-user]"); if (u) { openUser(u.dataset.user); return; }
+  onAction(e);
 };
 
 async function openUser(uid) {
   if (!isUuid(uid)) return;
-  if ($("detDlg").open) $("detDlg").close();
   const tLang = i18n[currentLang];
   $("userBody").innerHTML = `<p class='hint'>${tLang.loading}</p>`;
   if (!$("userDlg").open) $("userDlg").showModal();
@@ -818,7 +856,7 @@ $("userBody").onclick = (e) => {
     return;
   }
   const u = e.target.closest("[data-user]"); if (u && u.dataset.user === myId()) return;
-  const c = e.target.closest(".gb-card"); if (c) { $("userDlg").close(); openDetail(c.dataset.id); }
+  const c = e.target.closest(".gb-card"); if (c) { $("userDlg").close(); openModPage(c.dataset.id); }
 };
 
 function renderMine() {
@@ -840,7 +878,7 @@ async function toggleHide(m) {
   try {
     await patchMod(m.id, { hidden: !m.hidden });
     toast("OK");
-    await Promise.all([loadMods(), loadMine()]); renderMine(); if ($("detDlg").open) $("detDlg").close();
+    await Promise.all([loadMods(), loadMine()]); renderMine(); closeModPage();
   } catch (e) { toast("Error: " + e.message); }
 }
 
@@ -851,7 +889,7 @@ async function deleteMod(m) {
     if (!r.ok) { const e = await r.json().catch(() => ({})); throw new Error(e.message || ("Error " + r.status)); }
     await removeFiles("mods", [m.file_url]); await removeFiles("images", m.images || []);
     toast("Eliminado.");
-    await Promise.all([loadMods(), loadMine()]); renderMine(); if ($("detDlg").open) $("detDlg").close();
+    await Promise.all([loadMods(), loadMine()]); renderMine(); closeModPage();
   } catch (e) { toast("Error: " + e.message); }
 }
 
@@ -869,7 +907,6 @@ function openEdit(m) {
   $("eFile").value = "";
   renderEditThumbs();
   
-  if ($("detDlg").open) $("detDlg").close();
   if ($("mineDlg").open) $("mineDlg").close();
   if ($("upDlg").open) $("upDlg").close();
   
@@ -905,6 +942,7 @@ $("btnSaveEdit").onclick = async () => {
     toast("Guardado.");
     await Promise.all([loadMods(), loadMine()]); 
     if ($("mineDlg").open) renderMine();
+    openModPage(m.id);
   } catch (e) { toast("Error: " + e.message); } finally { btn.disabled = false; }
 };
 
@@ -916,10 +954,6 @@ function onAction(e) {
   else if (b.dataset.act === "del") deleteMod(m);
 }
 $("mineList").onclick = onAction;
-$("detBody").onclick = (e) => {
-  const u = e.target.closest("[data-user]"); if (u) { $("detDlg").close(); openUser(u.dataset.user); return; }
-  onAction(e);
-};
 
 function showPage(key) {
   curPage = key;
@@ -972,6 +1006,7 @@ document.querySelectorAll(".sidebar-links button").forEach((b) => {
     toggleSidebar(false);
     const nav = b.dataset.nav;
     if (nav === "mods") {
+      closeModPage();
       window.scrollTo({ top: 0, behavior: "smooth" });
     } else if (nav === "settings") {
       if (!$("settingsDlg").open) $("settingsDlg").showModal();
