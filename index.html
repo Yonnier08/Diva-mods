@@ -15,9 +15,9 @@
   }
   * { box-sizing:border-box; }
   body { margin:0; font-family:"Inter","Segoe UI",Roboto,system-ui,sans-serif; background:var(--bg); color:var(--fg); line-height:1.45; }
-  .ic { width:13px; height:13px; vertical-align:-1px; flex:none; }
+  .ic { width:15px; height:15px; vertical-align:-2px; flex:none; }
 
-  /* Estilos de Scrollbar para PC */
+  /* Scrollbars */
   ::-webkit-scrollbar { width:8px; height:8px; }
   ::-webkit-scrollbar-track { background:var(--bg); }
   ::-webkit-scrollbar-thumb { background:var(--line); border-radius:4px; }
@@ -25,15 +25,32 @@
   * { scrollbar-width:thin; scrollbar-color:var(--line) var(--bg); }
   
   /* Navbar */
-  header { position:sticky; top:0; z-index:20; background:rgba(14,18,27,0.92); backdrop-filter:blur(8px); border-bottom:1px solid var(--line); }
-  .top { display:flex; align-items:center; gap:10px; padding:10px 16px; max-width:1200px; margin:0 auto; }
-  .brand { display:flex; align-items:center; text-decoration:none; margin-right:auto; }
+  header { position:sticky; top:0; z-index:20; background:rgba(14,18,27,0.95); backdrop-filter:blur(8px); border-bottom:1px solid var(--line); }
+  .top { display:flex; align-items:center; gap:12px; padding:10px 16px; max-width:1200px; margin:0 auto; }
+  .brand { display:flex; align-items:center; text-decoration:none; }
   .brand img { height:34px; width:auto; object-fit:contain; display:block; }
 
-  nav { display:flex; gap:6px; max-width:1200px; margin:0 auto; padding:0 16px; overflow-x:auto; border-top:1px solid rgba(255,255,255,0.03); }
-  nav button { background:none; border:none; border-bottom:2px solid transparent; color:var(--mut); font-size:14px; font-weight:600; padding:10px 14px; cursor:pointer; font-family:inherit; transition:color 0.15s; }
-  nav button:hover { color:var(--fg); }
-  nav button.on { color:var(--acc); border-bottom-color:var(--acc); }
+  .nav-toggle { background:none; border:none; color:var(--fg); cursor:pointer; padding:6px; display:flex; align-items:center; justify-content:center; border-radius:6px; }
+  .nav-toggle:hover { background:rgba(255,255,255,0.05); }
+
+  .header-acts { display:flex; align-items:center; gap:8px; margin-left:auto; }
+
+  /* Menú Lateral (Sidebar Drawer) */
+  .sidebar-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(3px); z-index:40; opacity:0; pointer-events:none; transition:opacity 0.2s ease; }
+  .sidebar-overlay.open { opacity:1; pointer-events:auto; }
+  
+  .sidebar { position:fixed; top:0; left:0; bottom:0; width:280px; background:var(--surface); border-right:1px solid var(--line); z-index:50; transform:translateX(-100%); transition:transform 0.25s cubic-bezier(0.4,0,0.2,1); display:flex; flex-direction:column; padding:20px; }
+  .sidebar.open { transform:translateX(0); }
+  .sidebar-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; }
+  .sidebar-header h2 { margin:0; font-size:18px; }
+  .sidebar-links { display:flex; flex-direction:column; gap:6px; }
+  .sidebar-links button { background:none; border:none; text-align:left; color:var(--mut); font-size:15px; font-weight:600; padding:10px 12px; border-radius:6px; cursor:pointer; font-family:inherit; transition:all 0.15s; }
+  .sidebar-links button:hover { background:rgba(255,255,255,0.04); color:var(--fg); }
+  .sidebar-links button.on { color:var(--acc); background:rgba(47,212,198,0.08); }
+
+  /* Barra de búsqueda desplegable */
+  .search-container { max-width:1200px; margin:0 auto; padding:0 16px; overflow:hidden; max-height:0; transition:max-height 0.25s ease, padding 0.25s ease; }
+  .search-container.open { max-height:70px; padding:12px 16px 4px; }
 
   .btn { border:1px solid var(--line); background:var(--surface); color:var(--fg); padding:8px 14px; border-radius:6px; font-size:13.5px; font-weight:600; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:6px; transition:background 0.15s, border-color 0.15s; }
   .btn:hover { border-color:var(--mut); background:rgba(255,255,255,0.03); }
@@ -51,13 +68,13 @@
   input, textarea { width:100%; padding:10px 12px; border-radius:6px; border:1px solid var(--line); background:var(--surface); color:var(--fg); font-size:15px; font-family:inherit; }
   input:focus, textarea:focus { outline:2px solid var(--acc); outline-offset:-1px; }
 
-  .toolbar { display:flex; align-items:center; justify-content:space-between; gap:10px; margin:16px 0 14px; border-bottom:1px solid var(--line); }
+  .toolbar { display:flex; align-items:center; justify-content:space-between; gap:10px; margin:16px 0 14px; border-bottom:1px solid var(--line); padding-bottom:8px; }
   .tabs { display:flex; gap:4px; }
-  .tabs button { background:none; border:none; border-bottom:2px solid transparent; color:var(--mut); font-size:14px; font-weight:600; padding:8px 12px; cursor:pointer; font-family:inherit; margin-bottom:-1px; }
+  .tabs button { background:none; border:none; border-bottom:2px solid transparent; color:var(--mut); font-size:14px; font-weight:600; padding:8px 12px; cursor:pointer; font-family:inherit; margin-bottom:-9px; }
   .tabs button.on { color:var(--fg); border-bottom-color:var(--acc); }
   .count { color:var(--mut); font-size:13px; }
 
-  /* Cuadrícula Adaptativa para Móvil, Tablet y PC */
+  /* Cuadrícula Adaptativa */
   .gb-grid { display:grid; grid-template-columns:repeat(2, 1fr); gap:12px; }
   @media (min-width: 680px) { .gb-grid { grid-template-columns:repeat(3, 1fr); gap:16px; } }
   @media (min-width: 1024px) { .gb-grid { grid-template-columns:repeat(4, 1fr); gap:18px; } }
@@ -81,10 +98,10 @@
   .empty { grid-column:1/-1; text-align:center; color:var(--mut); padding:48px 8px; font-size:15px; }
   footer { max-width:1200px; margin:0 auto; padding:24px 16px 36px; color:var(--mut); font-size:12.5px; border-top:1px solid var(--line); text-align:center; }
 
-  /* Modales optimizados para PC y Móviles */
-  dialog { width:min(92vw,720px); max-height:88vh; border:1px solid var(--line); border-radius:10px; padding:22px; background:var(--surface); color:var(--fg); box-shadow:0 16px 40px rgba(0,0,0,0.6); }
+  /* Modales */
+  dialog { width:min(92vw,680px); max-height:88vh; border:1px solid var(--line); border-radius:10px; padding:20px; background:var(--surface); color:var(--fg); box-shadow:0 16px 40px rgba(0,0,0,0.6); overflow-y:auto; overflow-x:hidden; }
   dialog::backdrop { background:rgba(0,0,0,.75); backdrop-filter:blur(4px); }
-  dialog h2 { margin:0 0 14px; font-size:20px; }
+  dialog h2 { margin:0 0 12px; font-size:20px; }
   .row { display:flex; flex-direction:column; gap:10px; }
   .acts { display:flex; gap:10px; margin-top:14px; flex-wrap:wrap; }
   .acts .btn { flex:1; }
@@ -97,10 +114,9 @@
   .thumb { position:relative; }
   .thumb button { position:absolute; top:-6px; right:-6px; width:20px; height:20px; border-radius:50%; border:none; background:var(--danger); color:#fff; font-size:11px; cursor:pointer; padding:0; }
   
-  /* Galería optimizada en Modal */
-  .gallery { display:flex; gap:10px; overflow-x:auto; scroll-snap-type:x mandatory; margin-bottom:14px; border-radius:8px; background:var(--bg); border:1px solid var(--line); padding:6px; }
-  .gallery img { height:280px; border-radius:6px; scroll-snap-align:start; flex:none; max-width:100%; object-fit:contain; }
-  @media (min-width:680px) { .gallery img { height:360px; } }
+  /* Galería limpia sin desbordamiento */
+  .gallery { display:flex; gap:10px; overflow-x:auto; scroll-snap-type:x mandatory; margin-bottom:14px; border-radius:8px; background:var(--bg); border:1px solid var(--line); padding:6px; width:100%; }
+  .gallery img { width:100%; max-height:340px; aspect-ratio:16/9; border-radius:6px; scroll-snap-align:start; flex:none; object-fit:contain; }
 
   .desc { white-space:pre-wrap; word-break:break-word; margin:12px 0 16px; font-size:14.5px; line-height:1.6; }
   .mine { border:1px solid var(--line); border-radius:6px; padding:12px; margin-bottom:10px; background:rgba(255,255,255,0.01); }
@@ -118,29 +134,47 @@
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
   <symbol id="i-dl" viewBox="0 0 16 16"><path d="M8 2v8m0 0L5 7m3 3l3-3M3 13h10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-eye" viewBox="0 0 16 16"><path d="M1.5 8S4 3.5 8 3.5 14.5 8 14.5 8 12 12.5 8 12.5 1.5 8 1.5 8z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="8" cy="8" r="2" fill="none" stroke="currentColor" stroke-width="1.5"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.35-4.35" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
 </defs></svg>
+
+<!-- Menú Lateral (Sidebar Drawer) -->
+<div id="sidebarOverlay" class="sidebar-overlay"></div>
+<aside id="sidebar" class="sidebar">
+  <div class="sidebar-header">
+    <h2>Navegación</h2>
+    <button class="btn sm" id="btnCloseSidebar">✕</button>
+  </div>
+  <div class="sidebar-links">
+    <button class="on" data-nav="mods">Mods</button>
+    <button data-nav="rules">Reglas</button>
+    <button data-nav="info">Información</button>
+  </div>
+</aside>
 
 <header>
   <div class="top">
+    <button id="btnOpenSidebar" class="nav-toggle" aria-label="Abrir menú">${ic("i-menu")}</button>
     <a class="brand" href="./">
       <img src="logo.png" alt="Project Diva Logo">
     </a>
 
-    <button id="btnProfile" class="btn hide" style="padding:4px 10px;display:flex;align-items:center;gap:6px">
-      <span id="hAv"></span><span id="hName" style="max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
-    </button>
-    <button id="btnOpenUpload" class="btn pri hide">Subir</button>
-    <button id="btnOpenAuth" class="btn pri">Entrar</button>
+    <div class="header-acts">
+      <button id="btnToggleSearch" class="btn sm" aria-label="Buscar" style="padding:6px 10px">${ic("i-search")}</button>
+      <button id="btnProfile" class="btn hide" style="padding:4px 10px;display:flex;align-items:center;gap:6px">
+        <span id="hAv"></span><span id="hName" style="max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
+      </button>
+      <button id="btnOpenUpload" class="btn pri hide">Subir</button>
+      <button id="btnOpenAuth" class="btn pri">Entrar</button>
+    </div>
   </div>
-  <nav>
-    <button class="on" data-nav="mods">Mods</button>
-    <button data-nav="rules">Reglas</button>
-    <button data-nav="info">Información</button>
-  </nav>
+  <!-- Barra de búsqueda desplegable con lupa -->
+  <div id="searchContainer" class="search-container">
+    <input id="q" type="search" placeholder="Buscar mods por título, autor o descripción...">
+  </div>
 </header>
   
 <main>
-  <input id="q" type="search" placeholder="Buscar mods por título, autor o descripción...">
   <div class="toolbar">
     <div class="tabs" id="tabs">
       <button data-sort="created_at" class="on">Recientes</button>
@@ -423,7 +457,7 @@ function openDetail(id) {
     <div class="who" data-user="${esc(m.user_id)}" style="margin-bottom:10px;font-size:14px;display:flex;align-items:center;gap:6px;cursor:pointer">${avatarHtml(m.profiles && m.profiles.avatar_url, authorOf(m), 24)}<span>${esc(authorOf(m))}</span></div>
     <div class="gb-stats" style="margin-bottom:12px"><span>${ic("i-dl")}<b id="dlCount">${m.downloads || 0}</b></span><span>${ic("i-eye")}${m.views}</span><span>${fmtDate(m.created_at)}</span></div>
     <p class="desc">${esc(m.description)}</p>
-    ${link ? `<a id="dlBtn" class="btn pri" style="display:block;padding:10px;font-size:15px" href="${esc(link)}" target="_blank" rel="noopener">Descargar Mod</a>` : ""}
+    ${link ? `<a id="dlBtn" class="btn pri" style="display:block;padding:10px;font-size:15px" href="${esc(link)}" target="_blank" rel="noopener">Descargar</a>` : ""}
     ${acts}`;
     
   const b = $("dlBtn");
@@ -608,7 +642,10 @@ function showPage(key) {
   $("btnPgEdit").classList.toggle("hide", !isMod);
 }
 
-function openPage(key) { showPage(key); if (!$("pageDlg").open) $("pageDlg").showModal(); }
+function openPage(key) { 
+  showPage(key); 
+  if (!$("pageDlg").open) $("pageDlg").showModal(); 
+}
 
 $("btnPgEdit").onclick = () => {
   const p = pages[curPage] || DEFAULT_PAGES[curPage];
@@ -633,11 +670,36 @@ $("btnPgSave").onclick = async () => {
   } catch (e) { toast("Error: " + e.message); } finally { btn.disabled = false; btn.textContent = "Guardar"; }
 };
 
-document.querySelectorAll("[data-nav]").forEach((b) => (b.onclick = () => {
-  document.querySelectorAll("[data-nav]").forEach((x) => x.classList.toggle("on", x === b));
-  if (b.dataset.nav === "mods") window.scrollTo({ top: 0, behavior: "smooth" });
-  else openPage(b.dataset.nav);
-}));
+/* Lógica del Menú Lateral (Sidebar) y Búsqueda Desplegable */
+const toggleSidebar = (open) => {
+  $("sidebar").classList.toggle("open", open);
+  $("sidebarOverlay").classList.toggle("open", open);
+};
+
+$("btnOpenSidebar").onclick = () => toggleSidebar(true);
+$("btnCloseSidebar").onclick = () => toggleSidebar(false);
+$("sidebarOverlay").onclick = () => toggleSidebar(false);
+
+document.querySelectorAll(".sidebar-links button").forEach((b) => {
+  b.onclick = () => {
+    document.querySelectorAll(".sidebar-links button").forEach((x) => x.classList.toggle("on", x === b));
+    toggleSidebar(false);
+    const nav = b.dataset.nav;
+    if (nav === "mods") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      openPage(nav);
+    }
+  };
+});
+
+$("btnToggleSearch").onclick = () => {
+  const sc = $("searchContainer");
+  sc.classList.toggle("open");
+  if (sc.classList.contains("open")) {
+    $("q").focus();
+  }
+};
 
 document.querySelectorAll("[data-close]").forEach((b) => (b.onclick = () => b.closest("dialog").close()));
 $("btnOpenAuth").onclick = () => $("authDlg").showModal();
