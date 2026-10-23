@@ -6,160 +6,151 @@
 <title>PDMM+ Mods</title>
 <link rel="icon" href="logo.png">
 <style>
-  :root { 
-    --bg:#0e121b; --surface:#151b27; --line:#232d3f; --fg:#e6e9ee; --mut:#8a93a1; 
-    --acc:#2fd4c6; --acc-fg:#04201d; --yellow:#facc15; --danger:#f0686b; --radius:8px;
+  :root {
+    --bg:#0f1318; --surface:#161b22; --line:#262d37; --fg:#e4e7eb; --mut:#8b94a1;
+    --acc:#3cc4b8; --acc-fg:#06201d; --pink:#e0629a; --danger:#ee6b6e; --title:var(--fg);
   }
   html[data-theme="light"] {
-    --bg:#f1f4f8; --surface:#ffffff; --line:#dbe1e8; --fg:#1b1f24; --mut:#667085; 
-    --acc:#0f9d93; --acc-fg:#ffffff; --yellow:#d97706; --danger:#dc2626;
+    --bg:#f2f4f7; --surface:#ffffff; --line:#dde2e8; --fg:#1c2127; --mut:#667085;
+    --acc:#0e9a8f; --acc-fg:#ffffff; --pink:#c43c7a; --danger:#d03a3a;
   }
   * { box-sizing:border-box; }
-  body { margin:0; font-family:"Inter","Segoe UI",Roboto,system-ui,sans-serif; background:var(--bg); color:var(--fg); line-height:1.45; }
-  .ic { width:16px; height:16px; vertical-align:-2px; flex:none; }
+  body { margin:0; font-family:"Inter","Segoe UI",Roboto,system-ui,sans-serif; background:var(--bg); color:var(--fg); font-size:15px; line-height:1.5; }
+  .ic { width:15px; height:15px; vertical-align:-2px; flex:none; }
 
-  /* Scrollbars */
   ::-webkit-scrollbar { width:8px; height:8px; }
   ::-webkit-scrollbar-track { background:var(--bg); }
   ::-webkit-scrollbar-thumb { background:var(--line); border-radius:4px; }
-  ::-webkit-scrollbar-thumb:hover { background:var(--mut); }
   * { scrollbar-width:thin; scrollbar-color:var(--line) var(--bg); }
-  
-  /* Navbar */
-  header { position:sticky; top:0; z-index:20; background:var(--surface); backdrop-filter:blur(8px); border-bottom:1px solid var(--line); }
-  .top { display:flex; align-items:center; gap:12px; padding:10px 16px; max-width:1200px; margin:0 auto; }
+
+  header { position:sticky; top:0; z-index:20; background:var(--surface); border-bottom:1px solid var(--line); }
+  .top { display:flex; align-items:center; gap:10px; padding:8px 14px; max-width:1200px; margin:0 auto; }
   .brand { display:flex; align-items:center; text-decoration:none; }
   .brand img { height:34px; width:auto; object-fit:contain; display:block; }
+  .nav-toggle { background:none; border:none; color:var(--fg); cursor:pointer; padding:6px; display:flex; align-items:center; border-radius:4px; }
+  .nav-toggle:hover { background:var(--bg); }
+  .header-acts { display:flex; align-items:center; gap:6px; margin-left:auto; }
 
-  .nav-toggle { background:none; border:none; color:var(--fg); cursor:pointer; padding:6px; display:flex; align-items:center; justify-content:center; border-radius:6px; }
-  .nav-toggle:hover { background:rgba(255,255,255,0.05); }
-
-  .header-acts { display:flex; align-items:center; gap:8px; margin-left:auto; }
-
-  /* Menú Lateral */
-  .sidebar-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(3px); z-index:40; opacity:0; pointer-events:none; transition:opacity 0.2s ease; }
+  .sidebar-overlay { position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:40; opacity:0; pointer-events:none; transition:opacity .15s; }
   .sidebar-overlay.open { opacity:1; pointer-events:auto; }
-  
-  .sidebar { position:fixed; top:0; left:0; bottom:0; width:280px; background:var(--surface); border-right:1px solid var(--line); z-index:50; transform:translateX(-100%); transition:transform 0.25s cubic-bezier(0.4,0,0.2,1); display:flex; flex-direction:column; padding:20px; }
-  .sidebar.open { transform:translateX(0); }
-  .sidebar-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; }
-  .sidebar-header h2 { margin:0; font-size:18px; }
-  .sidebar-links { display:flex; flex-direction:column; gap:6px; }
-  .sidebar-links button { background:none; border:none; text-align:left; color:var(--mut); font-size:15px; font-weight:600; padding:10px 12px; border-radius:6px; cursor:pointer; font-family:inherit; transition:all 0.15s; }
-  .sidebar-links button:hover { background:rgba(255,255,255,0.04); color:var(--fg); }
-  .sidebar-links button.on { color:var(--acc); background:rgba(47,212,198,0.08); }
+  .sidebar { position:fixed; top:0; left:0; bottom:0; width:260px; background:var(--surface); border-right:1px solid var(--line); z-index:50; transform:translateX(-100%); transition:transform .18s; display:flex; flex-direction:column; padding:16px; }
+  .sidebar.open { transform:none; }
+  .sidebar-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+  .sidebar-header h2 { margin:0; font-size:16px; font-weight:600; }
+  .sidebar-links { display:flex; flex-direction:column; }
+  .sidebar-links button { background:none; border:none; border-left:3px solid transparent; text-align:left; color:var(--mut); font-size:15px; padding:10px 12px; cursor:pointer; font-family:inherit; }
+  .sidebar-links button:hover { color:var(--fg); }
+  .sidebar-links button.on { color:var(--fg); border-left-color:var(--acc); background:var(--bg); }
 
-  /* Búsqueda */
-  .search-container { max-width:1200px; margin:0 auto; padding:0 16px; overflow:hidden; max-height:0; transition:max-height 0.25s ease, padding 0.25s ease; }
-  .search-container.open { max-height:70px; padding:12px 16px 4px; }
+  .search-container { max-width:1200px; margin:0 auto; padding:0 14px; overflow:hidden; max-height:0; transition:max-height .2s, padding .2s; }
+  .search-container.open { max-height:70px; padding:10px 14px 4px; }
 
-  .btn { border:1px solid var(--line); background:var(--surface); color:var(--fg); padding:8px 14px; border-radius:6px; font-size:13.5px; font-weight:600; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:6px; transition:background 0.15s, border-color 0.15s; }
-  .btn:hover { border-color:var(--mut); background:rgba(255,255,255,0.03); }
-  .btn.pri { background:var(--acc); border-color:var(--acc); color:var(--acc-fg); }
-  .btn.pri:hover { opacity:0.9; }
-  .btn.danger { color:var(--danger); border-color:rgba(240,104,107,0.3); }
-  .btn.danger:hover { background:rgba(240,104,107,0.1); }
-  .btn.sm { padding:5px 10px; font-size:12.5px; }
+  .btn { border:1px solid var(--line); background:var(--surface); color:var(--fg); padding:7px 13px; border-radius:5px; font-size:14px; font-weight:500; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:6px; font-family:inherit; }
+  .btn:hover { border-color:var(--mut); }
+  .btn.pri { background:var(--acc); border-color:var(--acc); color:var(--acc-fg); font-weight:600; }
+  .btn.pri:hover { filter:brightness(1.08); }
+  .btn.danger { color:var(--danger); }
+  .btn.danger:hover { border-color:var(--danger); }
+  .btn.sm { padding:4px 9px; font-size:13px; }
   .btn:disabled { opacity:.55; cursor:default; }
   .hide { display:none !important; }
 
   .av { border-radius:50%; object-fit:cover; display:grid; place-items:center; font-weight:700; color:var(--acc-fg); background:var(--acc); flex:none; overflow:hidden; }
 
-  main { max-width:1200px; margin:0 auto; padding:20px 16px 50px; }
-  input, textarea, select { width:100%; padding:10px 12px; border-radius:6px; border:1px solid var(--line); background:var(--surface); color:var(--fg); font-size:15px; font-family:inherit; }
+  main { max-width:1200px; margin:0 auto; padding:18px 14px 50px; }
+  input, textarea, select { width:100%; padding:9px 11px; border-radius:5px; border:1px solid var(--line); background:var(--bg); color:var(--fg); font-size:15px; font-family:inherit; }
   input:focus, textarea:focus, select:focus { outline:2px solid var(--acc); outline-offset:-1px; }
 
-  /* Barra de Control (Filtros y Orden) */
-  .control-bar { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:18px; border-bottom:1px solid var(--line); padding-bottom:12px; }
-  .control-group { display:flex; align-items:center; gap:10px; flex-wrap:wrap; flex:1; }
-  .select-wrapper { display:flex; align-items:center; gap:6px; width:auto; }
-  .select-wrapper select { width:auto; padding:7px 12px; font-size:13.5px; font-weight:600; cursor:pointer; }
+  .control-bar { display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:14px; padding-bottom:12px; border-bottom:1px solid var(--line); }
+  .control-group { display:flex; align-items:center; gap:8px; flex-wrap:wrap; flex:1; }
+  .select-wrapper { display:flex; align-items:center; width:auto; }
+  .select-wrapper select { width:auto; padding:6px 10px; font-size:14px; cursor:pointer; }
   .count { color:var(--mut); font-size:13px; margin-left:auto; white-space:nowrap; }
 
-  /* Cuadrícula */
-  .gb-grid { display:grid; grid-template-columns:repeat(2, 1fr); gap:12px; }
-  @media (min-width: 680px) { .gb-grid { grid-template-columns:repeat(3, 1fr); gap:16px; } }
-  @media (min-width: 1024px) { .gb-grid { grid-template-columns:repeat(4, 1fr); gap:18px; } }
+  .gb-grid { display:grid; grid-template-columns:repeat(2, 1fr); gap:10px; }
+  @media (min-width: 680px) { .gb-grid { grid-template-columns:repeat(3, 1fr); gap:14px; } }
+  @media (min-width: 1024px) { .gb-grid { grid-template-columns:repeat(4, 1fr); } }
 
-  .gb-card { background:var(--surface); border:1px solid var(--line); border-radius:8px; overflow:hidden; cursor:pointer; display:flex; flex-direction:column; transition:transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease; }
-  .gb-card:hover { border-color:var(--acc); transform:translateY(-3px); box-shadow:0 8px 20px rgba(0,0,0,0.3); }
+  .gb-card { background:var(--surface); border:1px solid var(--line); border-radius:6px; overflow:hidden; cursor:pointer; display:flex; flex-direction:column; }
+  .gb-card:hover { border-color:var(--mut); }
+  .gb-thumb { position:relative; width:100%; aspect-ratio:16/10; background:var(--bg); overflow:hidden; display:grid; place-items:center; }
+  .gb-thumb img.cover { width:100%; height:100%; object-fit:cover; display:block; }
+  .gb-thumb img.ph { width:42%; opacity:.28; }
+  .badge-cat { position:absolute; left:6px; bottom:6px; background:rgba(0,0,0,.72); color:#fff; font-size:11px; padding:1px 6px; border-radius:3px; }
 
-  .gb-thumb { position:relative; width:100%; aspect-ratio:16/9; background:#000; overflow:hidden; display:grid; place-items:center; }
-  .gb-thumb img.cover { width:100%; height:100%; object-fit:cover; display:block; transition:transform 0.2s ease; }
-  .gb-card:hover .gb-thumb img.cover { transform:scale(1.03); }
-  
-  .badge-cat { position:absolute; bottom:8px; right:8px; background:rgba(0,0,0,0.85); backdrop-filter:blur(4px); color:var(--acc); border:1px solid var(--acc); font-size:10.5px; font-weight:700; padding:2px 6px; border-radius:4px; text-transform:uppercase; z-index:2; }
-  .author-badge { position:absolute; top:8px; left:8px; display:flex; align-items:center; gap:5px; background:rgba(0,0,0,0.8); backdrop-filter:blur(4px); padding:3px 8px; border-radius:12px; border:1px solid rgba(255,255,255,0.12); font-size:11.5px; color:#fff; cursor:pointer; z-index:2; }
-  .author-badge:hover { background:rgba(0,0,0,0.95); border-color:var(--acc); }
-
-  .gb-info { padding:10px 12px; display:flex; flex-direction:column; gap:6px; flex:1; }
-  .gb-title { margin:0; font-size:14.5px; font-weight:700; color:var(--yellow); line-height:1.35; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; word-break:break-word; }
-  .gb-card:hover .gb-title { text-decoration:underline; }
-
-  .gb-stats { display:flex; align-items:center; gap:10px; color:var(--mut); font-size:11.5px; margin-top:auto; padding-top:4px; flex-wrap:wrap; }
+  .gb-info { padding:9px 10px 10px; display:flex; flex-direction:column; gap:4px; flex:1; }
+  .gb-title { margin:0; font-size:14.5px; font-weight:600; color:var(--title); line-height:1.3; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; word-break:break-word; }
+  .gb-card:hover .gb-title { color:var(--acc); }
+  .gb-author { display:flex; align-items:center; gap:6px; color:var(--mut); font-size:12.5px; min-width:0; width:fit-content; max-width:100%; }
+  .gb-author span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .gb-author:hover span { color:var(--fg); text-decoration:underline; }
+  .gb-stats { display:flex; align-items:center; gap:10px; color:var(--mut); font-size:12px; margin-top:auto; padding-top:2px; flex-wrap:wrap; }
   .gb-stats span { display:inline-flex; align-items:center; gap:3px; }
+  .gb-stats .date { margin-left:auto; }
 
-  .empty { grid-column:1/-1; text-align:center; color:var(--mut); padding:48px 8px; font-size:15px; }
+  .empty { grid-column:1/-1; text-align:center; color:var(--mut); padding:44px 8px; }
 
-  /* Vista independiente del Mod */
-  .mod-page { background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:20px; margin-top:10px; }
-  .mod-header-row { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:16px; }
+  .mod-page { background:var(--surface); border:1px solid var(--line); border-radius:6px; padding:18px; margin-top:8px; }
+  .mod-header-row { display:flex; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:14px; }
+  .mod-title { margin:0 0 6px; font-size:23px; font-weight:600; line-height:1.25; }
+  .like-btn { background:none; border:1px solid var(--line); color:var(--fg); padding:6px 12px; border-radius:5px; font-size:14px; cursor:pointer; display:inline-flex; align-items:center; gap:7px; font-family:inherit; }
+  .like-btn:hover { border-color:var(--pink); color:var(--pink); }
+  .like-btn.liked { border-color:var(--pink); color:var(--pink); }
 
-  .like-btn { background:none; border:1px solid var(--line); color:var(--fg); padding:8px 16px; border-radius:20px; font-size:14px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:8px; transition:all 0.15s ease; }
-  .like-btn:hover { border-color:var(--danger); color:var(--danger); }
-  .like-btn.liked { background:rgba(240,104,107,0.15); border-color:var(--danger); color:var(--danger); }
-
-  .comments-sec { margin-top:30px; border-top:1px solid var(--line); padding-top:20px; }
-  .comment-box { display:flex; gap:10px; margin-bottom:20px; }
+  .comments-sec { margin-top:26px; border-top:1px solid var(--line); padding-top:16px; }
+  .sec-title { font-size:16px; font-weight:600; margin:0 0 12px; }
+  .comment-box { display:flex; gap:8px; margin-bottom:12px; }
   .comment-box input { flex:1; }
-  .comment-item { background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:12px 14px; margin-bottom:10px; font-size:14px; }
-  .comment-head { display:flex; align-items:center; gap:8px; margin-bottom:6px; }
-  .comment-user { font-weight:700; font-size:13px; }
-  .comment-time { color:var(--mut); font-size:11.5px; margin-left:auto; }
+  .cm { padding:11px 0; border-top:1px solid var(--line); }
+  #commentsList > .cm:first-child { border-top:none; }
+  .cm-head { display:flex; align-items:center; gap:8px; margin-bottom:3px; }
+  .cm-who { display:inline-flex; align-items:center; gap:8px; cursor:pointer; }
+  .cm-who:hover .cm-user { text-decoration:underline; }
+  .cm-user { font-weight:600; font-size:13.5px; }
+  .cm-time { color:var(--mut); font-size:12px; margin-left:auto; }
+  .cm-text { font-size:14.5px; white-space:pre-wrap; word-break:break-word; }
+  .cm-acts { display:flex; gap:14px; margin-top:4px; }
+  .linkbtn { background:none; border:none; padding:0; color:var(--mut); font-size:12.5px; cursor:pointer; font-family:inherit; }
+  .linkbtn:hover { color:var(--acc); }
+  .linkbtn.danger:hover { color:var(--danger); }
+  .tag { font-size:11px; color:var(--acc); border:1px solid var(--acc); border-radius:3px; padding:0 5px; }
+  .replies { margin:0 0 6px 11px; padding-left:14px; border-left:2px solid var(--line); }
+  .replies .cm { border-top:none; padding:8px 0 4px; }
+  .cm-form { display:flex; gap:6px; margin-top:8px; }
+  .cm-form input { flex:1; }
 
-  /* Modales sencillos para Formularios */
-  dialog { 
-    width: min(92vw, 600px); 
-    max-height: 85vh; 
-    border: 1px solid var(--line); 
-    border-radius: 10px; 
-    padding: 20px; 
-    background: var(--surface); 
-    color: var(--fg); 
-    box-shadow: 0 16px 40px rgba(0,0,0,0.6); 
-    overflow: hidden; 
-  }
-  dialog[open] { display: flex; flex-direction: column; }
-  dialog::backdrop { background: rgba(0,0,0,.75); backdrop-filter: blur(4px); }
-  dialog h2 { margin: 0 0 12px; font-size: 20px; flex-shrink: 0; }
-  
-  .row, #pgView, #pgEdit, #userBody, #mineList { overflow-y: auto; flex: 1; max-height: 55vh; padding-right: 4px; margin-bottom: 8px; }
-  .row { display: flex; flex-direction: column; gap: 10px; }
-  
-  .acts { display: flex; gap: 10px; margin-top: 14px; flex-shrink: 0; flex-wrap: wrap; }
-  .acts .btn { flex: 1; }
+  dialog { width:min(92vw, 600px); max-height:85vh; border:1px solid var(--line); border-radius:6px; padding:18px; background:var(--surface); color:var(--fg); overflow:hidden; }
+  dialog[open] { display:flex; flex-direction:column; }
+  dialog::backdrop { background:rgba(0,0,0,.65); }
+  dialog h2 { margin:0 0 12px; font-size:19px; font-weight:600; flex-shrink:0; }
 
-  .filebtn { display:block; padding:14px; text-align:center; border:1px dashed var(--mut); border-radius:6px; color:var(--mut); cursor:pointer; font-size:13.5px; transition:border-color 0.15s, color 0.15s; }
+  .row, #pgView, #pgEdit, #userBody, #mineList { overflow-y:auto; flex:1; max-height:55vh; padding-right:4px; margin-bottom:8px; }
+  .row { display:flex; flex-direction:column; gap:10px; }
+  .acts { display:flex; gap:8px; margin-top:12px; flex-shrink:0; flex-wrap:wrap; }
+  .acts .btn { flex:1; }
+
+  .filebtn { display:block; padding:13px; text-align:center; border:1px dashed var(--mut); border-radius:5px; color:var(--mut); cursor:pointer; font-size:14px; }
   .filebtn:hover { border-color:var(--acc); color:var(--fg); }
   .filebtn input { display:none; }
-  .hint { color:var(--mut); font-size:12.5px; margin:2px 0; }
+  .hint { color:var(--mut); font-size:13px; margin:2px 0; }
   .thumbs { display:flex; gap:8px; flex-wrap:wrap; }
-  .thumbs img { width:70px; height:70px; object-fit:cover; border-radius:6px; border:1px solid var(--line); }
+  .thumbs img { width:70px; height:70px; object-fit:cover; border-radius:4px; border:1px solid var(--line); }
   .thumb { position:relative; }
   .thumb button { position:absolute; top:-6px; right:-6px; width:20px; height:20px; border-radius:50%; border:none; background:var(--danger); color:#fff; font-size:11px; cursor:pointer; padding:0; }
-  
-  .gallery { display:flex; gap:10px; overflow-x:auto; scroll-snap-type:x mandatory; margin-bottom:16px; border-radius:8px; background:var(--bg); border:1px solid var(--line); padding:8px; width:100%; }
-  .gallery img { width:100%; max-height:420px; aspect-ratio:16/9; border-radius:6px; scroll-snap-align:start; flex:none; object-fit:contain; }
 
-  .desc { white-space:pre-wrap; word-break:break-word; margin:14px 0 20px; font-size:15px; line-height:1.6; }
-  .mine { border:1px solid var(--line); border-radius:6px; padding:12px; margin-bottom:10px; background:rgba(255,255,255,0.01); }
-  .chip { display:inline-block; font-size:11px; font-weight:700; padding:2px 7px; border-radius:4px; border:1px solid var(--line); margin-bottom:6px; }
+  .gallery { display:flex; gap:8px; overflow-x:auto; scroll-snap-type:x mandatory; margin-bottom:14px; border-radius:5px; background:var(--bg); border:1px solid var(--line); padding:6px; width:100%; }
+  .gallery img { width:100%; max-height:420px; aspect-ratio:16/9; border-radius:4px; scroll-snap-align:start; flex:none; object-fit:contain; }
+
+  .desc { white-space:pre-wrap; word-break:break-word; margin:12px 0 18px; line-height:1.6; }
+  .mine { border:1px solid var(--line); border-radius:5px; padding:11px; margin-bottom:10px; }
+  .mine h3 { margin:2px 0 6px; font-size:15.5px; font-weight:600; word-break:break-word; }
+  .chip { display:inline-block; font-size:11.5px; padding:1px 7px; border-radius:3px; border:1px solid var(--line); color:var(--mut); }
   .chip.ok { color:var(--acc); border-color:var(--acc); }
   .chip.off { color:var(--mut); }
   .uhead { display:flex; align-items:center; gap:14px; margin-bottom:10px; }
   .rich p { margin:0 0 10px; }
   .rich ul { margin:0 0 10px; padding-left:20px; }
-  #toast { position:fixed; left:50%; bottom:24px; transform:translateX(-50%); z-index:50; max-width:90vw; padding:12px 18px; border-radius:8px; font-weight:600; font-size:14px; display:none; background:var(--fg); color:var(--bg); box-shadow:0 6px 24px rgba(0,0,0,.5); }
+  #toast { position:fixed; left:50%; bottom:22px; transform:translateX(-50%); z-index:50; max-width:90vw; padding:11px 16px; border-radius:5px; font-size:14px; display:none; background:var(--fg); color:var(--bg); }
 </style>
 </head>
 <body>
@@ -384,11 +375,8 @@ const $ = (id) => document.getElementById(id);
 const BAD_WORDS = ["basura", "horrible", "mierda", "feo", "estúpido", "estupido", "malo", "inútil", "inutil", "hate", "shit", "garbage", "useless", "puto", "pendejo", "asco"];
 
 function checkRespect(text) {
-  const lower = text.toLowerCase();
-  for (let word of BAD_WORDS) {
-    if (lower.includes(word)) return false;
-  }
-  return true;
+  const clean = " " + text.toLowerCase().replace(/[^a-záéíóúüñ0-9]+/g, " ") + " ";
+  return !BAD_WORDS.some((w) => clean.includes(" " + w + " "));
 }
 
 // i18n
@@ -407,7 +395,7 @@ const i18n = {
     file_placeholder: "Archivo del mod (.zip, .7z, .rar, máx. 50 MB)", or_external: "— o, si pesa más de 50 MB —", ph_ext_url: "Enlace de descarga externo (Mega, Drive, etc.)",
     instant_publish: "Tu mod se publicará de inmediato.", btn_upload_mod: "Subir mod", edit_mod_title: "Editar mod", add_more_imgs: "Agregar imágenes (máx. 5 en total)",
     replace_file: "Reemplazar archivo (opcional, máx. 50 MB)", ph_ext_url_opt: "Enlace de descarga externo (opcional)", btn_save_changes: "Guardar cambios",
-    anon: "Anónimo", download_btn: "Descargar", member_since: "Miembro desde", moderator: "Moderador", no_bio: "Este perfil todavía no tiene descripción.",
+    profile: "Perfil", anon: "Anónimo", download_btn: "Descargar", member_since: "Miembro desde", moderator: "Moderador", no_bio: "Este perfil todavía no tiene descripción.",
     no_bio_own: "Todavía no escribiste nada sobre ti. Toca Editar perfil para agregarlo.", downloads_word: "descargas", logout: "Cerrar sesión",
     edit: "Editar", hide: "Ocultar", show: "Mostrar", delete: "Eliminar", published: "Publicado", hidden: "Oculto",
     cat_all: "Todas las categorías", cat_songs: "Canciones", cat_modules: "Módulos", cat_ui: "UI / Interfaz", cat_patches: "Parches / Scripts", cat_edits_pv: "EDITS PV", cat_3dpv: "3DPV", cat_other: "Otros"
@@ -426,7 +414,7 @@ const i18n = {
     file_placeholder: "Mod file (.zip, .7z, .rar, max 50 MB)", or_external: "— or, if larger than 50 MB —", ph_ext_url: "External download link (Mega, Drive, etc.)",
     instant_publish: "Your mod will be published immediately.", btn_upload_mod: "Upload mod", edit_mod_title: "Edit mod", add_more_imgs: "Add images (max 5 total)",
     replace_file: "Replace file (optional, max 50 MB)", ph_ext_url_opt: "External download link (optional)", btn_save_changes: "Save changes",
-    anon: "Anonymous", download_btn: "Download", member_since: "Member since", moderator: "Moderator", no_bio: "This profile has no description yet.",
+    profile: "Profile", anon: "Anonymous", download_btn: "Download", member_since: "Member since", moderator: "Moderator", no_bio: "This profile has no description yet.",
     no_bio_own: "You haven't written anything about yourself yet. Tap Edit profile to add it.", downloads_word: "downloads", logout: "Log out",
     edit: "Edit", hide: "Hide", show: "Show", delete: "Delete", published: "Published", hidden: "Hidden",
     cat_all: "All categories", cat_songs: "Songs", cat_modules: "Modules", cat_ui: "UI / Interface", cat_patches: "Patches / Scripts", cat_edits_pv: "EDITS PV", cat_3dpv: "3DPV", cat_other: "Other"
@@ -606,20 +594,17 @@ function gbItemHtml(m) {
 
   return `<div class="gb-card" data-id="${esc(m.id)}">
     <div class="gb-thumb">
-      ${safeUrl(img) ? `<img class="cover" src="${esc(img)}" alt="" loading="lazy">` : `<div style="font-size:28px;color:var(--mut)">🎵</div>`}
+      ${safeUrl(img) ? `<img class="cover" src="${esc(img)}" alt="" loading="lazy">` : `<img class="ph" src="logo.png" alt="">`}
       <span class="badge-cat">${esc(catLabel)}</span>
-      <div class="author-badge" data-user="${esc(m.user_id)}">
-        ${avatarHtml(m.profiles && m.profiles.avatar_url, authorOf(m), 16)}
-        <span>${esc(authorOf(m))}</span>
-      </div>
     </div>
     <div class="gb-info">
       <h3 class="gb-title">${esc(m.title)}</h3>
+      <div class="gb-author" data-user="${esc(m.user_id)}">${avatarHtml(m.profiles && m.profiles.avatar_url, authorOf(m), 16)}<span>${esc(authorOf(m))}</span></div>
       <div class="gb-stats">
-        <span>${ic("i-dl")} ${m.downloads || 0}</span>
-        <span>${ic("i-heart")} ${likesCount}</span>
-        <span>${ic("i-comm")} ${commsCount}</span>
-        <span style="margin-left:auto">${fmtDate(m.created_at)}</span>
+        <span>${ic("i-dl")}${m.downloads || 0}</span>
+        <span>${ic("i-heart")}${likesCount}</span>
+        <span>${ic("i-comm")}${commsCount}</span>
+        <span class="date">${fmtDate(m.created_at)}</span>
       </div>
     </div>
   </div>`;
@@ -729,46 +714,75 @@ async function loadComments(modId) {
   }
 }
 
-async function postComment(modId) {
-  if (!session || !session.user) return toast("Inicia sesión para comentar.");
-  const input = $("cInput");
-  const content = input.value.trim();
-  if (!content) return;
-
-  if (!checkRespect(content)) {
-    return toast("Mantén un tono respetuoso y libre de insultos.");
-  }
-
-  const btn = $("btnPostC");
-  btn.disabled = true;
-
+async function sendComment(modId, content, parentId) {
+  if (!session || !session.user) { toast("Inicia sesión para comentar."); return false; }
+  content = content.trim();
+  if (!content) return false;
+  if (!checkRespect(content)) { toast("Mantén un tono respetuoso y libre de insultos."); return false; }
+  await refreshIfNeeded();
   try {
+    const body = { mod_id: modId, user_id: session.user.id, content: content };
+    if (parentId) body.parent_id = parentId;
     const res = await fetch(URL_BASE + "/rest/v1/mod_comments", {
       method: "POST",
-      headers: headers({ "Content-Type": "application/json", Prefer: "return=representation" }),
-      body: JSON.stringify({ 
-        mod_id: modId, 
-        user_id: session.user.id, 
-        content: content 
-      })
+      headers: headers({ "Content-Type": "application/json", Prefer: "return=minimal" }),
+      body: JSON.stringify(body)
     });
-
-    const data = await res.json().catch(() => ({}));
-
     if (!res.ok) {
-      throw new Error(data.message || data.hint || "Error al guardar comentario");
+      const d = await res.json().catch(() => ({}));
+      const msg = d.message || d.hint || "No se pudo guardar el comentario";
+      throw new Error(/parent_id/.test(msg) ? "Falta ejecutar el SQL de respuestas en Supabase." : msg);
     }
-
-    input.value = "";
-    toast("Comentario publicado.");
     await loadSocialCounts();
     await loadModSocialData(modId);
     renderMods();
-  } catch(e) { 
-    toast("Error: " + e.message); 
-  } finally {
-    btn.disabled = false;
+    return true;
+  } catch (e) {
+    toast("Error: " + e.message);
+    return false;
   }
+}
+
+async function postComment(modId) {
+  const input = $("cInput"), btn = $("btnPostC");
+  btn.disabled = true;
+  const ok = await sendComment(modId, input.value, null);
+  btn.disabled = false;
+  if (ok) { input.value = ""; toast("Comentario publicado."); }
+}
+
+async function deleteComment(id, modId) {
+  if (!confirm("¿Eliminar este comentario? También se borrarán sus respuestas.")) return;
+  try {
+    const r = await fetch(URL_BASE + "/rest/v1/mod_comments?id=eq." + id, { method: "DELETE", headers: headers({ Prefer: "return=representation" }) });
+    const d = await r.json().catch(() => []);
+    if (!r.ok) throw new Error((d && d.message) || ("Error " + r.status));
+    if (Array.isArray(d) && !d.length) throw new Error("No tienes permiso para borrar este comentario.");
+    await loadSocialCounts();
+    await loadModSocialData(modId);
+    renderMods();
+    toast("Comentario eliminado.");
+  } catch (e) { toast("Error: " + e.message); }
+}
+
+function commentHtml(c, rootId) {
+  const uName = c.profile.username || "Usuario";
+  const isAuthor = currentMod && c.user_id === currentMod.user_id;
+  const me = myId();
+  const canDel = me && (c.user_id === me || isMod);
+  return `<div class="cm">
+    <div class="cm-head">
+      <span class="cm-who" data-user="${esc(c.user_id)}">${avatarHtml(c.profile.avatar_url, uName, 22)}<span class="cm-user">${esc(uName)}</span></span>
+      ${isAuthor ? `<span class="tag">Autor</span>` : ""}
+      <span class="cm-time">${fmtDate(c.created_at)}</span>
+    </div>
+    <div class="cm-text">${esc(c.content)}</div>
+    <div class="cm-acts">
+      <button class="linkbtn" data-reply="${esc(c.id)}" data-root="${esc(rootId)}" data-rname="${esc(uName)}" data-isroot="${c.id === rootId ? 1 : 0}">Responder</button>
+      ${canDel ? `<button class="linkbtn danger" data-delc="${esc(c.id)}">Eliminar</button>` : ""}
+    </div>
+    <div id="slot-${esc(c.id)}"></div>
+  </div>`;
 }
 
 async function loadModSocialData(id) {
@@ -786,25 +800,51 @@ async function loadModSocialData(id) {
 
   const cList = $("commentsList");
   if (cList) {
-    cList.innerHTML = comments.length ? comments.map(c => {
-      const uName = c.profile.username || "Usuario";
-      const uAv = c.profile.avatar_url;
-      const isAuthor = currentMod && c.user_id === currentMod.user_id;
-      const authorBadge = isAuthor ? `<span class="chip ok" style="font-size:9px;padding:1px 5px;margin:0">Autor</span>` : '';
-
-      return `
-        <div class="comment-item">
-          <div class="comment-head">
-            ${avatarHtml(uAv, uName, 20)}
-            <span class="comment-user">${esc(uName)}</span>
-            ${authorBadge}
-            <span class="comment-time">${fmtDate(c.created_at)}</span>
-          </div>
-          <div>${esc(c.content)}</div>
-        </div>
-      `;
+    const roots = comments.filter(c => !c.parent_id).sort((x, y) => new Date(y.created_at) - new Date(x.created_at));
+    const kids = {};
+    comments.filter(c => c.parent_id).forEach(c => { (kids[c.parent_id] = kids[c.parent_id] || []).push(c); });
+    cList.innerHTML = roots.length ? roots.map(c => {
+      const rs = kids[c.id] || [];
+      return commentHtml(c, c.id) + (rs.length ? `<div class="replies">${rs.map(r => commentHtml(r, c.id)).join("")}</div>` : "");
     }).join("") : `<p class="hint">Sé el primero en dejar un comentario respetuoso sobre este mod.</p>`;
   }
+}
+
+function wireComments(modId) {
+  const list = $("commentsList");
+  list.onclick = async (e) => {
+    const rb = e.target.closest("[data-reply]");
+    if (rb) {
+      if (!session) return toast("Inicia sesión para responder.");
+      document.querySelectorAll(".cm-form").forEach(f => f.remove());
+      const slot = $("slot-" + rb.dataset.reply);
+      if (!slot) return;
+      const prefix = rb.dataset.isroot === "1" ? "" : "@" + rb.dataset.rname + " ";
+      slot.innerHTML = `<div class="cm-form"><input maxlength="250" value="${esc(prefix)}" placeholder="Responder a ${esc(rb.dataset.rname)}..."><button class="btn pri sm" data-send="${esc(rb.dataset.root)}">Enviar</button><button class="btn sm" data-cancel>Cancelar</button></div>`;
+      const inp = slot.querySelector("input");
+      inp.focus();
+      inp.setSelectionRange(inp.value.length, inp.value.length);
+      return;
+    }
+    if (e.target.closest("[data-cancel]")) { e.target.closest(".cm-form").remove(); return; }
+    const sb = e.target.closest("[data-send]");
+    if (sb) {
+      const inp = sb.closest(".cm-form").querySelector("input");
+      sb.disabled = true;
+      const ok = await sendComment(modId, inp.value, sb.dataset.send);
+      if (ok) toast("Respuesta publicada."); else sb.disabled = false;
+      return;
+    }
+    const db = e.target.closest("[data-delc]");
+    if (db) deleteComment(db.dataset.delc, modId);
+  };
+  list.onkeydown = (e) => {
+    if (e.key === "Enter" && e.target.matches(".cm-form input")) {
+      e.preventDefault();
+      e.target.closest(".cm-form").querySelector("[data-send]").click();
+    }
+  };
+  $("cInput").onkeydown = (e) => { if (e.key === "Enter") { e.preventDefault(); postComment(modId); } };
 }
 
 // Abrir Mod en Vista de Página Independiente
@@ -822,12 +862,13 @@ function openModPage(id) {
   const tLang = i18n[currentLang];
   let acts = "";
   if (owner) acts = `<div class="acts" style="margin-top:12px"><button class="btn sm" data-act="edit" data-id="${esc(m.id)}">${tLang.edit}</button><button class="btn sm" data-act="hide" data-id="${esc(m.id)}">${tLang.hide}</button><button class="btn sm danger" data-act="del" data-id="${esc(m.id)}">${tLang.delete}</button></div>`;
+  if (!owner && isMod) acts = `<p class="hint" style="margin-top:14px">Moderación</p><div class="acts" style="margin-top:4px"><button class="btn sm" data-act="hide" data-id="${esc(m.id)}">${tLang.hide}</button><button class="btn sm danger" data-act="del" data-id="${esc(m.id)}">${tLang.delete}</button></div>`;
 
   $("modPageContent").innerHTML = `
     ${imgs.length ? `<div class="gallery">${imgs.map((u) => `<img src="${esc(u)}" alt="">`).join("")}</div>` : ""}
     <div class="mod-header-row">
       <div>
-        <h1 style="margin:0 0 6px;color:var(--yellow);font-size:24px">${esc(m.title)}</h1>
+        <h1 class="mod-title">${esc(m.title)}</h1>
         <div class="who" data-user="${esc(m.user_id)}" style="font-size:15px;display:flex;align-items:center;gap:8px;cursor:pointer">${avatarHtml(m.profiles && m.profiles.avatar_url, authorOf(m), 26)}<span>${esc(authorOf(m))}</span></div>
       </div>
       <button id="btnLike" class="like-btn">${ic("i-heart")} <span>0 Likes</span></button>
@@ -845,9 +886,9 @@ function openModPage(id) {
     ${acts}
 
     <div class="comments-sec">
-      <h3 style="font-size:17px;margin:0 0 12px">Comentarios</h3>
+      <h3 class="sec-title">Comentarios</h3>
       <div class="comment-box">
-        <input id="cInput" placeholder="Escribe un comentario o respuesta..." maxlength="250">
+        <input id="cInput" placeholder="Escribe un comentario..." maxlength="250">
         <button id="btnPostC" class="btn pri sm">Enviar</button>
       </div>
       <div id="commentsList">Cargando comentarios...</div>
@@ -860,6 +901,7 @@ function openModPage(id) {
   const b = $("dlBtn");
   if (b) b.onclick = () => { rpc("increment_downloads", id); m.downloads = (m.downloads || 0) + 1; $("dlCount").textContent = m.downloads; renderMods(); };
   $("btnPostC").onclick = () => postComment(id);
+  wireComments(id);
 
   loadModSocialData(id);
 }
@@ -944,7 +986,7 @@ function renderMine() {
   $("mineList").innerHTML = mine.map((m) => {
     const st = m.hidden ? ["off", tLang.hidden] : ["ok", tLang.published];
     return `<div class="mine"><span class="chip ${st[0]}">${st[1]}</span><h3>${esc(m.title)}</h3>
-      <div class="gb-stats"><span>⬇ ${m.downloads || 0}</span><span>👁 ${m.views || 0}</span></div>
+      <div class="gb-stats"><span>${ic("i-dl")}${m.downloads || 0}</span><span>${ic("i-eye")}${m.views || 0}</span></div>
       <div class="acts"><button class="btn sm" data-act="edit" data-id="${esc(m.id)}">${tLang.edit}</button>
       <button class="btn sm" data-act="hide" data-id="${esc(m.id)}">${m.hidden ? tLang.show : tLang.hide}</button>
       <button class="btn sm danger" data-act="del" data-id="${esc(m.id)}">${tLang.delete}</button></div></div>`;
