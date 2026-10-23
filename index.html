@@ -1,153 +1,338 @@
 <!DOCTYPE html>
-<html lang="es" translate="no">
+<html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="google" content="notranslate">
 <title>PDMM+ Mods</title>
 <style>
-  :root { --bg:#0e1116; --card:#171b22; --line:#262c36; --fg:#e8ecf1; --mut:#8b95a5; --acc:#39c5bb; --acc2:#ff5fa2; --warn:#f0b429; }
+  :root { 
+    --bg:#0b0e14; 
+    --card:#131822; 
+    --line:rgba(255, 255, 255, 0.08); 
+    --fg:#e8ecf1; 
+    --mut:#8b95a5; 
+    --acc:#00eceb; 
+    --acc2:#ff0055; 
+    --warn:#f0b429; 
+    --radius:12px;
+  }
   @media (prefers-color-scheme: light) {
-    :root { --bg:#f5f7fa; --card:#fff; --line:#e2e6ec; --fg:#16191f; --mut:#667085; }
+    :root { --bg:#f4f6f9; --card:#ffffff; --line:#e2e6ec; --fg:#16191f; --mut:#667085; }
   }
   * { box-sizing:border-box; }
-  body { margin:0; font-family:system-ui,-apple-system,"Segoe UI",sans-serif; background:var(--bg); color:var(--fg); line-height:1.45; }
-  header { position:sticky; top:0; z-index:20; display:flex; align-items:center; gap:8px; padding:10px 14px;
-    background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:blur(10px); border-bottom:1px solid var(--line); }
-  .logo { font-weight:800; font-size:19px; margin-right:auto; background:linear-gradient(90deg,var(--acc),var(--acc2));
-    -webkit-background-clip:text; background-clip:text; color:transparent; }
-  .btn { border:1px solid var(--line); background:var(--card); color:var(--fg); padding:9px 13px; border-radius:10px;
-    font-size:14px; font-weight:600; cursor:pointer; text-decoration:none; display:inline-block; text-align:center; }
-  .btn.pri { border:none; color:#06201e; background:linear-gradient(90deg,var(--acc),#6fe0d6); }
-  .btn.danger { color:#ff6b6b; border-color:#ff6b6b66; }
-  .btn.sm { padding:7px 10px; font-size:13px; }
-  .btn:disabled { opacity:.6; }
+  body { margin:0; font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background:var(--bg); color:var(--fg); line-height:1.5; }
+  
+  /* Navbar Principal */
+  header { position:sticky; top:0; z-index:20; display:flex; align-items:center; gap:12px; padding:10px 16px;
+    background:rgba(11, 14, 20, 0.85); backdrop-filter:blur(12px); border-bottom:1px solid var(--line); }
+  
+  .brand-logo { display:flex; align-items:center; text-decoration:none; margin-right:8px; cursor:pointer; }
+  .brand-logo svg { height:28px; width:auto; fill:none; }
+  
+  .nav-tabs { display:flex; gap:6px; align-items:center; margin-right:auto; }
+  .tab-btn { background:transparent; border:none; color:var(--mut); font-size:14px; font-weight:600; padding:8px 12px; border-radius:8px; cursor:pointer; transition:all 0.2s ease; }
+  .tab-btn:hover, .tab-btn.active { color:var(--fg); background:rgba(255, 255, 255, 0.05); }
+  .tab-btn.active { color:var(--acc); }
+
+  .btn { border:1px solid var(--line); background:var(--card); color:var(--fg); padding:8px 14px; border-radius:10px;
+    font-size:14px; font-weight:600; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:6px; transition:all 0.2s ease; }
+  .btn:hover { background:rgba(255,255,255,0.06); border-color:rgba(255,255,255,0.15); transform:translateY(-1px); }
+  .btn.pri { border:none; color:#041819; background:linear-gradient(135deg, var(--acc), #6fe0d6); box-shadow:0 2px 10px rgba(0, 236, 235, 0.25); }
+  .btn.pri:hover { box-shadow:0 4px 15px rgba(0, 236, 235, 0.4); }
+  .btn.danger { color:#ff6b6b; border-color:rgba(255, 107, 107, 0.3); }
+  .btn.danger:hover { background:rgba(255, 107, 107, 0.1); }
+  .btn.sm { padding:6px 10px; font-size:13px; }
+  .btn:disabled { opacity:.6; cursor:not-allowed; }
   .hide { display:none !important; }
-  .av { border-radius:50%; object-fit:cover; display:grid; place-items:center; font-weight:800; color:#06201e;
+
+  .av { border-radius:50%; object-fit:cover; display:grid; place-items:center; font-weight:800; color:#041819;
     background:linear-gradient(135deg,var(--acc),var(--acc2)); flex:none; overflow:hidden; }
-  main { max-width:900px; margin:0 auto; padding:16px 14px 60px; }
-  .hero h1 { margin:6px 0 4px; font-size:25px; }
-  .hero p { margin:0 0 14px; color:var(--mut); }
-  .bar { display:flex; gap:10px; align-items:center; margin-bottom:14px; }
+
+  main { max-width:960px; margin:0 auto; padding:20px 16px 60px; }
+  .hero h1 { margin:0 0 6px; font-size:26px; letter-spacing:-0.5px; }
+  .hero p { margin:0 0 16px; color:var(--mut); font-size:15px; }
+  .bar { display:flex; gap:10px; align-items:center; margin-bottom:18px; }
   .bar input { flex:1; }
-  .count { color:var(--mut); font-size:14px; white-space:nowrap; }
-  input, textarea { width:100%; padding:11px 12px; border-radius:10px; border:1px solid var(--line);
-    background:var(--bg); color:var(--fg); font-size:16px; font-family:inherit; }
-  input:focus, textarea:focus { outline:2px solid var(--acc); }
-  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:12px; }
-  .card { background:var(--card); border:1px solid var(--line); border-radius:14px; overflow:hidden; display:flex; flex-direction:column; cursor:pointer; }
-  .cover { aspect-ratio:16/9; background:linear-gradient(135deg,#39c5bb33,#ff5fa233); display:grid; place-items:center;
-    font-size:42px; font-weight:800; color:var(--mut); overflow:hidden; }
+  .count { color:var(--mut); font-size:13px; white-space:nowrap; }
+
+  input, textarea { width:100%; padding:10px 12px; border-radius:10px; border:1px solid var(--line);
+    background:var(--card); color:var(--fg); font-size:15px; font-family:inherit; transition:border-color 0.2s ease; }
+  input:focus, textarea:focus { outline:none; border-color:var(--acc); box-shadow:0 0 0 2px rgba(0,236,235,0.15); }
+
+  /* Grid y Tarjetas */
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:14px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; display:flex; flex-direction:column; cursor:pointer; transition:transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease; }
+  .card:hover { transform:translateY(-4px); border-color:rgba(0, 236, 235, 0.3); box-shadow:0 10px 20px -8px rgba(0,0,0,0.5); }
+  .cover { aspect-ratio:16/9; background:linear-gradient(135deg, rgba(0,236,235,0.1), rgba(255,0,85,0.1)); display:grid; place-items:center; font-size:36px; font-weight:800; color:var(--mut); overflow:hidden; }
   .cover img { width:100%; height:100%; object-fit:cover; }
-  .body { padding:12px; display:flex; flex-direction:column; gap:7px; flex:1; }
-  .body h3 { margin:0; font-size:17px; word-break:break-word; }
-  .who { display:flex; align-items:center; gap:7px; color:var(--mut); font-size:13px; }
-  .stats { display:flex; gap:14px; color:var(--mut); font-size:13px; }
-  .empty { grid-column:1/-1; text-align:center; color:var(--mut); padding:36px 8px; }
-  dialog { width:min(94vw,460px); max-height:90vh; border:1px solid var(--line); border-radius:16px; padding:18px; background:var(--card); color:var(--fg); }
-  dialog::backdrop { background:rgba(0,0,0,.65); }
-  dialog h2 { margin:0 0 10px; }
-  .row { display:flex; flex-direction:column; gap:8px; }
-  .acts { display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; }
+  .body { padding:12px; display:flex; flex-direction:column; gap:6px; flex:1; }
+  .body h3 { margin:0; font-size:16px; font-weight:700; word-break:break-word; }
+  .who { display:flex; align-items:center; gap:6px; color:var(--mut); font-size:13px; }
+  .stats { display:flex; gap:12px; color:var(--mut); font-size:12px; margin-top:auto; padding-top:4px; }
+  .empty { grid-column:1/-1; text-align:center; color:var(--mut); padding:40px 12px; }
+
+  /* Elementos Modales */
+  dialog { width:min(92vw,480px); max-height:90vh; border:1px solid var(--line); border-radius:16px; padding:20px; background:var(--card); color:var(--fg); box-shadow:0 20px 40px rgba(0,0,0,0.6); }
+  dialog::backdrop { background:rgba(0,0,0,0.75); backdrop-filter:blur(4px); }
+  dialog h2 { margin:0 0 12px; font-size:20px; }
+  .row { display:flex; flex-direction:column; gap:10px; }
+  .acts { display:flex; gap:8px; margin-top:14px; flex-wrap:wrap; }
   .acts .btn { flex:1; }
-  .filebtn { display:block; padding:12px; text-align:center; border:2px dashed var(--line); border-radius:10px; color:var(--mut); cursor:pointer; word-break:break-all; }
+  .filebtn { display:block; padding:12px; text-align:center; border:2px dashed var(--line); border-radius:10px; color:var(--mut); cursor:pointer; word-break:break-all; transition:border-color 0.2s; }
+  .filebtn:hover { border-color:var(--acc); color:var(--fg); }
   .filebtn input { display:none; }
-  .hint { color:var(--mut); font-size:13px; margin:2px 0; }
+  .hint { color:var(--mut); font-size:12px; margin:2px 0; }
   .thumbs { display:flex; gap:6px; flex-wrap:wrap; }
-  .thumbs img { width:64px; height:64px; object-fit:cover; border-radius:8px; border:1px solid var(--line); display:block; }
+  .thumbs img { width:60px; height:60px; object-fit:cover; border-radius:8px; border:1px solid var(--line); }
   .thumb { position:relative; }
-  .thumb button { position:absolute; top:-6px; right:-6px; width:22px; height:22px; border-radius:50%; border:none;
-    background:#ff5252; color:#fff; font-size:12px; cursor:pointer; padding:0; }
-  .gallery { display:flex; gap:8px; overflow-x:auto; scroll-snap-type:x mandatory; margin-bottom:10px; }
-  .gallery img { height:210px; border-radius:10px; scroll-snap-align:start; flex:none; max-width:100%; object-fit:contain; background:var(--bg); }
-  .desc { white-space:pre-wrap; word-break:break-word; }
-  .mine { border:1px solid var(--line); border-radius:12px; padding:10px; margin-bottom:10px; }
-  .mine h3 { margin:0 0 4px; font-size:16px; word-break:break-word; }
-  .chip { display:inline-block; font-size:12px; font-weight:700; padding:2px 8px; border-radius:20px; border:1px solid var(--line); margin-bottom:6px; }
+  .thumb button { position:absolute; top:-6px; right:-6px; width:20px; height:20px; border-radius:50%; border:none; background:var(--acc2); color:#fff; font-size:11px; cursor:pointer; padding:0; }
+  .gallery { display:flex; gap:8px; overflow-x:auto; scroll-snap-type:x mandatory; margin-bottom:12px; border-radius:10px; }
+  .gallery img { height:220px; border-radius:10px; scroll-snap-align:start; flex:none; max-width:100%; object-fit:contain; background:var(--bg); }
+  .desc { white-space:pre-wrap; word-break:break-word; font-size:14px; line-height:1.6; }
+  
+  .rules-list { padding-left:18px; margin:8px 0; }
+  .rules-list li { margin-bottom:8px; font-size:14px; color:var(--fg); }
+
+  .mine { border:1px solid var(--line); border-radius:10px; padding:12px; margin-bottom:10px; background:rgba(255,255,255,0.02); }
+  .mine h3 { margin:0 0 4px; font-size:15px; }
+  .chip { display:inline-block; font-size:11px; font-weight:700; padding:2px 8px; border-radius:20px; border:1px solid var(--line); margin-bottom:6px; }
   .chip.ok { color:var(--acc); border-color:var(--acc); }
   .chip.wait { color:var(--warn); border-color:var(--warn); }
   .chip.off { color:var(--mut); }
-  #toast { position:fixed; left:50%; bottom:22px; transform:translateX(-50%); z-index:50; max-width:90vw; padding:12px 16px;
-    border-radius:12px; font-weight:600; display:none; background:var(--acc2); color:#fff; box-shadow:0 6px 24px rgba(0,0,0,.35); }
+  
+  #toast { position:fixed; left:50%; bottom:24px; transform:translateX(-50%); z-index:50; max-width:90vw; padding:10px 18px;
+    border-radius:10px; font-weight:600; font-size:14px; display:none; background:var(--acc2); color:#fff; box-shadow:0 8px 24px rgba(0,0,0,0.4); }
 </style>
 </head>
 <body>
+
 <header>
-  <div class="logo">PDMM+ Mods</div>
-  <button id="btnProfile" class="btn hide" style="padding:4px 10px;display:flex;align-items:center;gap:7px">
+  <!-- Icono / Logo -->
+  <a class="brand-logo" href="#">
+  <img src="tu-logo.png" alt="PDMM+ Mods Logo" style="height: 28px; width: auto;" />
+ </a>
+  <!-- Pestañas de navegación -->
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="location.hash=''" data-i18n="navMods">Mods</button>
+    <button class="tab-btn" onclick="$('rulesDlg').showModal()" data-i18n="navRules">Reglas</button>
+    <button class="tab-btn" onclick="$('infoDlg').showModal()" data-i18n="navInfo">Información</button>
+  </nav>
+
+  <!-- Botones de Usuario -->
+  <button id="btnProfile" class="btn hide" style="padding:4px 10px;">
     <span id="hAv"></span><span id="hName" style="max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
   </button>
-  <button id="btnOpenUpload" class="btn pri hide">Subir</button>
-  <button id="btnOpenAuth" class="btn">Entrar</button>
+  <button id="btnOpenUpload" class="btn pri hide" data-i18n="btnUpload">Subir</button>
+  <button id="btnOpenAuth" class="btn" data-i18n="btnLogin">Entrar</button>
 </header>
 
 <main>
-  <div class="hero"><h1>Mods de Project Diva</h1><p>Descubre y comparte mods hechos por la comunidad.</p></div>
-  <div class="bar"><input id="q" type="search" placeholder="Buscar mods"><span id="count" class="count"></span></div>
-  <div id="list" class="grid"><div class="empty">Cargando...</div></div>
+  <div class="hero">
+    <h1 data-i18n="heroTitle">Mods de Project Diva</h1>
+    <p data-i18n="heroSubtitle">Descubre y comparte mods hechos por la comunidad.</p>
+  </div>
+
+  <div class="bar">
+    <input id="q" type="search" data-i18n-ph="searchPlaceholder" placeholder="Buscar mods...">
+    <span id="count" class="count"></span>
+  </div>
+
+  <div id="list" class="grid">
+    <div class="empty" data-i18n="loading">Cargando...</div>
+  </div>
 </main>
 
+<!-- Modal: Reglas -->
+<dialog id="rulesDlg">
+  <h2 data-i18n="rulesTitle">Reglas de la Comunidad</h2>
+  <ul class="rules-list">
+    <li data-i18n="rule1">Solo contenido relacionado con Project Diva y juegos de ritmo derivados.</li>
+    <li data-i18n="rule2">Respeta los créditos y la autoría de los creadores originales.</li>
+    <li data-i18n="rule3">Prohibido subir archivos maliciosos, exploits o contenido ilegal.</li>
+    <li data-i18n="rule4">Todos los mods pasan por una breve revisión antes de ser públicos.</li>
+  </ul>
+  <div class="acts"><button class="btn" data-close data-i18n="btnClose">Cerrar</button></div>
+</dialog>
+
+<!-- Modal: Información -->
+<dialog id="infoDlg">
+  <h2 data-i18n="infoTitle">Acerca de PDMM+ Mods</h2>
+  <p class="desc" data-i18n="infoBody">Esta plataforma es un espacio independiente creado para compartir, explorar y descargar mods para Project Diva Mega Mix+ y entregas afines. Todo el contenido es proporcionado libremente por la comunidad.</p>
+  <div class="acts"><button class="btn" data-close data-i18n="btnClose">Cerrar</button></div>
+</dialog>
+
+<!-- Modal: Autenticación -->
 <dialog id="authDlg">
-  <h2>Cuenta</h2>
+  <h2 data-i18n="authTitle">Cuenta</h2>
   <div class="row">
     <input id="email" type="email" placeholder="Correo electrónico" autocomplete="email">
     <input id="password" type="password" placeholder="Contraseña (mín. 6 caracteres)" autocomplete="current-password">
   </div>
-  <div class="acts"><button id="btnLogin" class="btn pri">Iniciar sesión</button><button id="btnSignup" class="btn">Crear cuenta</button></div>
-  <div class="acts"><button class="btn" data-close>Cerrar</button></div>
-</dialog>
-
-<dialog id="profDlg">
-  <h2>Mi perfil</h2>
-  <div class="row">
-    <div style="display:flex;align-items:center;gap:12px"><span id="pAv"></span>
-      <label class="btn" style="cursor:pointer">Cambiar foto<input id="pFile" type="file" accept="image/*" class="hide"></label></div>
-    <input id="pName" placeholder="Nombre de usuario" maxlength="30">
-    <p class="hint">Este nombre se muestra como autor de tus mods. Foto máx. 5 MB.</p>
+  <div class="acts">
+    <button id="btnLogin" class="btn pri" data-i18n="btnLogin">Iniciar sesión</button>
+    <button id="btnSignup" class="btn" data-i18n="btnSignup">Crear cuenta</button>
   </div>
-  <div class="acts"><button id="btnSaveProf" class="btn pri">Guardar</button><button id="btnMine" class="btn">Mis mods</button></div>
-  <div class="acts"><button id="btnLogout" class="btn danger">Cerrar sesión</button><button class="btn" data-close>Cerrar</button></div>
+  <div class="acts"><button class="btn" data-close data-i18n="btnClose">Cerrar</button></div>
 </dialog>
 
+<!-- Modal: Perfil -->
+<dialog id="profDlg">
+  <h2 data-i18n="profTitle">Mi perfil</h2>
+  <div class="row">
+    <div style="display:flex;align-items:center;gap:12px">
+      <span id="pAv"></span>
+      <label class="btn" style="cursor:pointer" data-i18n="btnChangeAvatar">Cambiar foto<input id="pFile" type="file" accept="image/*" class="hide"></label>
+    </div>
+    <input id="pName" placeholder="Nombre de usuario" maxlength="30">
+    <p class="hint" data-i18n="profHint">Este nombre se muestra como autor de tus mods. Foto máx. 5 MB.</p>
+  </div>
+  <div class="acts">
+    <button id="btnSaveProf" class="btn pri" data-i18n="btnSave">Guardar</button>
+    <button id="btnMine" class="btn" data-i18n="btnMyMods">Mis mods</button>
+  </div>
+  <div class="acts">
+    <button id="btnLogout" class="btn danger" data-i18n="btnLogout">Cerrar sesión</button>
+    <button class="btn" data-close data-i18n="btnClose">Cerrar</button>
+  </div>
+</dialog>
+
+<!-- Modal: Mis Mods -->
 <dialog id="mineDlg">
-  <h2>Mis mods</h2>
+  <h2 data-i18n="btnMyMods">Mis mods</h2>
   <div id="mineList"></div>
-  <div class="acts"><button class="btn" data-close>Cerrar</button></div>
+  <div class="acts"><button class="btn" data-close data-i18n="btnClose">Cerrar</button></div>
 </dialog>
 
+<!-- Modal: Subir Mod -->
 <dialog id="upDlg">
-  <h2>Subir un mod</h2>
+  <h2 data-i18n="uploadTitle">Subir un mod</h2>
   <div class="row">
     <input id="title" placeholder="Título del mod" maxlength="80">
     <textarea id="desc" rows="3" placeholder="Descripción"></textarea>
-    <label class="filebtn"><span id="imgName">Imágenes del mod (hasta 5)</span><input id="imgs" type="file" accept="image/*" multiple></label>
+    <label class="filebtn"><span id="imgName" data-i18n="upImgsHint">Imágenes del mod (hasta 5)</span><input id="imgs" type="file" accept="image/*" multiple></label>
     <div id="imgPrev" class="thumbs"></div>
-    <label class="filebtn"><span id="fileName">Archivo del mod (.zip, .7z, .rar, máx. 50 MB)</span><input id="file" type="file" accept=".zip,.7z,.rar"></label>
-    <p class="hint" style="text-align:center">— o, si pesa más de 50 MB —</p>
+    <label class="filebtn"><span id="fileName" data-i18n="upFileHint">Archivo del mod (.zip, .7z, .rar, máx. 50 MB)</span><input id="file" type="file" accept=".zip,.7z,.rar"></label>
+    <p class="hint" style="text-align:center" data-i18n="orExternal">— o, si pesa más de 50 MB —</p>
     <input id="ext" type="url" placeholder="Enlace de descarga externo (Mega, Drive, etc.)">
   </div>
-  <p class="hint">Tu mod se publicará cuando sea aprobado.</p>
-  <div class="acts"><button id="btnUpload" class="btn pri">Subir mod</button><button class="btn" data-close>Cancelar</button></div>
+  <p class="hint" data-i18n="reviewNotice">Tu mod se publicará cuando sea aprobado.</p>
+  <div class="acts">
+    <button id="btnUpload" class="btn pri" data-i18n="btnSubmitMod">Subir mod</button>
+    <button class="btn" data-close data-i18n="btnCancel">Cancelar</button>
+  </div>
 </dialog>
 
+<!-- Modal: Editar Mod -->
 <dialog id="editDlg">
-  <h2>Editar mod</h2>
+  <h2 data-i18n="editTitle">Editar mod</h2>
   <div class="row">
     <input id="eTitle" placeholder="Título del mod" maxlength="80">
     <textarea id="eDesc" rows="3" placeholder="Descripción"></textarea>
     <div id="eThumbs" class="thumbs"></div>
-    <label class="filebtn"><span id="eImgName">Agregar imágenes (máx. 5 en total)</span><input id="eImgs" type="file" accept="image/*" multiple></label>
-    <label class="filebtn"><span id="eFileName">Reemplazar archivo (opcional, máx. 50 MB)</span><input id="eFile" type="file" accept=".zip,.7z,.rar"></label>
+    <label class="filebtn"><span id="eImgName" data-i18n="addImgsHint">Agregar imágenes (máx. 5 en total)</span><input id="eImgs" type="file" accept="image/*" multiple></label>
+    <label class="filebtn"><span id="eFileName" data-i18n="replaceFileHint">Reemplazar archivo (opcional, máx. 50 MB)</span><input id="eFile" type="file" accept=".zip,.7z,.rar"></label>
     <input id="eExt" type="url" placeholder="Enlace de descarga externo (opcional)">
   </div>
-  <p class="hint">Si cambias el archivo o el enlace, el mod vuelve a revisión antes de publicarse.</p>
-  <div class="acts"><button id="btnSaveEdit" class="btn pri">Guardar cambios</button><button class="btn" data-close>Cancelar</button></div>
+  <p class="hint" data-i18n="reReviewNotice">Si cambias el archivo o el enlace, el mod vuelve a revisión antes de publicarse.</p>
+  <div class="acts">
+    <button id="btnSaveEdit" class="btn pri" data-i18n="btnSave">Guardar cambios</button>
+    <button class="btn" data-close data-i18n="btnCancel">Cancelar</button>
+  </div>
 </dialog>
 
-<dialog id="detDlg"><div id="detBody"></div><div class="acts"><button class="btn" data-close>Cerrar</button></div></dialog>
+<!-- Modal: Detalle del Mod -->
+<dialog id="detDlg">
+  <div id="detBody"></div>
+  <div class="acts"><button class="btn" data-close data-i18n="btnClose">Cerrar</button></div>
+</dialog>
+
 <div id="toast"></div>
 
 <script>
+// Diccionario de Traducciones (i18n)
+const i18nDict = {
+  es: {
+    navMods: "Mods", navRules: "Reglas", navInfo: "Información",
+    btnUpload: "Subir", btnLogin: "Entrar", btnSignup: "Crear cuenta",
+    heroTitle: "Mods de Project Diva", heroSubtitle: "Descubre y comparte mods hechos por la comunidad.",
+    searchPlaceholder: "Buscar mods...", loading: "Cargando...",
+    rulesTitle: "Reglas de la Comunidad",
+    rule1: "Solo contenido relacionado con Project Diva y juegos de ritmo derivados.",
+    rule2: "Respeta los créditos y la autoría de los creadores originales.",
+    rule3: "Prohibido subir archivos maliciosos, exploits o contenido ilegal.",
+    rule4: "Todos los mods pasan por una breve revisión antes de ser públicos.",
+    infoTitle: "Acerca de PDMM+ Mods",
+    infoBody: "Esta plataforma es un espacio independiente creado para compartir, explorar y descargar mods para Project Diva Mega Mix+ y entregas afines. Todo el contenido es proporcionado libremente por la comunidad.",
+    authTitle: "Cuenta", profTitle: "Mi perfil", btnChangeAvatar: "Cambiar foto",
+    profHint: "Este nombre se muestra como autor de tus mods. Foto máx. 5 MB.",
+    btnSave: "Guardar", btnMyMods: "Mis mods", btnLogout: "Cerrar sesión", btnClose: "Cerrar",
+    uploadTitle: "Subir un mod", upImgsHint: "Imágenes del mod (hasta 5)", upFileHint: "Archivo del mod (.zip, .7z, .rar, máx. 50 MB)",
+    orExternal: "— o, si pesa más de 50 MB —", reviewNotice: "Tu mod se publicará cuando sea aprobado.",
+    btnSubmitMod: "Subir mod", btnCancel: "Cancelar", editTitle: "Editar mod",
+    addImgsHint: "Agregar imágenes (máx. 5 en total)", replaceFileHint: "Reemplazar archivo (opcional, máx. 50 MB)",
+    reReviewNotice: "Si cambias el archivo o el enlace, el mod vuelve a revisión.", download: "Descargar", edit: "Editar", hide: "Ocultar", show: "Mostrar", delete: "Eliminar"
+  },
+  en: {
+    navMods: "Mods", navRules: "Rules", navInfo: "Info",
+    btnUpload: "Upload", btnLogin: "Sign In", btnSignup: "Sign Up",
+    heroTitle: "Project Diva Mods", heroSubtitle: "Discover and share community-created mods.",
+    searchPlaceholder: "Search mods...", loading: "Loading...",
+    rulesTitle: "Community Rules",
+    rule1: "Only content related to Project Diva and rhythm games.",
+    rule2: "Respect original creators' credits and copyright.",
+    rule3: "No malicious files, exploits, or illegal content.",
+    rule4: "All mods go through a brief review before publication.",
+    infoTitle: "About PDMM+ Mods",
+    infoBody: "This platform is an independent place to share, explore, and download mods for Project Diva Mega Mix+ and related games. All content is freely uploaded by the community.",
+    authTitle: "Account", profTitle: "My Profile", btnChangeAvatar: "Change Avatar",
+    profHint: "This name appears as the author of your mods. Max avatar size: 5 MB.",
+    btnSave: "Save", btnMyMods: "My Mods", btnLogout: "Log Out", btnClose: "Close",
+    uploadTitle: "Upload a Mod", upImgsHint: "Mod images (up to 5)", upFileHint: "Mod file (.zip, .7z, .rar, max 50 MB)",
+    orExternal: "— or, if larger than 50 MB —", reviewNotice: "Your mod will be published once approved.",
+    btnSubmitMod: "Upload Mod", btnCancel: "Cancel", editTitle: "Edit Mod",
+    addImgsHint: "Add images (max 5 total)", replaceFileHint: "Replace file (optional, max 50 MB)",
+    reReviewNotice: "Changing the file or link sends the mod back for review.", download: "Download", edit: "Edit", hide: "Hide", show: "Show", delete: "Delete"
+  },
+  ja: {
+    navMods: "モッド", navRules: "ルール", navInfo: "情報",
+    btnUpload: "投稿", btnLogin: "ログイン", btnSignup: "新規登録",
+    heroTitle: "Project Diva モッド", heroSubtitle: "コミュニティによって作成されたモッドを検索・共有できます。",
+    searchPlaceholder: "モッドを検索...", loading: "読み込み中...",
+    rulesTitle: "コミュニティルール",
+    rule1: "Project Divaおよび関連するリズムゲームに関するコンテンツのみ。",
+    rule2: "元の制作者のクレジットと権利を尊重してください。",
+    rule3: "悪質なファイルや違法コンテンツの投稿は禁止です。",
+    rule4: "すべてのモッドは公開前に簡単な審査が行われます。",
+    infoTitle: "PDMM+ Mods について",
+    infoBody: "このプラットフォームは、Project Diva Mega Mix+および関連ゲームのモッドを共有、検索、ダウンロードするための独立したコミュニティスペースです。",
+    authTitle: "アカウント", profTitle: "プロフィール", btnChangeAvatar: "画像を mid",
+    profHint: "この名前はモッドの作者名として表示されます。",
+    btnSave: "保存", btnMyMods: "マイモッド", btnLogout: "ログアウト", btnClose: "閉じる",
+    uploadTitle: "モッドを投稿", upImgsHint: "モッド画像 (最大5枚)", upFileHint: "モッドファイル (.zip, .7z, .rar, 最大 50 MB)",
+    orExternal: "— 50 MBを超える場合 —", reviewNotice: "承認後に公開されます。",
+    btnSubmitMod: "投稿する", btnCancel: "キャンセル", editTitle: "モッドを編集",
+    addImgsHint: "画像を追加 (合計最大5枚)", replaceFileHint: "ファイルを差し替え (任意)",
+    reReviewNotice: "ファイルやリンクを変更すると再審査となります。", download: "ダウンロード", edit: "編集", hide: "非表示", show: "表示", delete: "削除"
+  }
+};
+
+let currentLang = 'es';
+
+function applyI18n() {
+  const userLang = (navigator.language || navigator.userLanguage || "es").slice(0, 2);
+  currentLang = i18nDict[userLang] ? userLang : 'en';
+  const dict = i18nDict[currentLang];
+
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const k = el.getAttribute('data-i18n');
+    if (dict[k]) el.textContent = dict[k];
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+    const k = el.getAttribute('data-i18n-ph');
+    if (dict[k]) el.placeholder = dict[k];
+  });
+}
+
 const URL_BASE = "https://nidlcakntjjzgkjlejbk.supabase.co";
 const KEY = "sb_publishable_TVKTwGkcuLX_eXNon8IQjg_Jor-NquZ";
 const MAX_FILE = 50 * 1024 * 1024, MAX_IMG = 5 * 1024 * 1024;
@@ -156,13 +341,14 @@ const $ = (id) => document.getElementById(id);
 let session = null, profile = null, allMods = [], mine = [], editing = null, editImgs = [];
 try { session = JSON.parse(localStorage.getItem("pdmm_session") || "null"); } catch (e) {}
 
-function toast(t) { const el = $("toast"); el.textContent = t; el.style.display = "block"; clearTimeout(toast.t); toast.t = setTimeout(() => (el.style.display = "none"), 6000); }
-window.addEventListener("error", (e) => toast("Error en la página: " + e.message));
+function toast(t) { const el = $("toast"); el.textContent = t; el.style.display = "block"; clearTimeout(toast.t); toast.t = setTimeout(() => (el.style.display = "none"), 5000); }
+window.addEventListener("error", (e) => toast("Error: " + e.message));
 window.addEventListener("unhandledrejection", (e) => toast("Error: " + ((e.reason && e.reason.message) || e.reason)));
 
 function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c])); }
 function safeUrl(u) { return /^https?:\/\//i.test(u || "") ? u : ""; }
 function headers(extra) { const tk = session && session.access_token ? session.access_token : KEY; return Object.assign({ apikey: KEY, Authorization: "Bearer " + tk }, extra || {}); }
+
 function avatarHtml(url, name, size) {
   const s = size || 28;
   if (safeUrl(url)) return `<img class="av" src="${esc(url)}" width="${s}" height="${s}" alt="">`;
@@ -198,7 +384,7 @@ async function loadProfile() {
   const d = await r.json().catch(() => []);
   profile = d[0] || null;
   if (!profile) {
-    const name = "usuario" + session.user.id.slice(0, 6);
+    const name = "user_" + session.user.id.slice(0, 6);
     await fetch(URL_BASE + "/rest/v1/profiles", { method: "POST", headers: headers({ "Content-Type": "application/json", Prefer: "resolution=merge-duplicates,return=minimal" }), body: JSON.stringify({ id: session.user.id, username: name }) });
     profile = { id: session.user.id, username: name, avatar_url: null };
   }
@@ -232,7 +418,7 @@ function renderMods() {
       <div class="cover">${safeUrl(img) ? `<img src="${esc(img)}" alt="" loading="lazy">` : esc((m.title || "?").charAt(0).toUpperCase())}</div>
       <div class="body"><h3>${esc(m.title)}</h3>
         <div class="who">${avatarHtml(m.profiles && m.profiles.avatar_url, authorOf(m), 22)}<span>${esc(authorOf(m))}</span></div>
-        <div class="stats"><span>⬇ ${m.downloads || 0}</span><span>👁 ${m.views || 0}</span><span>${new Date(m.created_at).toLocaleDateString("es")}</span></div>
+        <div class="stats"><span>⬇ ${m.downloads || 0}</span><span>👁 ${m.views || 0}</span><span>${new Date(m.created_at).toLocaleDateString()}</span></div>
       </div></div>`;
   }).join("");
 }
@@ -256,6 +442,7 @@ function rpc(fn, id) { return fetch(URL_BASE + "/rest/v1/rpc/" + fn, { method: "
 
 function openDetail(id) {
   const m = allMods.find((x) => x.id === id); if (!m) return;
+  const dict = i18nDict[currentLang];
   rpc("increment_views", id); m.views = (m.views || 0) + 1; renderMods();
   const link = safeUrl(m.file_url) || safeUrl(m.external_url);
   const imgs = (m.images || []).filter(safeUrl);
@@ -263,10 +450,10 @@ function openDetail(id) {
     ${imgs.length ? `<div class="gallery">${imgs.map((u) => `<img src="${esc(u)}" alt="">`).join("")}</div>` : ""}
     <h2 style="margin:0 0 6px">${esc(m.title)}</h2>
     <div class="who" style="margin-bottom:8px">${avatarHtml(m.profiles && m.profiles.avatar_url, authorOf(m), 26)}<span>${esc(authorOf(m))}</span></div>
-    <div class="stats" style="margin-bottom:10px"><span>⬇ <b id="dlCount">${m.downloads || 0}</b></span><span>👁 ${m.views}</span><span>${new Date(m.created_at).toLocaleDateString("es")}</span></div>
+    <div class="stats" style="margin-bottom:10px"><span>⬇ <b id="dlCount">${m.downloads || 0}</b></span><span>👁 ${m.views}</span><span>${new Date(m.created_at).toLocaleDateString()}</span></div>
     <p class="desc">${esc(m.description)}</p>
-    ${link ? `<a id="dlBtn" class="btn pri" style="display:block" href="${esc(link)}" target="_blank" rel="noopener">Descargar</a>` : ""}
-    ${isOwner(m) ? `<div class="acts"><button class="btn sm" data-act="edit" data-id="${esc(m.id)}">Editar</button><button class="btn sm" data-act="hide" data-id="${esc(m.id)}">Ocultar</button><button class="btn sm danger" data-act="del" data-id="${esc(m.id)}">Eliminar</button></div>` : ""}`;
+    ${link ? `<a id="dlBtn" class="btn pri" style="display:block;margin-top:10px;" href="${esc(link)}" target="_blank" rel="noopener">${dict.download}</a>` : ""}
+    ${isOwner(m) ? `<div class="acts" style="margin-top:12px"><button class="btn sm" data-act="edit" data-id="${esc(m.id)}">${dict.edit}</button><button class="btn sm" data-act="hide" data-id="${esc(m.id)}">${dict.hide}</button><button class="btn sm danger" data-act="del" data-id="${esc(m.id)}">${dict.delete}</button></div>` : ""}`;
   const b = $("dlBtn");
   if (b) b.onclick = () => { rpc("increment_downloads", id); m.downloads = (m.downloads || 0) + 1; $("dlCount").textContent = m.downloads; renderMods(); };
   $("detDlg").showModal();
@@ -274,14 +461,15 @@ function openDetail(id) {
 $("list").onclick = (e) => { const c = e.target.closest(".card"); if (c) openDetail(c.dataset.id); };
 
 function renderMine() {
+  const dict = i18nDict[currentLang];
   if (!mine.length) { $("mineList").innerHTML = "<p class='hint'>Todavía no has subido mods.</p>"; return; }
   $("mineList").innerHTML = mine.map((m) => {
     const st = m.hidden ? ["off", "Oculto"] : (m.approved ? ["ok", "Publicado"] : ["wait", "Pendiente de aprobación"]);
     return `<div class="mine"><span class="chip ${st[0]}">${st[1]}</span><h3>${esc(m.title)}</h3>
       <div class="stats"><span>⬇ ${m.downloads || 0}</span><span>👁 ${m.views || 0}</span></div>
-      <div class="acts"><button class="btn sm" data-act="edit" data-id="${esc(m.id)}">Editar</button>
-      <button class="btn sm" data-act="hide" data-id="${esc(m.id)}">${m.hidden ? "Mostrar" : "Ocultar"}</button>
-      <button class="btn sm danger" data-act="del" data-id="${esc(m.id)}">Eliminar</button></div></div>`;
+      <div class="acts"><button class="btn sm" data-act="edit" data-id="${esc(m.id)}">${dict.edit}</button>
+      <button class="btn sm" data-act="hide" data-id="${esc(m.id)}">${m.hidden ? dict.show : dict.hide}</button>
+      <button class="btn sm danger" data-act="del" data-id="${esc(m.id)}">${dict.delete}</button></div></div>`;
   }).join("");
 }
 async function openMine() { await refreshIfNeeded(); await loadMine(); renderMine(); if (!$("mineDlg").open) $("mineDlg").showModal(); }
@@ -311,14 +499,14 @@ function openEdit(m) {
   editing = m; editImgs = (m.images || []).slice();
   $("eTitle").value = m.title || ""; $("eDesc").value = m.description || ""; $("eExt").value = m.external_url || "";
   $("eImgs").value = ""; $("eFile").value = "";
-  $("eImgName").textContent = "Agregar imágenes (máx. 5 en total)"; $("eFileName").textContent = "Reemplazar archivo (opcional, máx. 50 MB)";
+  $("eImgName").textContent = i18nDict[currentLang].addImgsHint; $("eFileName").textContent = i18nDict[currentLang].replaceFileHint;
   renderEditThumbs();
   if ($("detDlg").open) $("detDlg").close();
   $("editDlg").showModal();
 }
 $("eThumbs").onclick = (e) => { const b = e.target.closest("[data-rm]"); if (b) { editImgs.splice(+b.dataset.rm, 1); renderEditThumbs(); } };
-$("eImgs").onchange = () => { const n = $("eImgs").files.length; $("eImgName").textContent = n ? n + " imagen(es) nueva(s)" : "Agregar imágenes (máx. 5 en total)"; };
-$("eFile").onchange = () => { const f = $("eFile").files[0]; $("eFileName").textContent = f ? f.name : "Reemplazar archivo (opcional, máx. 50 MB)"; };
+$("eImgs").onchange = () => { const n = $("eImgs").files.length; $("eImgName").textContent = n ? n + " nueva(s)" : i18nDict[currentLang].addImgsHint; };
+$("eFile").onchange = () => { const f = $("eFile").files[0]; $("eFileName").textContent = f ? f.name : i18nDict[currentLang].replaceFileHint; };
 
 $("btnSaveEdit").onclick = async () => {
   const m = editing; if (!m) return;
@@ -347,9 +535,9 @@ $("btnSaveEdit").onclick = async () => {
     if (newFile && m.file_url) await removeFiles("mods", [m.file_url]);
     const relink = !!newFile || (extVal || null) !== (m.external_url || null);
     $("editDlg").close();
-    toast(relink ? "Cambios guardados. Como cambió el archivo o el enlace, el mod volverá a revisión." : "Cambios guardados.");
+    toast(relink ? "Cambios guardados. Volverá a revisión." : "Cambios guardados.");
     await Promise.all([loadMods(), loadMine()]); if ($("mineDlg").open) renderMine();
-  } catch (e) { toast("Error: " + e.message); } finally { btn.disabled = false; btn.textContent = "Guardar cambios"; }
+  } catch (e) { toast("Error: " + e.message); } finally { btn.disabled = false; btn.textContent = i18nDict[currentLang].btnSave; }
 };
 
 function onAction(e) {
@@ -369,10 +557,10 @@ $("btnMine").onclick = () => { $("profDlg").close(); openMine(); };
 $("btnProfile").onclick = () => { $("pName").value = (profile && profile.username) || ""; $("pAv").innerHTML = avatarHtml(profile && profile.avatar_url, profile && profile.username, 56); $("pFile").value = ""; $("profDlg").showModal(); };
 $("q").oninput = renderMods;
 $("pFile").onchange = () => { const f = $("pFile").files[0]; if (f) $("pAv").innerHTML = `<img class="av" src="${URL.createObjectURL(f)}" width="56" height="56" alt="">`; };
-$("file").onchange = () => { const f = $("file").files[0]; $("fileName").textContent = f ? f.name : "Archivo del mod (.zip, .7z, .rar, máx. 50 MB)"; };
+$("file").onchange = () => { const f = $("file").files[0]; $("fileName").textContent = f ? f.name : i18nDict[currentLang].upFileHint; };
 $("imgs").onchange = () => {
   const fs = Array.from($("imgs").files).slice(0, 5);
-  $("imgName").textContent = fs.length ? fs.length + " imagen(es) elegida(s)" : "Imágenes del mod (hasta 5)";
+  $("imgName").textContent = fs.length ? fs.length + " imagen(es) elegida(s)" : i18nDict[currentLang].upImgsHint;
   $("imgPrev").innerHTML = fs.map((f) => `<img src="${URL.createObjectURL(f)}" alt="">`).join("");
 };
 
@@ -382,7 +570,7 @@ $("btnSignup").onclick = async () => {
   try {
     const d = await authCall("signup", { email, password }); $("authDlg").close();
     if (d.access_token) { saveSession(d); await loadProfile(); toast("Cuenta creada. Ya iniciaste sesión."); }
-    else toast("Cuenta creada. Revisa tu correo (y spam) para confirmarla y luego inicia sesión.");
+    else toast("Cuenta creada. Revisa tu correo para confirmarla.");
   } catch (e) { toast("Error: " + e.message); }
 };
 $("btnLogin").onclick = async () => {
@@ -405,7 +593,7 @@ $("btnSaveProf").onclick = async () => {
     if (!r.ok) { const e = await r.json().catch(() => ({})); throw new Error(e.message || ("Error " + r.status)); }
     profile = Object.assign(profile || {}, { username: name, avatar_url: avatar }); renderAuth(); loadMods();
     $("profDlg").close(); toast("Perfil actualizado.");
-  } catch (e) { toast("Error: " + e.message); } finally { btn.disabled = false; btn.textContent = "Guardar"; }
+  } catch (e) { toast("Error: " + e.message); } finally { btn.disabled = false; btn.textContent = i18nDict[currentLang].btnSave; }
 };
 
 $("btnUpload").onclick = async () => {
@@ -430,12 +618,14 @@ $("btnUpload").onclick = async () => {
     const ins = await fetch(URL_BASE + "/rest/v1/mods", { method: "POST", headers: headers({ "Content-Type": "application/json", Prefer: "return=minimal" }),
       body: JSON.stringify({ title, description, author: (profile && profile.username) || "Anónimo", file_url: fileUrl, external_url: ext || null, images: imageUrls }) });
     if (!ins.ok) { const e = await ins.json().catch(() => ({})); throw new Error(e.message || ("Error al guardar (" + ins.status + ")")); }
-    $("upDlg").close(); toast("¡Mod enviado! Se publicará cuando sea aprobado. Puedes verlo en Mis mods.");
+    $("upDlg").close(); toast("¡Mod enviado! Se publicará cuando sea aprobado.");
     ["title", "desc", "ext"].forEach((id) => ($(id).value = "")); $("file").value = ""; $("imgs").value = "";
-    $("fileName").textContent = "Archivo del mod (.zip, .7z, .rar, máx. 50 MB)"; $("imgName").textContent = "Imágenes del mod (hasta 5)"; $("imgPrev").innerHTML = "";
-  } catch (e) { toast("Error: " + e.message); } finally { btn.disabled = false; btn.textContent = "Subir mod"; }
+    $("fileName").textContent = i18nDict[currentLang].upFileHint; $("imgName").textContent = i18nDict[currentLang].upImgsHint; $("imgPrev").innerHTML = "";
+  } catch (e) { toast("Error: " + e.message); } finally { btn.disabled = false; btn.textContent = i18nDict[currentLang].btnSubmitMod; }
 };
 
+// Inicialización de idioma y autenticación
+applyI18n();
 renderAuth();
 refreshIfNeeded().then(loadProfile);
 loadMods();
