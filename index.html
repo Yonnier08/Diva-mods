@@ -69,7 +69,7 @@
   input, textarea, select { width:100%; padding:10px 12px; border-radius:6px; border:1px solid var(--line); background:var(--surface); color:var(--fg); font-size:15px; font-family:inherit; }
   input:focus, textarea:focus, select:focus { outline:2px solid var(--acc); outline-offset:-1px; }
 
-  /* Barra de Control (Filtros desplegables y Contador) */
+  /* Barra de Control (Filtros y Orden) */
   .control-bar { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:18px; border-bottom:1px solid var(--line); padding-bottom:12px; }
   .control-group { display:flex; align-items:center; gap:10px; flex-wrap:wrap; flex:1; }
   .select-wrapper { display:flex; align-items:center; gap:6px; width:auto; }
@@ -181,10 +181,8 @@
 </header>
   
 <main>
-  <!-- Barra de Filtros Desplegables -->
   <div class="control-bar">
     <div class="control-group">
-      <!-- Selector de Categoría -->
       <div class="select-wrapper">
         <select id="catSelect">
           <option value="all" data-i18n="cat_all">Todas las categorías</option>
@@ -196,7 +194,6 @@
         </select>
       </div>
 
-      <!-- Selector de Orden -->
       <div class="select-wrapper">
         <select id="sortSelect">
           <option value="created_at_desc" data-i18n="sort_recent_desc">Más recientes primero</option>
@@ -546,7 +543,6 @@ function renderMods() {
     return matchQuery && matchCat;
   });
   
-  // Ordenamiento dinámico
   items.sort((a, b) => {
     if (sortOrder === "created_at_desc") return new Date(b.created_at) - new Date(a.created_at);
     if (sortOrder === "created_at_asc") return new Date(a.created_at) - new Date(b.created_at);
@@ -778,7 +774,7 @@ $("btnPgEdit").onclick = () => {
   const p = pages[curPage] || DEFAULT_PAGES[curPage];
   $("pgTitleIn").value = p.title; $("pgBodyIn").value = p.body;
   $("pgView").classList.add("hide"); $("pgActsView").classList.add("hide");
-  $("pgEdit").classList.remove("hide"); $("pgActsEdit").classList.remove("hide");
+  $("pgEdit").classList.remove("hide"); $("pgActsEdit").classList.add("hide");
 };
 
 $("btnPgCancel").onclick = () => showPage(curPage);
@@ -831,6 +827,15 @@ $("langSelect").onchange = (e) => {
   setLanguage(e.target.value);
   renderMods();
 };
+
+// Cierre automático de modales al hacer clic fuera (en el backdrop)
+document.querySelectorAll("dialog").forEach((dlg) => {
+  dlg.addEventListener("click", (e) => {
+    if (e.target === dlg) {
+      dlg.close();
+    }
+  });
+});
 
 document.querySelectorAll("[data-close]").forEach((b) => (b.onclick = () => b.closest("dialog").close()));
 $("btnOpenAuth").onclick = () => $("authDlg").showModal();
