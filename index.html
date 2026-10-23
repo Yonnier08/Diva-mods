@@ -16,81 +16,101 @@
   * { box-sizing:border-box; }
   body { margin:0; font-family:"Inter","Segoe UI",Roboto,system-ui,sans-serif; background:var(--bg); color:var(--fg); line-height:1.45; }
   .ic { width:13px; height:13px; vertical-align:-1px; flex:none; }
-  
-  header { position:sticky; top:0; z-index:20; background:var(--bg); border-bottom:1px solid var(--line); }
-  .top { display:flex; align-items:center; gap:10px; padding:8px 14px; }
-  .brand { display:flex; align-items:center; text-decoration:none; margin-right:auto; }
-  .brand img { height:32px; width:auto; object-fit:contain; display:block; }
 
-  nav { display:flex; gap:4px; padding:0 10px; overflow-x:auto; border-top:1px solid rgba(255,255,255,0.03); }
-  nav button { background:none; border:none; border-bottom:2px solid transparent; color:var(--mut); font-size:14px; font-weight:600; padding:8px 12px; cursor:pointer; font-family:inherit; }
+  /* Estilos de Scrollbar para PC */
+  ::-webkit-scrollbar { width:8px; height:8px; }
+  ::-webkit-scrollbar-track { background:var(--bg); }
+  ::-webkit-scrollbar-thumb { background:var(--line); border-radius:4px; }
+  ::-webkit-scrollbar-thumb:hover { background:var(--mut); }
+  * { scrollbar-width:thin; scrollbar-color:var(--line) var(--bg); }
+  
+  /* Navbar */
+  header { position:sticky; top:0; z-index:20; background:rgba(14,18,27,0.92); backdrop-filter:blur(8px); border-bottom:1px solid var(--line); }
+  .top { display:flex; align-items:center; gap:10px; padding:10px 16px; max-width:1200px; margin:0 auto; }
+  .brand { display:flex; align-items:center; text-decoration:none; margin-right:auto; }
+  .brand img { height:34px; width:auto; object-fit:contain; display:block; }
+
+  nav { display:flex; gap:6px; max-width:1200px; margin:0 auto; padding:0 16px; overflow-x:auto; border-top:1px solid rgba(255,255,255,0.03); }
+  nav button { background:none; border:none; border-bottom:2px solid transparent; color:var(--mut); font-size:14px; font-weight:600; padding:10px 14px; cursor:pointer; font-family:inherit; transition:color 0.15s; }
+  nav button:hover { color:var(--fg); }
   nav button.on { color:var(--acc); border-bottom-color:var(--acc); }
 
-  .btn { border:1px solid var(--line); background:var(--surface); color:var(--fg); padding:7px 12px; border-radius:6px; font-size:13.5px; font-weight:600; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:6px; }
-  .btn:hover { border-color:var(--mut); }
+  .btn { border:1px solid var(--line); background:var(--surface); color:var(--fg); padding:8px 14px; border-radius:6px; font-size:13.5px; font-weight:600; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:6px; transition:background 0.15s, border-color 0.15s; }
+  .btn:hover { border-color:var(--mut); background:rgba(255,255,255,0.03); }
   .btn.pri { background:var(--acc); border-color:var(--acc); color:var(--acc-fg); }
+  .btn.pri:hover { opacity:0.9; }
   .btn.danger { color:var(--danger); border-color:rgba(240,104,107,0.3); }
-  .btn.sm { padding:5px 9px; font-size:12.5px; }
+  .btn.danger:hover { background:rgba(240,104,107,0.1); }
+  .btn.sm { padding:5px 10px; font-size:12.5px; }
   .btn:disabled { opacity:.55; cursor:default; }
   .hide { display:none !important; }
 
   .av { border-radius:50%; object-fit:cover; display:grid; place-items:center; font-weight:700; color:var(--acc-fg); background:var(--acc); flex:none; overflow:hidden; }
 
-  main { max-width:960px; margin:0 auto; padding:14px 12px 40px; }
-  input, textarea { width:100%; padding:9px 11px; border-radius:6px; border:1px solid var(--line); background:var(--bg); color:var(--fg); font-size:15px; font-family:inherit; }
+  main { max-width:1200px; margin:0 auto; padding:20px 16px 50px; }
+  input, textarea { width:100%; padding:10px 12px; border-radius:6px; border:1px solid var(--line); background:var(--surface); color:var(--fg); font-size:15px; font-family:inherit; }
   input:focus, textarea:focus { outline:2px solid var(--acc); outline-offset:-1px; }
 
-  .toolbar { display:flex; align-items:center; justify-content:space-between; gap:10px; margin:12px 0 10px; border-bottom:1px solid var(--line); }
-  .tabs { display:flex; gap:2px; }
-  .tabs button { background:none; border:none; border-bottom:2px solid transparent; color:var(--mut); font-size:13.5px; font-weight:600; padding:8px 10px; cursor:pointer; font-family:inherit; margin-bottom:-1px; }
+  .toolbar { display:flex; align-items:center; justify-content:space-between; gap:10px; margin:16px 0 14px; border-bottom:1px solid var(--line); }
+  .tabs { display:flex; gap:4px; }
+  .tabs button { background:none; border:none; border-bottom:2px solid transparent; color:var(--mut); font-size:14px; font-weight:600; padding:8px 12px; cursor:pointer; font-family:inherit; margin-bottom:-1px; }
   .tabs button.on { color:var(--fg); border-bottom-color:var(--acc); }
-  .count { color:var(--mut); font-size:12.5px; }
+  .count { color:var(--mut); font-size:13px; }
 
+  /* Cuadrícula Adaptativa para Móvil, Tablet y PC */
   .gb-grid { display:grid; grid-template-columns:repeat(2, 1fr); gap:12px; }
-  @media (min-width: 768px) { .gb-grid { grid-template-columns:repeat(3, 1fr); gap:14px; } }
+  @media (min-width: 680px) { .gb-grid { grid-template-columns:repeat(3, 1fr); gap:16px; } }
+  @media (min-width: 1024px) { .gb-grid { grid-template-columns:repeat(4, 1fr); gap:18px; } }
 
-  .gb-card { background:var(--surface); border:1px solid var(--line); border-radius:6px; overflow:hidden; cursor:pointer; display:flex; flex-direction:column; transition:transform 0.15s ease, border-color 0.15s ease; }
-  .gb-card:hover { border-color:var(--acc); transform:translateY(-2px); }
+  .gb-card { background:var(--surface); border:1px solid var(--line); border-radius:8px; overflow:hidden; cursor:pointer; display:flex; flex-direction:column; transition:transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease; }
+  .gb-card:hover { border-color:var(--acc); transform:translateY(-3px); box-shadow:0 8px 20px rgba(0,0,0,0.3); }
 
   .gb-thumb { position:relative; width:100%; aspect-ratio:16/9; background:#000; overflow:hidden; display:grid; place-items:center; }
-  .gb-thumb img.cover { width:100%; height:100%; object-fit:cover; display:block; }
-  .author-badge { position:absolute; top:6px; left:6px; display:flex; align-items:center; gap:4px; background:rgba(0,0,0,0.75); backdrop-filter:blur(4px); padding:2px 6px; border-radius:12px; border:1px solid rgba(255,255,255,0.1); font-size:11px; color:#fff; cursor:pointer; z-index:2; }
-  .author-badge:hover { background:rgba(0,0,0,0.9); border-color:var(--acc); }
+  .gb-thumb img.cover { width:100%; height:100%; object-fit:cover; display:block; transition:transform 0.2s ease; }
+  .gb-card:hover .gb-thumb img.cover { transform:scale(1.03); }
+  .author-badge { position:absolute; top:8px; left:8px; display:flex; align-items:center; gap:5px; background:rgba(0,0,0,0.8); backdrop-filter:blur(4px); padding:3px 8px; border-radius:12px; border:1px solid rgba(255,255,255,0.12); font-size:11.5px; color:#fff; cursor:pointer; z-index:2; }
+  .author-badge:hover { background:rgba(0,0,0,0.95); border-color:var(--acc); }
 
-  .gb-info { padding:8px 10px; display:flex; flex-direction:column; gap:4px; flex:1; }
-  .gb-title { margin:0; font-size:14px; font-weight:700; color:var(--yellow); line-height:1.3; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; word-break:break-word; }
+  .gb-info { padding:10px 12px; display:flex; flex-direction:column; gap:6px; flex:1; }
+  .gb-title { margin:0; font-size:14.5px; font-weight:700; color:var(--yellow); line-height:1.35; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; word-break:break-word; }
   .gb-card:hover .gb-title { text-decoration:underline; }
 
-  .gb-stats { display:flex; align-items:center; gap:10px; color:var(--mut); font-size:12px; margin-top:auto; padding-top:4px; }
-  .gb-stats span { display:inline-flex; align-items:center; gap:3px; }
+  .gb-stats { display:flex; align-items:center; gap:12px; color:var(--mut); font-size:12px; margin-top:auto; padding-top:4px; }
+  .gb-stats span { display:inline-flex; align-items:center; gap:4px; }
 
-  .empty { grid-column:1/-1; text-align:center; color:var(--mut); padding:36px 8px; }
-  footer { max-width:960px; margin:0 auto; padding:18px 14px 30px; color:var(--mut); font-size:12px; border-top:1px solid var(--line); text-align:center; }
+  .empty { grid-column:1/-1; text-align:center; color:var(--mut); padding:48px 8px; font-size:15px; }
+  footer { max-width:1200px; margin:0 auto; padding:24px 16px 36px; color:var(--mut); font-size:12.5px; border-top:1px solid var(--line); text-align:center; }
 
-  dialog { width:min(94vw,480px); max-height:90vh; border:1px solid var(--line); border-radius:8px; padding:18px; background:var(--surface); color:var(--fg); }
-  dialog::backdrop { background:rgba(0,0,0,.75); backdrop-filter:blur(3px); }
-  dialog h2 { margin:0 0 12px; font-size:18px; }
-  .row { display:flex; flex-direction:column; gap:8px; }
-  .acts { display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; }
+  /* Modales optimizados para PC y Móviles */
+  dialog { width:min(92vw,720px); max-height:88vh; border:1px solid var(--line); border-radius:10px; padding:22px; background:var(--surface); color:var(--fg); box-shadow:0 16px 40px rgba(0,0,0,0.6); }
+  dialog::backdrop { background:rgba(0,0,0,.75); backdrop-filter:blur(4px); }
+  dialog h2 { margin:0 0 14px; font-size:20px; }
+  .row { display:flex; flex-direction:column; gap:10px; }
+  .acts { display:flex; gap:10px; margin-top:14px; flex-wrap:wrap; }
   .acts .btn { flex:1; }
-  .filebtn { display:block; padding:12px; text-align:center; border:1px dashed var(--mut); border-radius:6px; color:var(--mut); cursor:pointer; font-size:13.5px; }
+  .filebtn { display:block; padding:14px; text-align:center; border:1px dashed var(--mut); border-radius:6px; color:var(--mut); cursor:pointer; font-size:13.5px; transition:border-color 0.15s, color 0.15s; }
+  .filebtn:hover { border-color:var(--acc); color:var(--fg); }
   .filebtn input { display:none; }
-  .hint { color:var(--mut); font-size:12px; margin:2px 0; }
-  .thumbs { display:flex; gap:6px; flex-wrap:wrap; }
-  .thumbs img { width:60px; height:60px; object-fit:cover; border-radius:4px; border:1px solid var(--line); }
+  .hint { color:var(--mut); font-size:12.5px; margin:2px 0; }
+  .thumbs { display:flex; gap:8px; flex-wrap:wrap; }
+  .thumbs img { width:70px; height:70px; object-fit:cover; border-radius:6px; border:1px solid var(--line); }
   .thumb { position:relative; }
   .thumb button { position:absolute; top:-6px; right:-6px; width:20px; height:20px; border-radius:50%; border:none; background:var(--danger); color:#fff; font-size:11px; cursor:pointer; padding:0; }
-  .gallery { display:flex; gap:8px; overflow-x:auto; scroll-snap-type:x mandatory; margin-bottom:12px; }
-  .gallery img { height:200px; border-radius:4px; scroll-snap-align:start; flex:none; max-width:100%; object-fit:contain; background:var(--bg); }
-  .desc { white-space:pre-wrap; word-break:break-word; margin:10px 0 14px; font-size:14px; }
-  .mine { border:1px solid var(--line); border-radius:6px; padding:10px; margin-bottom:8px; }
-  .chip { display:inline-block; font-size:11px; font-weight:700; padding:1px 6px; border-radius:4px; border:1px solid var(--line); margin-bottom:4px; }
+  
+  /* Galería optimizada en Modal */
+  .gallery { display:flex; gap:10px; overflow-x:auto; scroll-snap-type:x mandatory; margin-bottom:14px; border-radius:8px; background:var(--bg); border:1px solid var(--line); padding:6px; }
+  .gallery img { height:280px; border-radius:6px; scroll-snap-align:start; flex:none; max-width:100%; object-fit:contain; }
+  @media (min-width:680px) { .gallery img { height:360px; } }
+
+  .desc { white-space:pre-wrap; word-break:break-word; margin:12px 0 16px; font-size:14.5px; line-height:1.6; }
+  .mine { border:1px solid var(--line); border-radius:6px; padding:12px; margin-bottom:10px; background:rgba(255,255,255,0.01); }
+  .chip { display:inline-block; font-size:11px; font-weight:700; padding:2px 7px; border-radius:4px; border:1px solid var(--line); margin-bottom:6px; }
   .chip.ok { color:var(--acc); border-color:var(--acc); }
   .chip.off { color:var(--mut); }
-  .uhead { display:flex; align-items:center; gap:12px; margin-bottom:8px; }
-  .rich p { margin:0 0 8px; }
-  .rich ul { margin:0 0 8px; padding-left:18px; }
-  #toast { position:fixed; left:50%; bottom:20px; transform:translateX(-50%); z-index:50; max-width:90vw; padding:10px 16px; border-radius:6px; font-weight:600; font-size:13.5px; display:none; background:var(--fg); color:var(--bg); box-shadow:0 4px 18px rgba(0,0,0,.4); }
+  .uhead { display:flex; align-items:center; gap:14px; margin-bottom:10px; }
+  .rich p { margin:0 0 10px; }
+  .rich ul { margin:0 0 10px; padding-left:20px; }
+  #toast { position:fixed; left:50%; bottom:24px; transform:translateX(-50%); z-index:50; max-width:90vw; padding:12px 18px; border-radius:8px; font-weight:600; font-size:14px; display:none; background:var(--fg); color:var(--bg); box-shadow:0 6px 24px rgba(0,0,0,.5); }
 </style>
 </head>
 <body>
@@ -107,7 +127,7 @@
     </a>
 
     <button id="btnProfile" class="btn hide" style="padding:4px 10px;display:flex;align-items:center;gap:6px">
-      <span id="hAv"></span><span id="hName" style="max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
+      <span id="hAv"></span><span id="hName" style="max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
     </button>
     <button id="btnOpenUpload" class="btn pri hide">Subir</button>
     <button id="btnOpenAuth" class="btn pri">Entrar</button>
@@ -153,7 +173,7 @@
     <h2>Editar página</h2>
     <div class="row">
       <input id="pgTitleIn" maxlength="80" placeholder="Título">
-      <textarea id="pgBodyIn" rows="8" placeholder="Texto"></textarea>
+      <textarea id="pgBodyIn" rows="10" placeholder="Texto"></textarea>
     </div>
   </div>
   <div class="acts" id="pgActsView"><button id="btnPgEdit" class="btn hide">Editar</button><button class="btn" data-close>Cerrar</button></div>
@@ -171,7 +191,7 @@
     <div style="display:flex;align-items:center;gap:12px"><span id="pAv"></span>
       <label class="btn" style="cursor:pointer">Cambiar foto<input id="pFile" type="file" accept="image/*" class="hide"></label></div>
     <input id="pName" placeholder="Nombre de usuario" maxlength="30">
-    <textarea id="pBio" rows="3" maxlength="500" placeholder="Cuéntanos sobre ti"></textarea>
+    <textarea id="pBio" rows="4" maxlength="500" placeholder="Cuéntanos sobre ti"></textarea>
   </div>
   <div class="acts"><button id="btnSaveProf" class="btn pri">Guardar</button><button class="btn" data-close>Cancelar</button></div>
 </dialog>
@@ -186,7 +206,7 @@
   <h2>Subir un mod</h2>
   <div class="row">
     <input id="title" placeholder="Título del mod" maxlength="80">
-    <textarea id="desc" rows="3" placeholder="Descripción"></textarea>
+    <textarea id="desc" rows="4" placeholder="Descripción"></textarea>
     <label class="filebtn"><span id="imgName">Imágenes del mod (hasta 5)</span><input id="imgs" type="file" accept="image/*" multiple></label>
     <div id="imgPrev" class="thumbs"></div>
     <label class="filebtn"><span id="fileName">Archivo del mod (.zip, .7z, .rar, máx. 50 MB)</span><input id="file" type="file" accept=".zip,.7z,.rar"></label>
@@ -201,7 +221,7 @@
   <h2>Editar mod</h2>
   <div class="row">
     <input id="eTitle" placeholder="Título del mod" maxlength="80">
-    <textarea id="eDesc" rows="3" placeholder="Descripción"></textarea>
+    <textarea id="eDesc" rows="4" placeholder="Descripción"></textarea>
     <div id="eThumbs" class="thumbs"></div>
     <label class="filebtn"><span id="eImgName">Agregar imágenes (máx. 5 en total)</span><input id="eImgs" type="file" accept="image/*" multiple></label>
     <label class="filebtn"><span id="eFileName">Reemplazar archivo (opcional, máx. 50 MB)</span><input id="eFile" type="file" accept=".zip,.7z,.rar"></label>
@@ -400,10 +420,10 @@ function openDetail(id) {
   $("detBody").innerHTML = `
     ${imgs.length ? `<div class="gallery">${imgs.map((u) => `<img src="${esc(u)}" alt="">`).join("")}</div>` : ""}
     <h2 style="margin:0 0 6px;color:var(--yellow)">${esc(m.title)}</h2>
-    <div class="who" data-user="${esc(m.user_id)}" style="margin-bottom:8px;font-size:13.5px;display:flex;align-items:center;gap:6px;cursor:pointer">${avatarHtml(m.profiles && m.profiles.avatar_url, authorOf(m), 22)}<span>${esc(authorOf(m))}</span></div>
-    <div class="gb-stats" style="margin-bottom:10px"><span>${ic("i-dl")}<b id="dlCount">${m.downloads || 0}</b></span><span>${ic("i-eye")}${m.views}</span><span>${fmtDate(m.created_at)}</span></div>
+    <div class="who" data-user="${esc(m.user_id)}" style="margin-bottom:10px;font-size:14px;display:flex;align-items:center;gap:6px;cursor:pointer">${avatarHtml(m.profiles && m.profiles.avatar_url, authorOf(m), 24)}<span>${esc(authorOf(m))}</span></div>
+    <div class="gb-stats" style="margin-bottom:12px"><span>${ic("i-dl")}<b id="dlCount">${m.downloads || 0}</b></span><span>${ic("i-eye")}${m.views}</span><span>${fmtDate(m.created_at)}</span></div>
     <p class="desc">${esc(m.description)}</p>
-    ${link ? `<a id="dlBtn" class="btn pri" style="display:block" href="${esc(link)}" target="_blank" rel="noopener">Descargar Mod</a>` : ""}
+    ${link ? `<a id="dlBtn" class="btn pri" style="display:block;padding:10px;font-size:15px" href="${esc(link)}" target="_blank" rel="noopener">Descargar Mod</a>` : ""}
     ${acts}`;
     
   const b = $("dlBtn");
@@ -515,7 +535,6 @@ $("eThumbs").onclick = (e) => { const b = e.target.closest("[data-rm]"); if (b) 
 $("eImgs").onchange = () => { const n = $("eImgs").files.length; $("eImgName").textContent = n ? n + " imagen(es) nueva(s)" : "Agregar imágenes (máx. 5 en total)"; };
 $("eFile").onchange = () => { const f = $("eFile").files[0]; $("eFileName").textContent = f ? f.name : "Reemplazar archivo (opcional, máx. 50 MB)"; };
 
-/* LÓGICA COMPLETA DE GUARDAR EDICIÓN DEL MOD */
 $("btnSaveEdit").onclick = async () => {
   const m = editing; if (!m) return;
   const title = $("eTitle").value.trim(), description = $("eDesc").value.trim(), ext = $("eExt").value.trim();
