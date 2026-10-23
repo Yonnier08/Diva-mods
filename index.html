@@ -97,19 +97,16 @@
 <body>
 
 <header>
-  <!-- Logo de tu proyecto -->
   <a class="brand-logo" href="#">
     <img src="logo.png" alt="PDMM+ Mods Logo">
   </a>
 
-  <!-- Pestañas de navegación -->
   <nav class="nav-tabs">
     <button class="tab-btn active" onclick="location.hash=''" data-i18n="navMods">Mods</button>
     <button class="tab-btn" onclick="$('rulesDlg').showModal()" data-i18n="navRules">Reglas</button>
     <button class="tab-btn" onclick="$('infoDlg').showModal()" data-i18n="navInfo">Información</button>
   </nav>
 
-  <!-- Botones de Usuario -->
   <button id="btnProfile" class="btn hide" style="padding:4px 10px;">
     <span id="hAv"></span><span id="hName" style="max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
   </button>
@@ -133,7 +130,6 @@
   </div>
 </main>
 
-<!-- Modal: Reglas -->
 <dialog id="rulesDlg">
   <h2 data-i18n="rulesTitle">Reglas de la Comunidad</h2>
   <ul class="rules-list">
@@ -145,14 +141,12 @@
   <div class="acts"><button class="btn" data-close data-i18n="btnClose">Cerrar</button></div>
 </dialog>
 
-<!-- Modal: Información -->
 <dialog id="infoDlg">
   <h2 data-i18n="infoTitle">Acerca de PDMM+ Mods</h2>
   <p class="desc" data-i18n="infoBody">Esta plataforma es un espacio independiente creado para compartir, explorar y descargar mods para Project Diva Mega Mix+ y entregas afines. Todo el contenido es proporcionado libremente por la comunidad.</p>
   <div class="acts"><button class="btn" data-close data-i18n="btnClose">Cerrar</button></div>
 </dialog>
 
-<!-- Modal: Autenticación -->
 <dialog id="authDlg">
   <h2 data-i18n="authTitle">Cuenta</h2>
   <div class="row">
@@ -166,7 +160,6 @@
   <div class="acts"><button class="btn" data-close data-i18n="btnClose">Cerrar</button></div>
 </dialog>
 
-<!-- Modal: Perfil -->
 <dialog id="profDlg">
   <h2 data-i18n="profTitle">Mi perfil</h2>
   <div class="row">
@@ -187,14 +180,12 @@
   </div>
 </dialog>
 
-<!-- Modal: Mis Mods -->
 <dialog id="mineDlg">
   <h2 data-i18n="btnMyMods">Mis mods</h2>
   <div id="mineList"></div>
   <div class="acts"><button class="btn" data-close data-i18n="btnClose">Cerrar</button></div>
 </dialog>
 
-<!-- Modal: Subir Mod -->
 <dialog id="upDlg">
   <h2 data-i18n="uploadTitle">Subir un mod</h2>
   <div class="row">
@@ -213,7 +204,6 @@
   </div>
 </dialog>
 
-<!-- Modal: Editar Mod -->
 <dialog id="editDlg">
   <h2 data-i18n="editTitle">Editar mod</h2>
   <div class="row">
@@ -231,7 +221,6 @@
   </div>
 </dialog>
 
-<!-- Modal: Detalle del Mod -->
 <dialog id="detDlg">
   <div id="detBody"></div>
   <div class="acts"><button class="btn" data-close data-i18n="btnClose">Cerrar</button></div>
@@ -240,7 +229,6 @@
 <div id="toast"></div>
 
 <script>
-// Diccionario de Traducciones (i18n)
 const i18nDict = {
   es: {
     navMods: "Mods", navRules: "Reglas", navInfo: "Información",
@@ -332,7 +320,7 @@ const $ = (id) => document.getElementById(id);
 let session = null, profile = null, allMods = [], mine = [], editing = null, editImgs = [];
 try { session = JSON.parse(localStorage.getItem("pdmm_session") || "null"); } catch (e) {}
 
-function toast(t) { const el = $("toast"); el.textContent = t; el.style.display = "block"; clearTimeout(toast.t); toast.t = setTimeout(() => (el.style.display = "none"), 5000); }
+function toast(t) { const el = $("toast"); if (!el) return; el.textContent = t; el.style.display = "block"; clearTimeout(toast.t); toast.t = setTimeout(() => (el.style.display = "none"), 5000); }
 window.addEventListener("error", (e) => toast("Error: " + e.message));
 window.addEventListener("unhandledrejection", (e) => toast("Error: " + ((e.reason && e.reason.message) || e.reason)));
 
@@ -352,9 +340,17 @@ const isOwner = (m) => !!(session && session.user && m.user_id === session.user.
 function saveSession(s) { session = s; if (s) localStorage.setItem("pdmm_session", JSON.stringify(s)); else { localStorage.removeItem("pdmm_session"); profile = null; mine = []; } renderAuth(); }
 function renderAuth() {
   const logged = !!(session && session.access_token);
-  $("btnOpenAuth").classList.toggle("hide", logged);
-  ["btnOpenUpload", "btnProfile"].forEach((id) => $(id).classList.toggle("hide", !logged));
-  if (logged) { $("hAv").innerHTML = avatarHtml(profile && profile.avatar_url, profile && profile.username, 26); $("hName").textContent = (profile && profile.username) || "Perfil"; }
+  const btnAuth = $("btnOpenAuth");
+  const btnUp = $("btnOpenUpload");
+  const btnProf = $("btnProfile");
+  if (btnAuth) btnAuth.classList.toggle("hide", logged);
+  if (btnUp) btnUp.classList.toggle("hide", !logged);
+  if (btnProf) btnProf.classList.toggle("hide", !logged);
+  if (logged) { 
+    const hAv = $("hAv"); const hName = $("hName");
+    if (hAv) hAv.innerHTML = avatarHtml(profile && profile.avatar_url, profile && profile.username, 26); 
+    if (hName) hName.textContent = (profile && profile.username) || "Perfil"; 
+  }
 }
 
 async function authCall(path, body) {
@@ -399,11 +395,20 @@ async function patchMod(id, body) {
 }
 
 function renderMods() {
-  const q = $("q").value.trim().toLowerCase();
+  const qEl = $("q");
+  const listEl = $("list");
+  const countEl = $("count");
+  if (!listEl) return;
+
+  const q = qEl ? qEl.value.trim().toLowerCase() : "";
   const items = allMods.filter((m) => ((m.title || "") + " " + authorOf(m) + " " + (m.description || "")).toLowerCase().includes(q));
-  $("count").textContent = allMods.length + (allMods.length === 1 ? " mod" : " mods");
-  if (!items.length) { $("list").innerHTML = "<div class='empty'>" + (allMods.length ? "Sin resultados." : "Todavía no hay mods publicados.") + "</div>"; return; }
-  $("list").innerHTML = items.map((m) => {
+  if (countEl) countEl.textContent = allMods.length + (allMods.length === 1 ? " mod" : " mods");
+  
+  if (!items.length) { 
+    listEl.innerHTML = "<div class='empty'>" + (allMods.length ? "Sin resultados." : "Todavía no hay mods publicados.") + "</div>"; 
+    return; 
+  }
+  listEl.innerHTML = items.map((m) => {
     const img = (m.images || [])[0];
     return `<div class="card" data-id="${esc(m.id)}">
       <div class="cover">${safeUrl(img) ? `<img src="${esc(img)}" alt="" loading="lazy">` : esc((m.title || "?").charAt(0).toUpperCase())}</div>
@@ -422,7 +427,8 @@ async function loadMods() {
     allMods = Array.isArray(d) ? d : []; 
     renderMods();
   } catch (e) { 
-    $("list").innerHTML = "<div class='empty'>No se pudieron cargar los mods: " + esc(e.message) + "</div>"; 
+    const listEl = $("list");
+    if (listEl) listEl.innerHTML = "<div class='empty'>No se pudieron cargar los mods: " + esc(e.message) + "</div>"; 
   }
 }
 
@@ -441,7 +447,10 @@ function openDetail(id) {
   rpc("increment_views", id); m.views = (m.views || 0) + 1; renderMods();
   const link = safeUrl(m.file_url) || safeUrl(m.external_url);
   const imgs = (m.images || []).filter(safeUrl);
-  $("detBody").innerHTML = `
+  const detBody = $("detBody");
+  if (!detBody) return;
+
+  detBody.innerHTML = `
     ${imgs.length ? `<div class="gallery">${imgs.map((u) => `<img src="${esc(u)}" alt="">`).join("")}</div>` : ""}
     <h2 style="margin:0 0 6px">${esc(m.title)}</h2>
     <div class="who" style="margin-bottom:8px"><span>${esc(authorOf(m))}</span></div>
@@ -449,16 +458,24 @@ function openDetail(id) {
     <p class="desc">${esc(m.description)}</p>
     ${link ? `<a id="dlBtn" class="btn pri" style="display:block;margin-top:10px;" href="${esc(link)}" target="_blank" rel="noopener">${dict.download}</a>` : ""}
     ${isOwner(m) ? `<div class="acts" style="margin-top:12px"><button class="btn sm" data-act="edit" data-id="${esc(m.id)}">${dict.edit}</button><button class="btn sm" data-act="hide" data-id="${esc(m.id)}">${dict.hide}</button><button class="btn sm danger" data-act="del" data-id="${esc(m.id)}">${dict.delete}</button></div>` : ""}`;
+  
   const b = $("dlBtn");
-  if (b) b.onclick = () => { rpc("increment_downloads", id); m.downloads = (m.downloads || 0) + 1; $("dlCount").textContent = m.downloads; renderMods(); };
-  $("detDlg").showModal();
+  if (b) b.onclick = () => { rpc("increment_downloads", id); m.downloads = (m.downloads || 0) + 1; const dlCount = $("dlCount"); if (dlCount) dlCount.textContent = m.downloads; renderMods(); };
+  const detDlg = $("detDlg");
+  if (detDlg) detDlg.showModal();
 }
-$("list").onclick = (e) => { const c = e.target.closest(".card"); if (c) openDetail(c.dataset.id); };
+
+const listContainer = $("list");
+if (listContainer) {
+  listContainer.onclick = (e) => { const c = e.target.closest(".card"); if (c) openDetail(c.dataset.id); };
+}
 
 function renderMine() {
   const dict = i18nDict[currentLang];
-  if (!mine.length) { $("mineList").innerHTML = "<p class='hint'>Todavía no has subido mods.</p>"; return; }
-  $("mineList").innerHTML = mine.map((m) => {
+  const mineList = $("mineList");
+  if (!mineList) return;
+  if (!mine.length) { mineList.innerHTML = "<p class='hint'>Todavía no has subido mods.</p>"; return; }
+  mineList.innerHTML = mine.map((m) => {
     const st = m.hidden ? ["off", "Oculto"] : ["ok", "Publicado"];
     return `<div class="mine"><span class="chip ${st[0]}">${st[1]}</span><h3>${esc(m.title)}</h3>
       <div class="stats"><span>⬇ ${m.downloads || 0}</span><span>👁 ${m.views || 0}</span></div>
@@ -467,16 +484,28 @@ function renderMine() {
       <button class="btn sm danger" data-act="del" data-id="${esc(m.id)}">${dict.delete}</button></div></div>`;
   }).join("");
 }
-async function openMine() { await refreshIfNeeded(); await loadMine(); renderMine(); if (!$("mineDlg").open) $("mineDlg").showModal(); }
+
+async function openMine() { 
+  await refreshIfNeeded(); 
+  await loadMine(); 
+  renderMine(); 
+  const mineDlg = $("mineDlg");
+  if (mineDlg && !mineDlg.open) mineDlg.showModal(); 
+}
+
 const findMod = (id) => mine.find((x) => x.id === id) || allMods.find((x) => x.id === id);
 
 async function toggleHide(m) {
   try {
     await patchMod(m.id, { hidden: !m.hidden });
     toast(m.hidden ? "Tu mod volvió a ser visible." : "Tu mod quedó oculto.");
-    await Promise.all([loadMods(), loadMine()]); renderMine(); if ($("detDlg").open) $("detDlg").close();
+    await Promise.all([loadMods(), loadMine()]); 
+    renderMine(); 
+    const detDlg = $("detDlg");
+    if (detDlg && detDlg.open) detDlg.close();
   } catch (e) { toast("Error: " + e.message); }
 }
+
 async function deleteMod(m) {
   if (!confirm("¿Eliminar \"" + m.title + "\" para siempre? Esta acción no se puede deshacer.")) return;
   try {
@@ -484,55 +513,93 @@ async function deleteMod(m) {
     if (!r.ok) { const e = await r.json().catch(() => ({})); throw new Error(e.message || ("Error " + r.status)); }
     await removeFiles("mods", [m.file_url]); await removeFiles("images", m.images || []);
     toast("Mod eliminado.");
-    await Promise.all([loadMods(), loadMine()]); renderMine(); if ($("detDlg").open) $("detDlg").close();
+    await Promise.all([loadMods(), loadMine()]); 
+    renderMine(); 
+    const detDlg = $("detDlg");
+    if (detDlg && detDlg.open) detDlg.close();
   } catch (e) { toast("Error: " + e.message); }
 }
+
 function renderEditThumbs() {
-  $("eThumbs").innerHTML = editImgs.map((u, i) => `<span class="thumb"><img src="${esc(u)}" alt=""><button data-rm="${i}" type="button">✕</button></span>`).join("");
+  const eThumbs = $("eThumbs");
+  if (eThumbs) eThumbs.innerHTML = editImgs.map((u, i) => `<span class="thumb"><img src="${esc(u)}" alt=""><button data-rm="${i}" type="button">✕</button></span>`).join("");
 }
+
 function openEdit(m) {
   editing = m; editImgs = (m.images || []).slice();
-  $("eTitle").value = m.title || ""; $("eDesc").value = m.description || ""; $("eExt").value = m.external_url || "";
-  $("eImgs").value = ""; $("eFile").value = "";
-  $("eImgName").textContent = i18nDict[currentLang].addImgsHint; $("eFileName").textContent = i18nDict[currentLang].replaceFileHint;
+  const eTitle = $("eTitle"), eDesc = $("eDesc"), eExt = $("eExt"), eImgs = $("eImgs"), eFile = $("eFile"), eImgName = $("eImgName"), eFileName = $("eFileName");
+  if (eTitle) eTitle.value = m.title || ""; 
+  if (eDesc) eDesc.value = m.description || ""; 
+  if (eExt) eExt.value = m.external_url || "";
+  if (eImgs) eImgs.value = ""; 
+  if (eFile) eFile.value = "";
+  if (eImgName) eImgName.textContent = i18nDict[currentLang].addImgsHint; 
+  if (eFileName) eFileName.textContent = i18nDict[currentLang].replaceFileHint;
   renderEditThumbs();
-  if ($("detDlg").open) $("detDlg").close();
-  $("editDlg").showModal();
+  const detDlg = $("detDlg");
+  if (detDlg && detDlg.open) detDlg.close();
+  const editDlg = $("editDlg");
+  if (editDlg) editDlg.showModal();
 }
-$("eThumbs").onclick = (e) => { const b = e.target.closest("[data-rm]"); if (b) { editImgs.splice(+b.dataset.rm, 1); renderEditThumbs(); } };
-$("eImgs").onchange = () => { const n = $("eImgs").files.length; $("eImgName").textContent = n ? n + " nueva(s)" : i18nDict[currentLang].addImgsHint; };
-$("eFile").onchange = () => { const f = $("eFile").files[0]; $("eFileName").textContent = f ? f.name : i18nDict[currentLang].replaceFileHint; };
 
-$("btnSaveEdit").onclick = async () => {
-  const m = editing; if (!m) return;
-  const title = $("eTitle").value.trim(), description = $("eDesc").value.trim(), ext = $("eExt").value.trim();
-  const newImgs = Array.from($("eImgs").files), newFile = $("eFile").files[0];
-  if (!title) return toast("Escribe un título.");
-  if (editImgs.length + newImgs.length > 5) return toast("Máximo 5 imágenes en total.");
-  if (newImgs.some((i) => i.size > MAX_IMG)) return toast("Cada imagen debe pesar menos de 5 MB.");
-  if (newFile && newFile.size > MAX_FILE) return toast("El archivo supera los 50 MB. Usa un enlace externo.");
-  if (newFile && !/\.(zip|7z|rar)$/i.test(newFile.name)) return toast("Solo se permiten .zip, .7z o .rar.");
-  if (ext && !safeUrl(ext)) return toast("El enlace debe empezar con http:// o https://");
-  if (!newFile && !m.file_url && !ext) return toast("El mod necesita un archivo o un enlace externo.");
-  await refreshIfNeeded(); if (!session) return toast("Inicia sesión primero.");
+const eThumbsEl = $("eThumbs");
+if (eThumbsEl) {
+  eThumbsEl.onclick = (e) => { const b = e.target.closest("[data-rm]"); if (b) { editImgs.splice(+b.dataset.rm, 1); renderEditThumbs(); } };
+}
 
-  const btn = $("btnSaveEdit"); btn.disabled = true; btn.textContent = "Guardando...";
-  try {
-    const uid = session.user.id, stamp = Date.now();
-    const images = editImgs.slice();
-    for (let i = 0; i < newImgs.length; i++) images.push(await uploadFile("images", uid + "/" + stamp + "_" + i + "_" + safeName(newImgs[i].name), newImgs[i]));
-    let fileUrl = m.file_url;
-    if (newFile) fileUrl = await uploadFile("mods", uid + "/" + stamp + "_" + safeName(newFile.name), newFile);
-    const extVal = ext || null;
-    await patchMod(m.id, { title, description, images, file_url: fileUrl, external_url: extVal });
-    const removedImgs = (m.images || []).filter((u) => !images.includes(u));
-    if (removedImgs.length) await removeFiles("images", removedImgs);
-    if (newFile && m.file_url) await removeFiles("mods", [m.file_url]);
-    $("editDlg").close();
-    toast("Cambios guardados correctamente.");
-    await Promise.all([loadMods(), loadMine()]); if ($("mineDlg").open) renderMine();
-  } catch (e) { toast("Error: " + e.message); } finally { btn.disabled = false; btn.textContent = i18nDict[currentLang].btnSave; }
-};
+const eImgsEl = $("eImgs");
+if (eImgsEl) {
+  eImgsEl.onchange = () => { const n = eImgsEl.files.length; const eImgName = $("eImgName"); if (eImgName) eImgName.textContent = n ? n + " nueva(s)" : i18nDict[currentLang].addImgsHint; };
+}
+
+const eFileEl = $("eFile");
+if (eFileEl) {
+  eFileEl.onchange = () => { const f = eFileEl.files[0]; const eFileName = $("eFileName"); if (eFileName) eFileName.textContent = f ? f.name : i18nDict[currentLang].replaceFileHint; };
+}
+
+const btnSaveEdit = $("btnSaveEdit");
+if (btnSaveEdit) {
+  btnSaveEdit.onclick = async () => {
+    const m = editing; if (!m) return;
+    const eTitle = $("eTitle"), eDesc = $("eDesc"), eExt = $("eExt"), eImgs = $("eImgs"), eFile = $("eFile");
+    const title = eTitle ? eTitle.value.trim() : "";
+    const description = eDesc ? eDesc.value.trim() : "";
+    const ext = eExt ? eExt.value.trim() : "";
+    const newImgs = eImgs ? Array.from(eImgs.files) : [];
+    const newFile = eFile ? eFile.files[0] : null;
+
+    if (!title) return toast("Escribe un título.");
+    if (editImgs.length + newImgs.length > 5) return toast("Máximo 5 imágenes en total.");
+    if (newImgs.some((i) => i.size > MAX_IMG)) return toast("Cada imagen debe pesar menos de 5 MB.");
+    if (newFile && newFile.size > MAX_FILE) return toast("El archivo supera los 50 MB. Usa un enlace externo.");
+    if (newFile && !/\.(zip|7z|rar)$/i.test(newFile.name)) return toast("Solo se permiten .zip, .7z o .rar.");
+    if (ext && !safeUrl(ext)) return toast("El enlace debe empezar con http:// o https://");
+    if (!newFile && !m.file_url && !ext) return toast("El mod necesita un archivo o un enlace externo.");
+    
+    await refreshIfNeeded(); if (!session) return toast("Inicia sesión primero.");
+
+    btnSaveEdit.disabled = true; btnSaveEdit.textContent = "Guardando...";
+    try {
+      const uid = session.user.id, stamp = Date.now();
+      const images = editImgs.slice();
+      for (let i = 0; i < newImgs.length; i++) images.push(await uploadFile("images", uid + "/" + stamp + "_" + i + "_" + safeName(newImgs[i].name), newImgs[i]));
+      let fileUrl = m.file_url;
+      if (newFile) fileUrl = await uploadFile("mods", uid + "/" + stamp + "_" + safeName(newFile.name), newFile);
+      const extVal = ext || null;
+      await patchMod(m.id, { title, description, images, file_url: fileUrl, external_url: extVal });
+      const removedImgs = (m.images || []).filter((u) => !images.includes(u));
+      if (removedImgs.length) await removeFiles("images", removedImgs);
+      if (newFile && m.file_url) await removeFiles("mods", [m.file_url]);
+      
+      const editDlg = $("editDlg");
+      if (editDlg) editDlg.close();
+      toast("Cambios guardados correctamente.");
+      await Promise.all([loadMods(), loadMine()]); 
+      const mineDlg = $("mineDlg");
+      if (mineDlg && mineDlg.open) renderMine();
+    } catch (e) { toast("Error: " + e.message); } finally { btnSaveEdit.disabled = false; btnSaveEdit.textContent = i18nDict[currentLang].btnSave; }
+  };
+}
 
 function onAction(e) {
   const b = e.target.closest("[data-act]"); if (!b) return;
@@ -541,85 +608,195 @@ function onAction(e) {
   else if (b.dataset.act === "hide") toggleHide(m);
   else if (b.dataset.act === "del") deleteMod(m);
 }
-$("mineList").onclick = onAction;
-$("detBody").onclick = onAction;
 
-document.querySelectorAll("[data-close]").forEach((b) => (b.onclick = () => b.closest("dialog").close()));
-$("btnOpenAuth").onclick = () => $("authDlg").showModal();
-$("btnOpenUpload").onclick = () => $("upDlg").showModal();
-$("btnMine").onclick = () => { $("profDlg").close(); openMine(); };
-$("btnProfile").onclick = () => { $("pName").value = (profile && profile.username) || ""; $("pAv").innerHTML = avatarHtml(profile && profile.avatar_url, profile && profile.username, 56); $("pFile").value = ""; $("profDlg").showModal(); };
-$("q").oninput = renderMods;
-$("pFile").onchange = () => { const f = $("pFile").files[0]; if (f) $("pAv").innerHTML = `<img class="av" src="${URL.createObjectURL(f)}" width="56" height="56" alt="">`; };
-$("file").onchange = () => { const f = $("file").files[0]; $("fileName").textContent = f ? f.name : i18nDict[currentLang].upFileHint; };
-$("imgs").onchange = () => {
-  const fs = Array.from($("imgs").files).slice(0, 5);
-  $("imgName").textContent = fs.length ? fs.length + " imagen(es) elegida(s)" : i18nDict[currentLang].upImgsHint;
-  $("imgPrev").innerHTML = fs.map((f) => `<img src="${URL.createObjectURL(f)}" alt="">`).join("");
-};
+const mineListEl = $("mineList");
+if (mineListEl) mineListEl.onclick = onAction;
+const detBodyEl = $("detBody");
+if (detBodyEl) detBodyEl.onclick = onAction;
 
-$("btnSignup").onclick = async () => {
-  const email = $("email").value.trim(), password = $("password").value;
-  if (!email || password.length < 6) return toast("Escribe un correo válido y una contraseña de 6 o más caracteres.");
-  try {
-    const d = await authCall("signup", { email, password }); $("authDlg").close();
-    if (d.access_token) { saveSession(d); await loadProfile(); toast("Cuenta creada. Ya iniciaste sesión."); }
-    else toast("Cuenta creada. Revisa tu correo para confirmarla.");
-  } catch (e) { toast("Error: " + e.message); }
-};
-$("btnLogin").onclick = async () => {
-  const email = $("email").value.trim(), password = $("password").value;
-  if (!email || !password) return toast("Escribe tu correo y contraseña.");
-  try { saveSession(await authCall("token?grant_type=password", { email, password })); await loadProfile(); $("authDlg").close(); toast("Sesión iniciada."); loadMods(); }
-  catch (e) { toast("Error: " + e.message); }
-};
-$("btnLogout").onclick = () => { saveSession(null); $("profDlg").close(); toast("Sesión cerrada."); };
+document.querySelectorAll("[data-close]").forEach((b) => (b.onclick = () => {
+  const dlg = b.closest("dialog");
+  if (dlg) dlg.close();
+}));
 
-$("btnSaveProf").onclick = async () => {
-  await refreshIfNeeded(); if (!session) return toast("Inicia sesión primero.");
-  const name = $("pName").value.trim(); if (!name) return toast("Escribe un nombre de usuario.");
-  const f = $("pFile").files[0]; if (f && f.size > MAX_IMG) return toast("La foto supera los 5 MB.");
-  const btn = $("btnSaveProf"); btn.disabled = true; btn.textContent = "Guardando...";
-  try {
-    let avatar = profile && profile.avatar_url;
-    if (f) avatar = await uploadFile("images", session.user.id + "/avatar_" + Date.now() + "_" + safeName(f.name), f);
-    const r = await fetch(URL_BASE + "/rest/v1/profiles?id=eq." + session.user.id, { method: "PATCH", headers: headers({ "Content-Type": "application/json", Prefer: "return=minimal" }), body: JSON.stringify({ username: name, avatar_url: avatar }) });
-    if (!r.ok) { const e = await r.json().catch(() => ({})); throw new Error(e.message || ("Error " + r.status)); }
-    profile = Object.assign(profile || {}, { username: name, avatar_url: avatar }); renderAuth(); loadMods();
-    $("profDlg").close(); toast("Perfil actualizado.");
-  } catch (e) { toast("Error: " + e.message); } finally { btn.disabled = false; btn.textContent = i18nDict[currentLang].btnSave; }
-};
+const btnOpenAuth = $("btnOpenAuth");
+if (btnOpenAuth) btnOpenAuth.onclick = () => { const authDlg = $("authDlg"); if (authDlg) authDlg.showModal(); };
 
-$("btnUpload").onclick = async () => {
-  const title = $("title").value.trim(), description = $("desc").value.trim();
-  const file = $("file").files[0], ext = $("ext").value.trim();
-  const imgs = Array.from($("imgs").files).slice(0, 5);
-  if (!title) return toast("Escribe un título.");
-  if (!file && !ext) return toast("Sube un archivo o pega un enlace externo.");
-  if (file && file.size > MAX_FILE) return toast("El archivo supera los 50 MB. Usa un enlace externo.");
-  if (file && !/\.(zip|7z|rar)$/i.test(file.name)) return toast("Solo se permiten .zip, .7z o .rar.");
-  if (ext && !safeUrl(ext)) return toast("El enlace debe empezar con http:// o https://");
-  if (imgs.some((i) => i.size > MAX_IMG)) return toast("Cada imagen debe pesar menos de 5 MB.");
-  await refreshIfNeeded(); if (!session) return toast("Inicia sesión primero.");
-  if (!profile) await loadProfile();
+const btnOpenUpload = $("btnOpenUpload");
+if (btnOpenUpload) btnOpenUpload.onclick = () => { const upDlg = $("upDlg"); if (upDlg) upDlg.showModal(); };
 
-  const btn = $("btnUpload"); btn.disabled = true; btn.textContent = "Subiendo...";
-  try {
-    const uid = session.user.id, stamp = Date.now();
-    const imageUrls = [];
-    for (let i = 0; i < imgs.length; i++) imageUrls.push(await uploadFile("images", uid + "/" + stamp + "_" + i + "_" + safeName(imgs[i].name), imgs[i]));
-    const fileUrl = file ? await uploadFile("mods", uid + "/" + stamp + "_" + safeName(file.name), file) : null;
+const btnMine = $("btnMine");
+if (btnMine) btnMine.onclick = () => { const profDlg = $("profDlg"); if (profDlg) profDlg.close(); openMine(); };
+
+const btnProfile = $("btnProfile");
+if (btnProfile) {
+  btnProfile.onclick = () => { 
+    const pName = $("pName");
+    if (pName) pName.value = (profile && profile.username) || ""; 
+    const pAv = $("pAv");
+    if (pAv) pAv.innerHTML = avatarHtml(profile && profile.avatar_url, profile && profile.username, 56); 
+    const pFile = $("pFile");
+    if (pFile) pFile.value = ""; 
+    const profDlg = $("profDlg");
+    if (profDlg) profDlg.showModal(); 
+  };
+}
+
+const qInput = $("q");
+if (qInput) qInput.oninput = renderMods;
+
+const pFileEl = $("pFile");
+if (pFileEl) {
+  pFileEl.onchange = () => { 
+    const f = pFileEl.files[0]; 
+    const pAv = $("pAv");
+    if (f && pAv) pAv.innerHTML = `<img class="av" src="${URL.createObjectURL(f)}" width="56" height="56" alt="">`; 
+  };
+}
+
+const fileEl = $("file");
+if (fileEl) {
+  fileEl.onchange = () => { 
+    const f = fileEl.files[0]; 
+    const fileName = $("fileName");
+    if (fileName) fileName.textContent = f ? f.name : i18nDict[currentLang].upFileHint; 
+  };
+}
+
+const imgsEl = $("imgs");
+if (imgsEl) {
+  imgsEl.onchange = () => {
+    const fs = Array.from(imgsEl.files).slice(0, 5);
+    const imgName = $("imgName");
+    const imgPrev = $("imgPrev");
+    if (imgName) imgName.textContent = fs.length ? fs.length + " imagen(es) elegida(s)" : i18nDict[currentLang].upImgsHint;
+    if (imgPrev) imgPrev.innerHTML = fs.map((f) => `<img src="${URL.createObjectURL(f)}" alt="">`).join("");
+  };
+}
+
+const btnSignup = $("btnSignup");
+if (btnSignup) {
+  btnSignup.onclick = async () => {
+    const emailEl = $("email"), passwordEl = $("password");
+    const email = emailEl ? emailEl.value.trim() : "";
+    const password = passwordEl ? passwordEl.value : "";
+    if (!email || password.length < 6) return toast("Escribe un correo válido y una contraseña de 6 o más caracteres.");
+    try {
+      const d = await authCall("signup", { email, password }); 
+      const authDlg = $("authDlg");
+      if (authDlg) authDlg.close();
+      if (d.access_token) { saveSession(d); await loadProfile(); toast("Cuenta creada. Ya iniciaste sesión."); }
+      else toast("Cuenta creada. Revisa tu correo para confirmarla.");
+    } catch (e) { toast("Error: " + e.message); }
+  };
+}
+
+const btnLogin = $("btnLogin");
+if (btnLogin) {
+  btnLogin.onclick = async () => {
+    const emailEl = $("email"), passwordEl = $("password");
+    const email = emailEl ? emailEl.value.trim() : "";
+    const password = passwordEl ? passwordEl.value : "";
+    if (!email || !password) return toast("Escribe tu correo y contraseña.");
+    try { 
+      saveSession(await authCall("token?grant_type=password", { email, password })); 
+      await loadProfile(); 
+      const authDlg = $("authDlg");
+      if (authDlg) authDlg.close(); 
+      toast("Sesión iniciada."); 
+      loadMods(); 
+    } catch (e) { toast("Error: " + e.message); }
+  };
+}
+
+const btnLogout = $("btnLogout");
+if (btnLogout) {
+  btnLogout.onclick = () => { 
+    saveSession(null); 
+    const profDlg = $("profDlg");
+    if (profDlg) profDlg.close(); 
+    toast("Sesión cerrada."); 
+  };
+}
+
+const btnSaveProf = $("btnSaveProf");
+if (btnSaveProf) {
+  btnSaveProf.onclick = async () => {
+    await refreshIfNeeded(); if (!session) return toast("Inicia sesión primero.");
+    const pName = $("pName");
+    const name = pName ? pName.value.trim() : ""; 
+    if (!name) return toast("Escribe un nombre de usuario.");
+    const pFile = $("pFile");
+    const f = pFile && pFile.files ? pFile.files[0] : null; 
+    if (f && f.size > MAX_IMG) return toast("La foto supera los 5 MB.");
     
-    const ins = await fetch(URL_BASE + "/rest/v1/mods", { method: "POST", headers: headers({ "Content-Type": "application/json", Prefer: "return=minimal" }),
-      body: JSON.stringify({ title, description, author: (profile && profile.username) || "Anónimo", file_url: fileUrl, external_url: ext || null, images: imageUrls, approved: true }) });
+    btnSaveProf.disabled = true; btnSaveProf.textContent = "Guardando...";
+    try {
+      let avatar = profile && profile.avatar_url;
+      if (f) avatar = await uploadFile("images", session.user.id + "/avatar_" + Date.now() + "_" + safeName(f.name), f);
+      const r = await fetch(URL_BASE + "/rest/v1/profiles?id=eq." + session.user.id, { method: "PATCH", headers: headers({ "Content-Type": "application/json", Prefer: "return=minimal" }), body: JSON.stringify({ username: name, avatar_url: avatar }) });
+      if (!r.ok) { const e = await r.json().catch(() => ({})); throw new Error(e.message || ("Error " + r.status)); }
+      profile = Object.assign(profile || {}, { username: name, avatar_url: avatar }); renderAuth(); loadMods();
+      const profDlg = $("profDlg");
+      if (profDlg) profDlg.close(); 
+      toast("Perfil actualizado.");
+    } catch (e) { toast("Error: " + e.message); } finally { btnSaveProf.disabled = false; btnSaveProf.textContent = i18nDict[currentLang].btnSave; }
+  };
+}
+
+const btnUpload = $("btnUpload");
+if (btnUpload) {
+  btnUpload.onclick = async () => {
+    const titleEl = $("title"), descEl = $("desc"), fileEl = $("file"), extEl = $("ext"), imgsEl = $("imgs");
+    const title = titleEl ? titleEl.value.trim() : "";
+    const description = descEl ? descEl.value.trim() : "";
+    const file = fileEl && fileEl.files ? fileEl.files[0] : null;
+    const ext = extEl ? extEl.value.trim() : "";
+    const imgs = imgsEl && imgsEl.files ? Array.from(imgsEl.files).slice(0, 5) : [];
+
+    if (!title) return toast("Escribe un título.");
+    if (!file && !ext) return toast("Sube un archivo o pega un enlace externo.");
+    if (file && file.size > MAX_FILE) return toast("El archivo supera los 50 MB. Usa un enlace externo.");
+    if (file && !/\.(zip|7z|rar)$/i.test(file.name)) return toast("Solo se permiten .zip, .7z o .rar.");
+    if (ext && !safeUrl(ext)) return toast("El enlace debe empezar con http:// o https://");
+    if (imgs.some((i) => i.size > MAX_IMG)) return toast("Cada imagen debe pesar menos de 5 MB.");
     
-    if (!ins.ok) { const e = await ins.json().catch(() => ({})); throw new Error(e.message || ("Error al guardar (" + ins.status + ")")); }
-    $("upDlg").close(); toast("¡Mod subido y publicado con éxito!");
-    ["title", "desc", "ext"].forEach((id) => ($(id).value = "")); $("file").value = ""; $("imgs").value = "";
-    $("fileName").textContent = i18nDict[currentLang].upFileHint; $("imgName").textContent = i18nDict[currentLang].upImgsHint; $("imgPrev").innerHTML = "";
-    loadMods();
-  } catch (e) { toast("Error: " + e.message); } finally { btn.disabled = false; btn.textContent = i18nDict[currentLang].btnSubmitMod; }
-};
+    await refreshIfNeeded(); if (!session) return toast("Inicia sesión primero.");
+    if (!profile) await loadProfile();
+
+    btnUpload.disabled = true; btnUpload.textContent = "Subiendo...";
+    try {
+      const uid = session.user.id, stamp = Date.now();
+      const imageUrls = [];
+      for (let i = 0; i < imgs.length; i++) imageUrls.push(await uploadFile("images", uid + "/" + stamp + "_" + i + "_" + safeName(imgs[i].name), imgs[i]));
+      const fileUrl = file ? await uploadFile("mods", uid + "/" + stamp + "_" + safeName(file.name), file) : null;
+      
+      const ins = await fetch(URL_BASE + "/rest/v1/mods", { method: "POST", headers: headers({ "Content-Type": "application/json", Prefer: "return=minimal" }),
+        body: JSON.stringify({ title, description, author: (profile && profile.username) || "Anónimo", file_url: fileUrl, external_url: ext || null, images: imageUrls, approved: true }) });
+      
+      if (!ins.ok) { const e = await ins.json().catch(() => ({})); throw new Error(e.message || ("Error al guardar (" + ins.status + ")")); }
+      
+      const upDlg = $("upDlg");
+      if (upDlg) upDlg.close(); 
+      toast("¡Mod subido y publicado con éxito!");
+      
+      if (titleEl) titleEl.value = "";
+      if (descEl) descEl.value = "";
+      if (extEl) extEl.value = "";
+      if (fileEl) fileEl.value = "";
+      if (imgsEl) imgsEl.value = "";
+      
+      const fileName = $("fileName");
+      const imgName = $("imgName");
+      const imgPrev = $("imgPrev");
+      if (fileName) fileName.textContent = i18nDict[currentLang].upFileHint; 
+      if (imgName) imgName.textContent = i18nDict[currentLang].upImgsHint; 
+      if (imgPrev) imgPrev.innerHTML = "";
+      
+      loadMods();
+    } catch (e) { toast("Error: " + e.message); } finally { btnUpload.disabled = false; btnUpload.textContent = i18nDict[currentLang].btnSubmitMod; }
+  };
+}
 
 // Inicialización
 applyI18n();
