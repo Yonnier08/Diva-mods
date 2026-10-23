@@ -6,7 +6,7 @@
 <meta name="google" content="notranslate">
 <title>PDMM+ Mods</title>
 <style>
-  :root { --bg:#0e1116; --card:#171b22; --line:#262c36; --fg:#e8ecf1; --mut:#8b95a5; --acc:#39c5bb; --acc2:#ff5fa2; }
+  :root { --bg:#0e1116; --card:#171b22; --line:#262c36; --fg:#e8ecf1; --mut:#8b95a5; --acc:#39c5bb; --acc2:#ff5fa2; --warn:#f0b429; }
   @media (prefers-color-scheme: light) {
     :root { --bg:#f5f7fa; --card:#fff; --line:#e2e6ec; --fg:#16191f; --mut:#667085; }
   }
@@ -19,6 +19,8 @@
   .btn { border:1px solid var(--line); background:var(--card); color:var(--fg); padding:9px 13px; border-radius:10px;
     font-size:14px; font-weight:600; cursor:pointer; text-decoration:none; display:inline-block; text-align:center; }
   .btn.pri { border:none; color:#06201e; background:linear-gradient(90deg,var(--acc),#6fe0d6); }
+  .btn.danger { color:#ff6b6b; border-color:#ff6b6b66; }
+  .btn.sm { padding:7px 10px; font-size:13px; }
   .btn:disabled { opacity:.6; }
   .hide { display:none !important; }
   .av { border-radius:50%; object-fit:cover; display:grid; place-items:center; font-weight:800; color:#06201e;
@@ -46,16 +48,25 @@
   dialog::backdrop { background:rgba(0,0,0,.65); }
   dialog h2 { margin:0 0 10px; }
   .row { display:flex; flex-direction:column; gap:8px; }
-  .acts { display:flex; gap:8px; margin-top:12px; }
+  .acts { display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; }
   .acts .btn { flex:1; }
   .filebtn { display:block; padding:12px; text-align:center; border:2px dashed var(--line); border-radius:10px; color:var(--mut); cursor:pointer; word-break:break-all; }
   .filebtn input { display:none; }
   .hint { color:var(--mut); font-size:13px; margin:2px 0; }
   .thumbs { display:flex; gap:6px; flex-wrap:wrap; }
-  .thumbs img { width:64px; height:64px; object-fit:cover; border-radius:8px; border:1px solid var(--line); }
+  .thumbs img { width:64px; height:64px; object-fit:cover; border-radius:8px; border:1px solid var(--line); display:block; }
+  .thumb { position:relative; }
+  .thumb button { position:absolute; top:-6px; right:-6px; width:22px; height:22px; border-radius:50%; border:none;
+    background:#ff5252; color:#fff; font-size:12px; cursor:pointer; padding:0; }
   .gallery { display:flex; gap:8px; overflow-x:auto; scroll-snap-type:x mandatory; margin-bottom:10px; }
   .gallery img { height:210px; border-radius:10px; scroll-snap-align:start; flex:none; max-width:100%; object-fit:contain; background:var(--bg); }
   .desc { white-space:pre-wrap; word-break:break-word; }
+  .mine { border:1px solid var(--line); border-radius:12px; padding:10px; margin-bottom:10px; }
+  .mine h3 { margin:0 0 4px; font-size:16px; word-break:break-word; }
+  .chip { display:inline-block; font-size:12px; font-weight:700; padding:2px 8px; border-radius:20px; border:1px solid var(--line); margin-bottom:6px; }
+  .chip.ok { color:var(--acc); border-color:var(--acc); }
+  .chip.wait { color:var(--warn); border-color:var(--warn); }
+  .chip.off { color:var(--mut); }
   #toast { position:fixed; left:50%; bottom:22px; transform:translateX(-50%); z-index:50; max-width:90vw; padding:12px 16px;
     border-radius:12px; font-weight:600; display:none; background:var(--acc2); color:#fff; box-shadow:0 6px 24px rgba(0,0,0,.35); }
 </style>
@@ -68,7 +79,6 @@
   </button>
   <button id="btnOpenUpload" class="btn pri hide">Subir</button>
   <button id="btnOpenAuth" class="btn">Entrar</button>
-  <button id="btnLogout" class="btn hide">Salir</button>
 </header>
 
 <main>
@@ -95,7 +105,14 @@
     <input id="pName" placeholder="Nombre de usuario" maxlength="30">
     <p class="hint">Este nombre se muestra como autor de tus mods. Foto máx. 5 MB.</p>
   </div>
-  <div class="acts"><button id="btnSaveProf" class="btn pri">Guardar</button><button class="btn" data-close>Cerrar</button></div>
+  <div class="acts"><button id="btnSaveProf" class="btn pri">Guardar</button><button id="btnMine" class="btn">Mis mods</button></div>
+  <div class="acts"><button id="btnLogout" class="btn danger">Cerrar sesión</button><button class="btn" data-close>Cerrar</button></div>
+</dialog>
+
+<dialog id="mineDlg">
+  <h2>Mis mods</h2>
+  <div id="mineList"></div>
+  <div class="acts"><button class="btn" data-close>Cerrar</button></div>
 </dialog>
 
 <dialog id="upDlg">
@@ -113,6 +130,20 @@
   <div class="acts"><button id="btnUpload" class="btn pri">Subir mod</button><button class="btn" data-close>Cancelar</button></div>
 </dialog>
 
+<dialog id="editDlg">
+  <h2>Editar mod</h2>
+  <div class="row">
+    <input id="eTitle" placeholder="Título del mod" maxlength="80">
+    <textarea id="eDesc" rows="3" placeholder="Descripción"></textarea>
+    <div id="eThumbs" class="thumbs"></div>
+    <label class="filebtn"><span id="eImgName">Agregar imágenes (máx. 5 en total)</span><input id="eImgs" type="file" accept="image/*" multiple></label>
+    <label class="filebtn"><span id="eFileName">Reemplazar archivo (opcional, máx. 50 MB)</span><input id="eFile" type="file" accept=".zip,.7z,.rar"></label>
+    <input id="eExt" type="url" placeholder="Enlace de descarga externo (opcional)">
+  </div>
+  <p class="hint">Si cambias el archivo o el enlace, el mod vuelve a revisión antes de publicarse.</p>
+  <div class="acts"><button id="btnSaveEdit" class="btn pri">Guardar cambios</button><button class="btn" data-close>Cancelar</button></div>
+</dialog>
+
 <dialog id="detDlg"><div id="detBody"></div><div class="acts"><button class="btn" data-close>Cerrar</button></div></dialog>
 <div id="toast"></div>
 
@@ -122,7 +153,7 @@ const KEY = "sb_publishable_TVKTwGkcuLX_eXNon8IQjg_Jor-NquZ";
 const MAX_FILE = 50 * 1024 * 1024, MAX_IMG = 5 * 1024 * 1024;
 const $ = (id) => document.getElementById(id);
 
-let session = null, profile = null, allMods = [];
+let session = null, profile = null, allMods = [], mine = [], editing = null, editImgs = [];
 try { session = JSON.parse(localStorage.getItem("pdmm_session") || "null"); } catch (e) {}
 
 function toast(t) { const el = $("toast"); el.textContent = t; el.style.display = "block"; clearTimeout(toast.t); toast.t = setTimeout(() => (el.style.display = "none"), 6000); }
@@ -137,12 +168,15 @@ function avatarHtml(url, name, size) {
   if (safeUrl(url)) return `<img class="av" src="${esc(url)}" width="${s}" height="${s}" alt="">`;
   return `<span class="av" style="width:${s}px;height:${s}px;font-size:${Math.round(s * .45)}px">${esc((name || "?").charAt(0).toUpperCase())}</span>`;
 }
+const authorOf = (m) => (m.profiles && m.profiles.username) || m.author || "Anónimo";
+const safeName = (n) => n.replace(/[^a-zA-Z0-9._-]/g, "_");
+const isOwner = (m) => !!(session && session.user && m.user_id === session.user.id);
 
-function saveSession(s) { session = s; if (s) localStorage.setItem("pdmm_session", JSON.stringify(s)); else { localStorage.removeItem("pdmm_session"); profile = null; } renderAuth(); }
+function saveSession(s) { session = s; if (s) localStorage.setItem("pdmm_session", JSON.stringify(s)); else { localStorage.removeItem("pdmm_session"); profile = null; mine = []; } renderAuth(); }
 function renderAuth() {
   const logged = !!(session && session.access_token);
   $("btnOpenAuth").classList.toggle("hide", logged);
-  ["btnOpenUpload", "btnLogout", "btnProfile"].forEach((id) => $(id).classList.toggle("hide", !logged));
+  ["btnOpenUpload", "btnProfile"].forEach((id) => $(id).classList.toggle("hide", !logged));
   if (logged) { $("hAv").innerHTML = avatarHtml(profile && profile.avatar_url, profile && profile.username, 26); $("hName").textContent = (profile && profile.username) || "Perfil"; }
 }
 
@@ -176,7 +210,16 @@ async function uploadFile(bucket, path, file) {
   if (!r.ok) { const e = await r.json().catch(() => ({})); throw new Error(e.message || e.error || ("Error al subir (" + r.status + ")")); }
   return URL_BASE + "/storage/v1/object/public/" + bucket + "/" + path;
 }
-const safeName = (n) => n.replace(/[^a-zA-Z0-9._-]/g, "_");
+function storagePath(url, bucket) { const p = "/storage/v1/object/public/" + bucket + "/"; const i = (url || "").indexOf(p); return i < 0 ? null : decodeURIComponent(url.slice(i + p.length)); }
+async function removeFiles(bucket, urls) {
+  const prefixes = urls.map((u) => storagePath(u, bucket)).filter(Boolean);
+  if (!prefixes.length) return;
+  await fetch(URL_BASE + "/storage/v1/object/" + bucket, { method: "DELETE", headers: headers({ "Content-Type": "application/json" }), body: JSON.stringify({ prefixes }) }).catch(() => {});
+}
+async function patchMod(id, body) {
+  const r = await fetch(URL_BASE + "/rest/v1/mods?id=eq." + id, { method: "PATCH", headers: headers({ "Content-Type": "application/json", Prefer: "return=minimal" }), body: JSON.stringify(body) });
+  if (!r.ok) { const e = await r.json().catch(() => ({})); throw new Error(e.message || ("Error " + r.status)); }
+}
 
 function renderMods() {
   const q = $("q").value.trim().toLowerCase();
@@ -193,15 +236,20 @@ function renderMods() {
       </div></div>`;
   }).join("");
 }
-const authorOf = (m) => (m.profiles && m.profiles.username) || m.author || "Anónimo";
 
 async function loadMods() {
   try {
-    const r = await fetch(URL_BASE + "/rest/v1/mods?select=*,profiles(username,avatar_url)&approved=eq.true&order=created_at.desc", { headers: headers() });
+    const r = await fetch(URL_BASE + "/rest/v1/mods?select=*,profiles(username,avatar_url)&approved=eq.true&hidden=eq.false&order=created_at.desc", { headers: headers() });
     const d = await r.json();
     if (!r.ok) throw new Error(d.message || ("Error " + r.status));
     allMods = d; renderMods();
   } catch (e) { $("list").innerHTML = "<div class='empty'>No se pudieron cargar los mods: " + esc(e.message) + "</div>"; }
+}
+async function loadMine() {
+  if (!session) return;
+  const r = await fetch(URL_BASE + "/rest/v1/mods?select=*&user_id=eq." + session.user.id + "&order=created_at.desc", { headers: headers() });
+  const d = await r.json().catch(() => []);
+  mine = Array.isArray(d) ? d : [];
 }
 
 function rpc(fn, id) { return fetch(URL_BASE + "/rest/v1/rpc/" + fn, { method: "POST", headers: headers({ "Content-Type": "application/json" }), body: JSON.stringify({ mod_id: id }) }).catch(() => {}); }
@@ -217,16 +265,107 @@ function openDetail(id) {
     <div class="who" style="margin-bottom:8px">${avatarHtml(m.profiles && m.profiles.avatar_url, authorOf(m), 26)}<span>${esc(authorOf(m))}</span></div>
     <div class="stats" style="margin-bottom:10px"><span>⬇ <b id="dlCount">${m.downloads || 0}</b></span><span>👁 ${m.views}</span><span>${new Date(m.created_at).toLocaleDateString("es")}</span></div>
     <p class="desc">${esc(m.description)}</p>
-    ${link ? `<a id="dlBtn" class="btn pri" style="display:block" href="${esc(link)}" target="_blank" rel="noopener">Descargar</a>` : ""}`;
+    ${link ? `<a id="dlBtn" class="btn pri" style="display:block" href="${esc(link)}" target="_blank" rel="noopener">Descargar</a>` : ""}
+    ${isOwner(m) ? `<div class="acts"><button class="btn sm" data-act="edit" data-id="${esc(m.id)}">Editar</button><button class="btn sm" data-act="hide" data-id="${esc(m.id)}">Ocultar</button><button class="btn sm danger" data-act="del" data-id="${esc(m.id)}">Eliminar</button></div>` : ""}`;
   const b = $("dlBtn");
   if (b) b.onclick = () => { rpc("increment_downloads", id); m.downloads = (m.downloads || 0) + 1; $("dlCount").textContent = m.downloads; renderMods(); };
   $("detDlg").showModal();
 }
 $("list").onclick = (e) => { const c = e.target.closest(".card"); if (c) openDetail(c.dataset.id); };
 
+function renderMine() {
+  if (!mine.length) { $("mineList").innerHTML = "<p class='hint'>Todavía no has subido mods.</p>"; return; }
+  $("mineList").innerHTML = mine.map((m) => {
+    const st = m.hidden ? ["off", "Oculto"] : (m.approved ? ["ok", "Publicado"] : ["wait", "Pendiente de aprobación"]);
+    return `<div class="mine"><span class="chip ${st[0]}">${st[1]}</span><h3>${esc(m.title)}</h3>
+      <div class="stats"><span>⬇ ${m.downloads || 0}</span><span>👁 ${m.views || 0}</span></div>
+      <div class="acts"><button class="btn sm" data-act="edit" data-id="${esc(m.id)}">Editar</button>
+      <button class="btn sm" data-act="hide" data-id="${esc(m.id)}">${m.hidden ? "Mostrar" : "Ocultar"}</button>
+      <button class="btn sm danger" data-act="del" data-id="${esc(m.id)}">Eliminar</button></div></div>`;
+  }).join("");
+}
+async function openMine() { await refreshIfNeeded(); await loadMine(); renderMine(); if (!$("mineDlg").open) $("mineDlg").showModal(); }
+const findMod = (id) => mine.find((x) => x.id === id) || allMods.find((x) => x.id === id);
+
+async function toggleHide(m) {
+  try {
+    await patchMod(m.id, { hidden: !m.hidden });
+    toast(m.hidden ? "Tu mod volvió a ser visible." : "Tu mod quedó oculto.");
+    await Promise.all([loadMods(), loadMine()]); renderMine(); if ($("detDlg").open) $("detDlg").close();
+  } catch (e) { toast("Error: " + e.message); }
+}
+async function deleteMod(m) {
+  if (!confirm("¿Eliminar \"" + m.title + "\" para siempre? Esta acción no se puede deshacer.")) return;
+  try {
+    const r = await fetch(URL_BASE + "/rest/v1/mods?id=eq." + m.id, { method: "DELETE", headers: headers({ Prefer: "return=minimal" }) });
+    if (!r.ok) { const e = await r.json().catch(() => ({})); throw new Error(e.message || ("Error " + r.status)); }
+    await removeFiles("mods", [m.file_url]); await removeFiles("images", m.images || []);
+    toast("Mod eliminado.");
+    await Promise.all([loadMods(), loadMine()]); renderMine(); if ($("detDlg").open) $("detDlg").close();
+  } catch (e) { toast("Error: " + e.message); }
+}
+function renderEditThumbs() {
+  $("eThumbs").innerHTML = editImgs.map((u, i) => `<span class="thumb"><img src="${esc(u)}" alt=""><button data-rm="${i}" type="button">✕</button></span>`).join("");
+}
+function openEdit(m) {
+  editing = m; editImgs = (m.images || []).slice();
+  $("eTitle").value = m.title || ""; $("eDesc").value = m.description || ""; $("eExt").value = m.external_url || "";
+  $("eImgs").value = ""; $("eFile").value = "";
+  $("eImgName").textContent = "Agregar imágenes (máx. 5 en total)"; $("eFileName").textContent = "Reemplazar archivo (opcional, máx. 50 MB)";
+  renderEditThumbs();
+  if ($("detDlg").open) $("detDlg").close();
+  $("editDlg").showModal();
+}
+$("eThumbs").onclick = (e) => { const b = e.target.closest("[data-rm]"); if (b) { editImgs.splice(+b.dataset.rm, 1); renderEditThumbs(); } };
+$("eImgs").onchange = () => { const n = $("eImgs").files.length; $("eImgName").textContent = n ? n + " imagen(es) nueva(s)" : "Agregar imágenes (máx. 5 en total)"; };
+$("eFile").onchange = () => { const f = $("eFile").files[0]; $("eFileName").textContent = f ? f.name : "Reemplazar archivo (opcional, máx. 50 MB)"; };
+
+$("btnSaveEdit").onclick = async () => {
+  const m = editing; if (!m) return;
+  const title = $("eTitle").value.trim(), description = $("eDesc").value.trim(), ext = $("eExt").value.trim();
+  const newImgs = Array.from($("eImgs").files), newFile = $("eFile").files[0];
+  if (!title) return toast("Escribe un título.");
+  if (editImgs.length + newImgs.length > 5) return toast("Máximo 5 imágenes en total.");
+  if (newImgs.some((i) => i.size > MAX_IMG)) return toast("Cada imagen debe pesar menos de 5 MB.");
+  if (newFile && newFile.size > MAX_FILE) return toast("El archivo supera los 50 MB. Usa un enlace externo.");
+  if (newFile && !/\.(zip|7z|rar)$/i.test(newFile.name)) return toast("Solo se permiten .zip, .7z o .rar.");
+  if (ext && !safeUrl(ext)) return toast("El enlace debe empezar con http:// o https://");
+  if (!newFile && !m.file_url && !ext) return toast("El mod necesita un archivo o un enlace externo.");
+  await refreshIfNeeded(); if (!session) return toast("Inicia sesión primero.");
+
+  const btn = $("btnSaveEdit"); btn.disabled = true; btn.textContent = "Guardando...";
+  try {
+    const uid = session.user.id, stamp = Date.now();
+    const images = editImgs.slice();
+    for (let i = 0; i < newImgs.length; i++) images.push(await uploadFile("images", uid + "/" + stamp + "_" + i + "_" + safeName(newImgs[i].name), newImgs[i]));
+    let fileUrl = m.file_url;
+    if (newFile) fileUrl = await uploadFile("mods", uid + "/" + stamp + "_" + safeName(newFile.name), newFile);
+    const extVal = ext || null;
+    await patchMod(m.id, { title, description, images, file_url: fileUrl, external_url: extVal });
+    const removedImgs = (m.images || []).filter((u) => !images.includes(u));
+    if (removedImgs.length) await removeFiles("images", removedImgs);
+    if (newFile && m.file_url) await removeFiles("mods", [m.file_url]);
+    const relink = !!newFile || (extVal || null) !== (m.external_url || null);
+    $("editDlg").close();
+    toast(relink ? "Cambios guardados. Como cambió el archivo o el enlace, el mod volverá a revisión." : "Cambios guardados.");
+    await Promise.all([loadMods(), loadMine()]); if ($("mineDlg").open) renderMine();
+  } catch (e) { toast("Error: " + e.message); } finally { btn.disabled = false; btn.textContent = "Guardar cambios"; }
+};
+
+function onAction(e) {
+  const b = e.target.closest("[data-act]"); if (!b) return;
+  const m = findMod(b.dataset.id); if (!m) return;
+  if (b.dataset.act === "edit") openEdit(m);
+  else if (b.dataset.act === "hide") toggleHide(m);
+  else if (b.dataset.act === "del") deleteMod(m);
+}
+$("mineList").onclick = onAction;
+$("detBody").onclick = onAction;
+
 document.querySelectorAll("[data-close]").forEach((b) => (b.onclick = () => b.closest("dialog").close()));
 $("btnOpenAuth").onclick = () => $("authDlg").showModal();
 $("btnOpenUpload").onclick = () => $("upDlg").showModal();
+$("btnMine").onclick = () => { $("profDlg").close(); openMine(); };
 $("btnProfile").onclick = () => { $("pName").value = (profile && profile.username) || ""; $("pAv").innerHTML = avatarHtml(profile && profile.avatar_url, profile && profile.username, 56); $("pFile").value = ""; $("profDlg").showModal(); };
 $("q").oninput = renderMods;
 $("pFile").onchange = () => { const f = $("pFile").files[0]; if (f) $("pAv").innerHTML = `<img class="av" src="${URL.createObjectURL(f)}" width="56" height="56" alt="">`; };
@@ -249,10 +388,10 @@ $("btnSignup").onclick = async () => {
 $("btnLogin").onclick = async () => {
   const email = $("email").value.trim(), password = $("password").value;
   if (!email || !password) return toast("Escribe tu correo y contraseña.");
-  try { saveSession(await authCall("token?grant_type=password", { email, password })); await loadProfile(); $("authDlg").close(); toast("Sesión iniciada."); }
+  try { saveSession(await authCall("token?grant_type=password", { email, password })); await loadProfile(); $("authDlg").close(); toast("Sesión iniciada."); loadMods(); }
   catch (e) { toast("Error: " + e.message); }
 };
-$("btnLogout").onclick = () => { saveSession(null); toast("Sesión cerrada."); };
+$("btnLogout").onclick = () => { saveSession(null); $("profDlg").close(); toast("Sesión cerrada."); };
 
 $("btnSaveProf").onclick = async () => {
   await refreshIfNeeded(); if (!session) return toast("Inicia sesión primero.");
@@ -291,7 +430,7 @@ $("btnUpload").onclick = async () => {
     const ins = await fetch(URL_BASE + "/rest/v1/mods", { method: "POST", headers: headers({ "Content-Type": "application/json", Prefer: "return=minimal" }),
       body: JSON.stringify({ title, description, author: (profile && profile.username) || "Anónimo", file_url: fileUrl, external_url: ext || null, images: imageUrls }) });
     if (!ins.ok) { const e = await ins.json().catch(() => ({})); throw new Error(e.message || ("Error al guardar (" + ins.status + ")")); }
-    $("upDlg").close(); toast("¡Mod enviado! Se publicará cuando sea aprobado.");
+    $("upDlg").close(); toast("¡Mod enviado! Se publicará cuando sea aprobado. Puedes verlo en Mis mods.");
     ["title", "desc", "ext"].forEach((id) => ($(id).value = "")); $("file").value = ""; $("imgs").value = "";
     $("fileName").textContent = "Archivo del mod (.zip, .7z, .rar, máx. 50 MB)"; $("imgName").textContent = "Imágenes del mod (hasta 5)"; $("imgPrev").innerHTML = "";
   } catch (e) { toast("Error: " + e.message); } finally { btn.disabled = false; btn.textContent = "Subir mod"; }
