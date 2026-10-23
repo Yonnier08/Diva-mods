@@ -15,7 +15,7 @@
   }
   * { box-sizing:border-box; }
   body { margin:0; font-family:"Inter","Segoe UI",Roboto,system-ui,sans-serif; background:var(--bg); color:var(--fg); line-height:1.45; }
-  .ic { width:15px; height:15px; vertical-align:-2px; flex:none; }
+  .ic { width:16px; height:16px; vertical-align:-2px; flex:none; }
 
   /* Scrollbars */
   ::-webkit-scrollbar { width:8px; height:8px; }
@@ -138,7 +138,7 @@
   <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.35-4.35" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
 </defs></svg>
 
-<!-- Menú Lateral (Sidebar Drawer) -->
+<!-- Menú Lateral (Sidebar) -->
 <div id="sidebarOverlay" class="sidebar-overlay"></div>
 <aside id="sidebar" class="sidebar">
   <div class="sidebar-header">
@@ -154,13 +154,17 @@
 
 <header>
   <div class="top">
-    <button id="btnOpenSidebar" class="nav-toggle" aria-label="Abrir menú">${ic("i-menu")}</button>
+    <button id="btnOpenSidebar" class="nav-toggle" aria-label="Abrir menú">
+      <svg class="ic"><use href="#i-menu"/></svg>
+    </button>
     <a class="brand" href="./">
       <img src="logo.png" alt="Project Diva Logo">
     </a>
 
     <div class="header-acts">
-      <button id="btnToggleSearch" class="btn sm" aria-label="Buscar" style="padding:6px 10px">${ic("i-search")}</button>
+      <button id="btnToggleSearch" class="btn sm" aria-label="Buscar" style="padding:6px 10px">
+        <svg class="ic"><use href="#i-search"/></svg>
+      </button>
       <button id="btnProfile" class="btn hide" style="padding:4px 10px;display:flex;align-items:center;gap:6px">
         <span id="hAv"></span><span id="hName" style="max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
       </button>
@@ -168,7 +172,7 @@
       <button id="btnOpenAuth" class="btn pri">Entrar</button>
     </div>
   </div>
-  <!-- Barra de búsqueda desplegable con lupa -->
+  <!-- Barra de búsqueda desplegable -->
   <div id="searchContainer" class="search-container">
     <input id="q" type="search" placeholder="Buscar mods por título, autor o descripción...">
   </div>
