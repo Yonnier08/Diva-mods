@@ -1,91 +1,99 @@
 <!DOCTYPE html>
-<html lang="es" translate="no">
+<html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="google" content="notranslate">
 <title>PDMM+ Mods</title>
-<link rel="icon" href="logo.jpg">
+<link rel="icon" href="logo.png">
 <style>
-  :root { --bg:#0b0e14; --surface:#121722; --line:#212a38; --fg:#e6e9ee; --mut:#8a93a1; --acc:#2fd4c6; --acc-fg:#04201d; --warn:#e0a526; --danger:#f0686b; }
+  :root { 
+    --bg:#0e121b; --surface:#151b27; --line:#232d3f; --fg:#e6e9ee; --mut:#8a93a1; 
+    --acc:#2fd4c6; --acc-fg:#04201d; --yellow:#facc15; --danger:#f0686b; --radius:8px;
+  }
   @media (prefers-color-scheme: light) {
-    :root { --bg:#f1f4f8; --surface:#ffffff; --line:#dbe1e8; --fg:#1b1f24; --mut:#667085; --acc:#0f9d93; --acc-fg:#ffffff; --warn:#b7791f; --danger:#d64545; }
+    :root { --bg:#f1f4f8; --surface:#ffffff; --line:#dbe1e8; --fg:#1b1f24; --mut:#667085; --acc:#0f9d93; --yellow:#d97706; }
   }
   * { box-sizing:border-box; }
-  body { margin:0; font-family:"Inter","Segoe UI",Roboto,system-ui,sans-serif; background:var(--bg); color:var(--fg); line-height:1.45; font-variant-numeric:tabular-nums; }
-  .ic { width:14px; height:14px; vertical-align:-2px; flex:none; }
+  body { margin:0; font-family:"Inter","Segoe UI",Roboto,system-ui,sans-serif; background:var(--bg); color:var(--fg); line-height:1.45; }
+  .ic { width:13px; height:13px; vertical-align:-1px; flex:none; }
+  
+  /* Navbar */
   header { position:sticky; top:0; z-index:20; background:var(--bg); border-bottom:1px solid var(--line); }
-  .top { display:flex; align-items:center; gap:8px; padding:8px 14px; }
-  .brand { margin-right:auto; display:block; }
-  .logo { height:36px; width:auto; max-width:170px; border-radius:6px; display:block; }
-  nav { display:flex; gap:2px; padding:0 10px; overflow-x:auto; }
+  .top { display:flex; align-items:center; gap:10px; padding:8px 14px; }
+  .brand { display:flex; align-items:center; gap:8px; text-decoration:none; margin-right:auto; }
+  .brand-logo-img { height:32px; width:auto; object-fit:contain; border-radius:4px; }
+  .brand-title { font-weight:800; font-size:18px; color:var(--fg); letter-spacing:-0.5px; }
+
+  nav { display:flex; gap:4px; padding:0 10px; overflow-x:auto; border-top:1px solid rgba(255,255,255,0.03); }
   nav button { background:none; border:none; border-bottom:2px solid transparent; color:var(--mut); font-size:14px; font-weight:600; padding:8px 12px; cursor:pointer; font-family:inherit; }
   nav button.on { color:var(--acc); border-bottom-color:var(--acc); }
-  .btn { border:1px solid var(--line); background:var(--surface); color:var(--fg); padding:8px 12px; border-radius:6px; font-size:14px; font-weight:600; cursor:pointer; text-decoration:none; display:inline-block; text-align:center; font-family:inherit; }
+
+  .btn { border:1px solid var(--line); background:var(--surface); color:var(--fg); padding:7px 12px; border-radius:6px; font-size:13.5px; font-weight:600; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:6px; }
   .btn:hover { border-color:var(--mut); }
   .btn.pri { background:var(--acc); border-color:var(--acc); color:var(--acc-fg); }
-  .btn.danger { color:var(--danger); border-color:color-mix(in srgb, var(--danger) 40%, var(--line)); }
-  .btn.sm { padding:6px 10px; font-size:13px; }
-  .btn:disabled { opacity:.55; cursor:default; }
+  .btn.danger { color:var(--danger); border-color:rgba(240,104,107,0.3); }
+  .btn.sm { padding:5px 9px; font-size:12.5px; }
   .hide { display:none !important; }
+
   .av { border-radius:50%; object-fit:cover; display:grid; place-items:center; font-weight:700; color:var(--acc-fg); background:var(--acc); flex:none; overflow:hidden; }
-  main { max-width:900px; margin:0 auto; padding:14px 14px 40px; }
-  input, textarea { width:100%; padding:10px 11px; border-radius:6px; border:1px solid var(--line); background:var(--bg); color:var(--fg); font-size:16px; font-family:inherit; }
+
+  main { max-width:960px; margin:0 auto; padding:14px 12px 40px; }
+  input, textarea { width:100%; padding:9px 11px; border-radius:6px; border:1px solid var(--line); background:var(--bg); color:var(--fg); font-size:15px; font-family:inherit; }
   input:focus, textarea:focus { outline:2px solid var(--acc); outline-offset:-1px; }
+
   .toolbar { display:flex; align-items:center; justify-content:space-between; gap:10px; margin:12px 0 10px; border-bottom:1px solid var(--line); }
   .tabs { display:flex; gap:2px; }
-  .tabs button { background:none; border:none; border-bottom:2px solid transparent; color:var(--mut); font-size:14px; font-weight:600; padding:8px 10px; cursor:pointer; font-family:inherit; margin-bottom:-1px; }
+  .tabs button { background:none; border:none; border-bottom:2px solid transparent; color:var(--mut); font-size:13.5px; font-weight:600; padding:8px 10px; cursor:pointer; font-family:inherit; margin-bottom:-1px; }
   .tabs button.on { color:var(--fg); border-bottom-color:var(--acc); }
-  .count { color:var(--mut); font-size:13px; }
-  .list { display:grid; gap:10px; grid-template-columns:1fr; }
-  @media (min-width:640px) { .list { grid-template-columns:1fr 1fr; } .list.one { grid-template-columns:1fr; } }
-  .item { display:flex; gap:12px; padding:10px; background:var(--surface); border:1px solid var(--line); border-radius:6px; cursor:pointer; }
-  .item:hover { border-color:var(--acc); }
-  .pic { width:118px; aspect-ratio:16/10; flex:none; border-radius:4px; background:var(--bg); overflow:hidden; display:grid; place-items:center; }
-  .pic img { width:100%; height:100%; object-fit:cover; display:block; }
-  .pic img.ph { width:45%; height:auto; opacity:.35; object-fit:contain; }
-  .info { min-width:0; display:flex; flex-direction:column; gap:4px; }
-  .info h3 { margin:0; font-size:16px; font-weight:600; line-height:1.25; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; word-break:break-word; }
-  .who { display:flex; align-items:center; gap:6px; color:var(--mut); font-size:13px; min-width:0; }
-  .who span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  .who.link { cursor:pointer; }
-  .who.link:hover span { color:var(--acc); text-decoration:underline; }
-  .stats { display:flex; gap:12px; color:var(--mut); font-size:12.5px; flex-wrap:wrap; }
-  .stats span { display:inline-flex; align-items:center; gap:4px; }
+  .count { color:var(--mut); font-size:12.5px; }
+
+  /* Estilo Estilo GameBanana (Cuadrícula de 2 columnas) */
+  .gb-grid { display:grid; grid-template-columns:repeat(2, 1fr); gap:12px; }
+  @media (min-width: 768px) { .gb-grid { grid-template-columns:repeat(3, 1fr); gap:14px; } }
+
+  .gb-card { background:var(--surface); border:1px solid var(--line); border-radius:6px; overflow:hidden; cursor:pointer; display:flex; flex-direction:column; transition:transform 0.15s ease, border-color 0.15s ease; }
+  .gb-card:hover { border-color:var(--acc); transform:translateY(-2px); }
+
+  .gb-thumb { position:relative; width:100%; aspect-ratio:16/9; background:#000; overflow:hidden; display:grid; place-items:center; }
+  .gb-thumb img.cover { width:100%; height:100%; object-fit:cover; display:block; }
+  .gb-thumb .author-badge { position:absolute; top:6px; left:6px; display:flex; align-items:center; gap:4px; background:rgba(0,0,0,0.75); backdrop-filter:blur(4px); padding:2px 6px; border-radius:12px; border:1px solid rgba(255,255,255,0.1); font-size:11px; color:#fff; }
+
+  .gb-info { padding:8px 10px; display:flex; flex-direction:column; gap:4px; flex:1; }
+  .gb-title { margin:0; font-size:14px; font-weight:700; color:var(--yellow); line-height:1.3; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; word-break:break-word; }
+  .gb-card:hover .gb-title { text-decoration:underline; }
+
+  .gb-stats { display:flex; align-items:center; gap:10px; color:var(--mut); font-size:12px; margin-top:auto; padding-top:4px; }
+  .gb-stats span { display:inline-flex; align-items:center; gap:3px; }
+
   .empty { grid-column:1/-1; text-align:center; color:var(--mut); padding:36px 8px; }
-  footer { max-width:900px; margin:0 auto; padding:18px 14px 30px; color:var(--mut); font-size:12.5px; border-top:1px solid var(--line); }
+  footer { max-width:960px; margin:0 auto; padding:18px 14px 30px; color:var(--mut); font-size:12px; border-top:1px solid var(--line); text-align:center; }
+
+  /* Modales */
   dialog { width:min(94vw,480px); max-height:90vh; border:1px solid var(--line); border-radius:8px; padding:18px; background:var(--surface); color:var(--fg); }
-  dialog::backdrop { background:rgba(0,0,0,.65); }
-  dialog h2 { margin:0 0 12px; font-size:19px; }
+  dialog::backdrop { background:rgba(0,0,0,.75); backdrop-filter:blur(3px); }
+  dialog h2 { margin:0 0 12px; font-size:18px; }
   .row { display:flex; flex-direction:column; gap:8px; }
   .acts { display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; }
   .acts .btn { flex:1; }
-  .filebtn { display:block; padding:12px; text-align:center; border:1px dashed var(--mut); border-radius:6px; color:var(--mut); cursor:pointer; word-break:break-all; font-size:14px; }
+  .filebtn { display:block; padding:12px; text-align:center; border:1px dashed var(--mut); border-radius:6px; color:var(--mut); cursor:pointer; font-size:13.5px; }
   .filebtn input { display:none; }
-  .hint { color:var(--mut); font-size:13px; margin:2px 0; }
+  .hint { color:var(--mut); font-size:12px; margin:2px 0; }
   .thumbs { display:flex; gap:6px; flex-wrap:wrap; }
-  .thumbs img { width:64px; height:64px; object-fit:cover; border-radius:4px; border:1px solid var(--line); display:block; }
-  .thumb { position:relative; }
-  .thumb button { position:absolute; top:-6px; right:-6px; width:22px; height:22px; border-radius:50%; border:none; background:var(--danger); color:#fff; font-size:12px; cursor:pointer; padding:0; }
+  .thumbs img { width:60px; height:60px; object-fit:cover; border-radius:4px; border:1px solid var(--line); }
   .gallery { display:flex; gap:8px; overflow-x:auto; scroll-snap-type:x mandatory; margin-bottom:12px; }
-  .gallery img { height:210px; border-radius:4px; scroll-snap-align:start; flex:none; max-width:100%; object-fit:contain; background:var(--bg); }
-  .desc { white-space:pre-wrap; word-break:break-word; margin:10px 0 14px; }
-  .mine { border:1px solid var(--line); border-radius:6px; padding:10px; margin-bottom:10px; }
-  .mine h3 { margin:0 0 4px; font-size:16px; word-break:break-word; }
-  .chip { display:inline-block; font-size:12px; font-weight:700; padding:1px 8px; border-radius:4px; border:1px solid var(--line); margin-bottom:6px; }
+  .gallery img { height:200px; border-radius:4px; scroll-snap-align:start; flex:none; max-width:100%; object-fit:contain; background:var(--bg); }
+  .desc { white-space:pre-wrap; word-break:break-word; margin:10px 0 14px; font-size:14px; }
+  .mine { border:1px solid var(--line); border-radius:6px; padding:10px; margin-bottom:8px; }
+  .chip { display:inline-block; font-size:11px; font-weight:700; padding:1px 6px; border-radius:4px; border:1px solid var(--line); margin-bottom:4px; }
   .chip.ok { color:var(--acc); border-color:var(--acc); }
-  .chip.wait { color:var(--warn); border-color:var(--warn); }
   .chip.off { color:var(--mut); }
-  .uhead { display:flex; align-items:center; gap:14px; margin-bottom:6px; }
-  .uhead h2 { margin:0; }
-  .sec { margin:18px 0 8px; font-size:15px; }
-  .rich p { margin:0 0 10px; word-break:break-word; }
-  .rich ul { margin:0 0 10px; padding-left:20px; }
-  .rich li { margin-bottom:6px; word-break:break-word; }
-  #toast { position:fixed; left:50%; bottom:20px; transform:translateX(-50%); z-index:50; max-width:90vw; padding:11px 15px; border-radius:6px; font-weight:600; font-size:14px; display:none; background:var(--fg); color:var(--bg); box-shadow:0 4px 18px rgba(0,0,0,.4); }
+  .rich p { margin:0 0 8px; }
+  .rich ul { margin:0 0 8px; padding-left:18px; }
+  #toast { position:fixed; left:50%; bottom:20px; transform:translateX(-50%); z-index:50; max-width:90vw; padding:10px 16px; border-radius:6px; font-weight:600; font-size:13.5px; display:none; background:var(--fg); color:var(--bg); box-shadow:0 4px 18px rgba(0,0,0,.4); }
 </style>
 </head>
 <body>
+
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
   <symbol id="i-dl" viewBox="0 0 16 16"><path d="M8 2v8m0 0L5 7m3 3l3-3M3 13h10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-eye" viewBox="0 0 16 16"><path d="M1.5 8S4 3.5 8 3.5 14.5 8 14.5 8 12 12.5 8 12.5 1.5 8 1.5 8z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="8" cy="8" r="2" fill="none" stroke="currentColor" stroke-width="1.5"/></symbol>
@@ -93,8 +101,15 @@
 
 <header>
   <div class="top">
-    <a class="brand" href="./"><img id="logoImg" class="logo" alt="Logo"></a>
-    <button id="btnProfile" class="btn hide" style="padding:4px 10px;display:flex;align-items:center;gap:7px">
+    <!-- Logo SVG con fallback a imagen -->
+    <a class="brand" href="./">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--acc)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+      </svg>
+      <span class="brand-title">PDMM+ Mods</span>
+    </a>
+
+    <button id="btnProfile" class="btn hide" style="padding:4px 10px;display:flex;align-items:center;gap:6px">
       <span id="hAv"></span><span id="hName" style="max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
     </button>
     <button id="btnOpenUpload" class="btn pri hide">Subir</button>
@@ -108,7 +123,7 @@
 </header>
   
 <main>
-  <input id="q" type="search" placeholder="Buscar mods por título, autor o descripción">
+  <input id="q" type="search" placeholder="Buscar mods por título, autor o descripción...">
   <div class="toolbar">
     <div class="tabs" id="tabs">
       <button data-sort="created_at" class="on">Recientes</button>
@@ -117,8 +132,9 @@
     </div>
     <span id="count" class="count"></span>
   </div>
-  <div id="list" class="list"><div class="empty">Cargando...</div></div>
+  <div id="list" class="gb-grid"><div class="empty">Cargando...</div></div>
 </main>
+
 <footer>Proyecto hecho por fans, sin fines de lucro. No está afiliado a SEGA ni a Crypton.</footer>
 
 <dialog id="authDlg">
@@ -140,8 +156,7 @@
     <h2>Editar página</h2>
     <div class="row">
       <input id="pgTitleIn" maxlength="80" placeholder="Título">
-      <textarea id="pgBodyIn" rows="10" placeholder="Texto"></textarea>
-      <p class="hint">Una línea que empieza con "- " se muestra como viñeta. Una línea en blanco separa párrafos.</p>
+      <textarea id="pgBodyIn" rows="8" placeholder="Texto"></textarea>
     </div>
   </div>
   <div class="acts" id="pgActsView"><button id="btnPgEdit" class="btn hide">Editar</button><button class="btn" data-close>Cerrar</button></div>
@@ -159,8 +174,7 @@
     <div style="display:flex;align-items:center;gap:12px"><span id="pAv"></span>
       <label class="btn" style="cursor:pointer">Cambiar foto<input id="pFile" type="file" accept="image/*" class="hide"></label></div>
     <input id="pName" placeholder="Nombre de usuario" maxlength="30">
-    <textarea id="pBio" rows="4" maxlength="500" placeholder="Cuéntanos sobre ti (máx. 500 caracteres)"></textarea>
-    <p class="hint">Todos pueden ver tu nombre, foto y descripción. Foto máx. 5 MB.</p>
+    <textarea id="pBio" rows="3" maxlength="500" placeholder="Cuéntanos sobre ti"></textarea>
   </div>
   <div class="acts"><button id="btnSaveProf" class="btn pri">Guardar</button><button class="btn" data-close>Cancelar</button></div>
 </dialog>
@@ -182,7 +196,7 @@
     <p class="hint" style="text-align:center">— o, si pesa más de 50 MB —</p>
     <input id="ext" type="url" placeholder="Enlace de descarga externo (Mega, Drive, etc.)">
   </div>
-  <p class="hint">Tu mod se publica al instante. Revisa las reglas antes de subirlo.</p>
+  <p class="hint">Tu mod se publicará de inmediato.</p>
   <div class="acts"><button id="btnUpload" class="btn pri">Subir mod</button><button class="btn" data-close>Cancelar</button></div>
 </dialog>
 
@@ -203,44 +217,40 @@
 <div id="toast"></div>
 
 <script>
-const LOGO_SRC = "logo.jpg";
 const URL_BASE = "https://nidlcakntjjzgkjlejbk.supabase.co";
 const KEY = "sb_publishable_TVKTwGkcuLX_eXNon8IQjg_Jor-NquZ";
 const MAX_FILE = 50 * 1024 * 1024, MAX_IMG = 5 * 1024 * 1024;
 const $ = (id) => document.getElementById(id);
 
 const DEFAULT_PAGES = {
-  info: { title: "Acerca de PDMM+ Mods", body: "Esta plataforma es un espacio independiente creado para compartir, explorar y descargar mods para Project Diva Mega Mix+ y entregas afines. Todo el contenido es proporcionado libremente por la comunidad.\n\nCreada por Yonny." },
+  info: { title: "Acerca de PDMM+ Mods", body: "Esta plataforma es un espacio independiente creado para compartir, explorar y descargar mods para Project Diva Mega Mix+ y entregas afines.\n\nCreada por Yonny." },
   rules: { title: "Reglas de la Comunidad", body: "- Solo contenido relacionado con Project Diva y juegos de ritmo derivados.\n- Respeta los créditos y la autoría de los creadores originales.\n- Prohibido subir archivos maliciosos, exploits o contenido ilegal.\n- Mantén un ambiente respetuoso en las descripciones y nombres." }
 };
-
-$("logoImg").src = LOGO_SRC;
 
 let session = null, profile = null, isMod = false, allMods = [], mine = [], userMods = [];
 let editing = null, editImgs = [], sortBy = "created_at", pages = JSON.parse(JSON.stringify(DEFAULT_PAGES)), curPage = null;
 try { session = JSON.parse(localStorage.getItem("pdmm_session") || "null"); } catch (e) {}
 
-function toast(t) { const el = $("toast"); el.textContent = t; el.style.display = "block"; clearTimeout(toast.t); toast.t = setTimeout(() => (el.style.display = "none"), 6000); }
-window.addEventListener("error", (e) => toast("Error en la página: " + e.message));
+function toast(t) { const el = $("toast"); if (!el) return; el.textContent = t; el.style.display = "block"; clearTimeout(toast.t); toast.t = setTimeout(() => (el.style.display = "none"), 5000); }
+window.addEventListener("error", (e) => toast("Error: " + e.message));
 window.addEventListener("unhandledrejection", (e) => toast("Error: " + ((e.reason && e.reason.message) || e.reason)));
 
 function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c])); }
 function safeUrl(u) { return /^https?:\/\//i.test(u || "") ? u : ""; }
 const isUuid = (s) => /^[0-9a-f-]{36}$/i.test(s || "");
 function headers(extra) { const tk = session && session.access_token ? session.access_token : KEY; return Object.assign({ apikey: KEY, Authorization: "Bearer " + tk }, extra || {}); }
+
 function avatarHtml(url, name, size) {
-  const s = size || 28;
+  const s = size || 22;
   if (safeUrl(url)) return `<img class="av" src="${esc(url)}" width="${s}" height="${s}" alt="">`;
   return `<span class="av" style="width:${s}px;height:${s}px;font-size:${Math.round(s * .45)}px">${esc((name || "?").charAt(0).toUpperCase())}</span>`;
 }
+
 const ic = (n) => `<svg class="ic"><use href="#${n}"/></svg>`;
-const fmtDate = (d) => new Date(d).toLocaleDateString("es", { day: "numeric", month: "short", year: "numeric" });
-const fmtMonth = (d) => new Date(d).toLocaleDateString("es", { month: "long", year: "numeric" });
-const statsHtml = (m) => `<span>${ic("i-dl")}${m.downloads || 0}</span><span>${ic("i-eye")}${m.views || 0}</span>`;
+const fmtDate = (d) => new Date(d).toLocaleDateString("es", { day: "numeric", month: "short" });
 const authorOf = (m) => (m.profiles && m.profiles.username) || m.author || "Anónimo";
 const safeName = (n) => n.replace(/[^a-zA-Z0-9._-]/g, "_");
 const isOwner = (m) => !!(session && session.user && m.user_id === session.user.id);
-const myId = () => (session && session.user ? session.user.id : null);
 
 function richText(body) {
   let html = "", list = [];
@@ -255,11 +265,12 @@ function richText(body) {
 }
 
 function saveSession(s) { session = s; if (s) localStorage.setItem("pdmm_session", JSON.stringify(s)); else { localStorage.removeItem("pdmm_session"); profile = null; mine = []; isMod = false; } renderAuth(); }
+
 function renderAuth() {
   const logged = !!(session && session.access_token);
   $("btnOpenAuth").classList.toggle("hide", logged);
   ["btnOpenUpload", "btnProfile"].forEach((id) => $(id).classList.toggle("hide", !logged));
-  if (logged) { $("hAv").innerHTML = avatarHtml(profile && profile.avatar_url, profile && profile.username, 24); $("hName").textContent = (profile && profile.username) || "Perfil"; }
+  if (logged) { $("hAv").innerHTML = avatarHtml(profile && profile.avatar_url, profile && profile.username, 22); $("hName").textContent = (profile && profile.username) || "Perfil"; }
 }
 
 async function authCall(path, body) {
@@ -268,38 +279,24 @@ async function authCall(path, body) {
   if (!r.ok) throw new Error(d.msg || d.error_description || d.message || ("Error " + r.status));
   return d;
 }
+
 async function refreshIfNeeded() {
   if (!session || !session.refresh_token) return;
   if (session.expires_at && session.expires_at - Math.floor(Date.now() / 1000) > 60) return;
   try { saveSession(await authCall("token?grant_type=refresh_token", { refresh_token: session.refresh_token })); } catch (e) { saveSession(null); }
 }
 
-async function loadModFlag() {
-  isMod = false; if (!session) return;
-  try {
-    const r = await fetch(URL_BASE + "/rest/v1/moderators?select=user_id&user_id=eq." + session.user.id, { headers: headers() });
-    const d = await r.json(); isMod = Array.isArray(d) && d.length > 0;
-  } catch (e) {}
-}
 async function loadProfile() {
   if (!session) return;
   const r = await fetch(URL_BASE + "/rest/v1/profiles?select=*&id=eq." + session.user.id, { headers: headers() });
   const d = await r.json().catch(() => []);
   profile = Array.isArray(d) ? d[0] || null : null;
   if (!profile) {
-    const name = "usuario" + session.user.id.slice(0, 6);
+    const name = "user_" + session.user.id.slice(0, 6);
     await fetch(URL_BASE + "/rest/v1/profiles", { method: "POST", headers: headers({ "Content-Type": "application/json", Prefer: "resolution=merge-duplicates,return=minimal" }), body: JSON.stringify({ id: session.user.id, username: name }) });
     profile = { id: session.user.id, username: name, avatar_url: null };
   }
-  await loadModFlag();
   renderAuth();
-}
-async function loadPages() {
-  try {
-    const r = await fetch(URL_BASE + "/rest/v1/site_pages?select=*", { headers: headers() });
-    const d = await r.json();
-    if (Array.isArray(d)) d.forEach((p) => { pages[p.key] = { title: p.title, body: p.body }; });
-  } catch (e) {}
 }
 
 async function uploadFile(bucket, path, file) {
@@ -307,58 +304,77 @@ async function uploadFile(bucket, path, file) {
   if (!r.ok) { const e = await r.json().catch(() => ({})); throw new Error(e.message || e.error || ("Error al subir (" + r.status + ")")); }
   return URL_BASE + "/storage/v1/object/public/" + bucket + "/" + path;
 }
+
 function storagePath(url, bucket) { const p = "/storage/v1/object/public/" + bucket + "/"; const i = (url || "").indexOf(p); return i < 0 ? null : decodeURIComponent(url.slice(i + p.length)); }
 async function removeFiles(bucket, urls) {
   const prefixes = urls.map((u) => storagePath(u, bucket)).filter(Boolean);
   if (!prefixes.length) return;
   await fetch(URL_BASE + "/storage/v1/object/" + bucket, { method: "DELETE", headers: headers({ "Content-Type": "application/json" }), body: JSON.stringify({ prefixes }) }).catch(() => {});
 }
+
 async function patchMod(id, body) {
   const r = await fetch(URL_BASE + "/rest/v1/mods?id=eq." + id, { method: "PATCH", headers: headers({ "Content-Type": "application/json", Prefer: "return=minimal" }), body: JSON.stringify(body) });
   if (!r.ok) { const e = await r.json().catch(() => ({})); throw new Error(e.message || ("Error " + r.status)); }
 }
 
-/* ---------- Lista de mods ---------- */
-function itemHtml(m) {
+/* ---------- Tarjetas Estilo GameBanana (Grid 2x2) ---------- */
+function gbItemHtml(m) {
   const img = (m.images || [])[0];
-  return `<div class="item" data-id="${esc(m.id)}">
-    <div class="pic">${safeUrl(img) ? `<img src="${esc(img)}" alt="" loading="lazy">` : `<img class="ph" src="${esc(LOGO_SRC)}" alt="">`}</div>
-    <div class="info"><h3>${esc(m.title)}</h3>
-      <div class="who link" data-user="${esc(m.user_id)}">${avatarHtml(m.profiles && m.profiles.avatar_url, authorOf(m), 16)}<span>${esc(authorOf(m))}</span></div>
-      <div class="stats">${statsHtml(m)}<span>${fmtDate(m.created_at)}</span></div>
-    </div></div>`;
+  return `<div class="gb-card" data-id="${esc(m.id)}">
+    <div class="gb-thumb">
+      ${safeUrl(img) ? `<img class="cover" src="${esc(img)}" alt="" loading="lazy">` : `<div style="font-size:28px;color:var(--mut)">🎵</div>`}
+      <div class="author-badge" data-user="${esc(m.user_id)}">
+        ${avatarHtml(m.profiles && m.profiles.avatar_url, authorOf(m), 16)}
+        <span>${esc(authorOf(m))}</span>
+      </div>
+    </div>
+    <div class="gb-info">
+      <h3 class="gb-title">${esc(m.title)}</h3>
+      <div class="gb-stats">
+        <span>${ic("i-dl")} ${m.downloads || 0}</span>
+        <span>${ic("i-eye")} ${m.views || 0}</span>
+        <span style="margin-left:auto">${fmtDate(m.created_at)}</span>
+      </div>
+    </div>
+  </div>`;
 }
+
 function renderMods() {
   const q = $("q").value.trim().toLowerCase();
   const items = allMods.filter((m) => ((m.title || "") + " " + authorOf(m) + " " + (m.description || "")).toLowerCase().includes(q));
   items.sort((a, b) => sortBy === "created_at" ? new Date(b.created_at) - new Date(a.created_at) : (b[sortBy] || 0) - (a[sortBy] || 0));
   $("count").textContent = allMods.length + (allMods.length === 1 ? " mod" : " mods");
-  $("list").innerHTML = items.length ? items.map(itemHtml).join("") : "<div class='empty'>" + (allMods.length ? "Sin resultados." : "Todavía no hay mods publicados.") + "</div>";
+  $("list").innerHTML = items.length ? items.map(gbItemHtml).join("") : "<div class='empty'>" + (allMods.length ? "Sin resultados." : "Todavía no hay mods publicados.") + "</div>";
 }
+
 $("tabs").onclick = (e) => {
   const b = e.target.closest("[data-sort]"); if (!b) return;
   sortBy = b.dataset.sort;
   document.querySelectorAll("#tabs button").forEach((x) => x.classList.toggle("on", x === b));
   renderMods();
 };
+
 async function loadMods() {
   try {
     const r = await fetch(URL_BASE + "/rest/v1/mods?select=*,profiles(username,avatar_url)&approved=eq.true&hidden=eq.false&order=created_at.desc", { headers: headers() });
     const d = await r.json();
     if (!r.ok) throw new Error(d.message || ("Error " + r.status));
-    allMods = d; renderMods();
+    allMods = Array.isArray(d) ? d : []; 
+    renderMods();
   } catch (e) { $("list").innerHTML = "<div class='empty'>No se pudieron cargar los mods: " + esc(e.message) + "</div>"; }
 }
+
 async function loadMine() {
   if (!session) return;
   const r = await fetch(URL_BASE + "/rest/v1/mods?select=*&user_id=eq." + session.user.id + "&order=created_at.desc", { headers: headers() });
   const d = await r.json().catch(() => []);
   mine = Array.isArray(d) ? d : [];
 }
+
 function rpc(fn, id) { return fetch(URL_BASE + "/rest/v1/rpc/" + fn, { method: "POST", headers: headers({ "Content-Type": "application/json" }), body: JSON.stringify({ mod_id: id }) }).catch(() => {}); }
 const findMod = (id) => mine.find((x) => x.id === id) || allMods.find((x) => x.id === id) || userMods.find((x) => x.id === id);
 
-/* ---------- Detalle de un mod ---------- */
+/* ---------- Detalle del Mod ---------- */
 function openDetail(id) {
   const m = allMods.find((x) => x.id === id) || userMods.find((x) => x.id === id); if (!m) return;
   rpc("increment_views", id); m.views = (m.views || 0) + 1; renderMods();
@@ -367,36 +383,39 @@ function openDetail(id) {
   const owner = isOwner(m);
   let acts = "";
   if (owner) acts = `<div class="acts"><button class="btn sm" data-act="edit" data-id="${esc(m.id)}">Editar</button><button class="btn sm" data-act="hide" data-id="${esc(m.id)}">Ocultar</button><button class="btn sm danger" data-act="del" data-id="${esc(m.id)}">Eliminar</button></div>`;
-  else if (isMod) acts = `<p class="hint" style="margin-top:12px">Moderación</p><div class="acts" style="margin-top:4px"><button class="btn sm" data-act="hide" data-id="${esc(m.id)}">Ocultar</button><button class="btn sm danger" data-act="del" data-id="${esc(m.id)}">Eliminar</button></div>`;
+  
   $("detBody").innerHTML = `
     ${imgs.length ? `<div class="gallery">${imgs.map((u) => `<img src="${esc(u)}" alt="">`).join("")}</div>` : ""}
-    <h2 style="margin:0 0 8px">${esc(m.title)}</h2>
-    <div class="who link" data-user="${esc(m.user_id)}" style="margin-bottom:8px;font-size:14px">${avatarHtml(m.profiles && m.profiles.avatar_url, authorOf(m), 22)}<span>${esc(authorOf(m))}</span></div>
-    <div class="stats"><span>${ic("i-dl")}<b id="dlCount">${m.downloads || 0}</b></span><span>${ic("i-eye")}${m.views}</span><span>${fmtDate(m.created_at)}</span></div>
+    <h2 style="margin:0 0 6px;color:var(--yellow)">${esc(m.title)}</h2>
+    <div class="who" data-user="${esc(m.user_id)}" style="margin-bottom:8px;font-size:13.5px;display:flex;align-items:center;gap:6px;cursor:pointer">${avatarHtml(m.profiles && m.profiles.avatar_url, authorOf(m), 22)}<span>${esc(authorOf(m))}</span></div>
+    <div class="gb-stats" style="margin-bottom:10px"><span>${ic("i-dl")}<b id="dlCount">${m.downloads || 0}</b></span><span>${ic("i-eye")}${m.views}</span><span>${fmtDate(m.created_at)}</span></div>
     <p class="desc">${esc(m.description)}</p>
-    ${link ? `<a id="dlBtn" class="btn pri" style="display:block" href="${esc(link)}" target="_blank" rel="noopener">Descargar</a>` : ""}
+    ${link ? `<a id="dlBtn" class="btn pri" style="display:block" href="${esc(link)}" target="_blank" rel="noopener">Descargar Mod</a>` : ""}
     ${acts}`;
+    
   const b = $("dlBtn");
   if (b) b.onclick = () => { rpc("increment_downloads", id); m.downloads = (m.downloads || 0) + 1; $("dlCount").textContent = m.downloads; renderMods(); };
   $("detDlg").showModal();
 }
+
 $("list").onclick = (e) => {
   const u = e.target.closest("[data-user]"); if (u) { openUser(u.dataset.user); return; }
-  const c = e.target.closest(".item"); if (c) openDetail(c.dataset.id);
+  const c = e.target.closest(".gb-card"); if (c) openDetail(c.dataset.id);
 };
 
-/* ---------- Mis mods y acciones (dueño o moderador) ---------- */
+/* ---------- Resto de Acciones e Interfaz ---------- */
 function renderMine() {
   if (!mine.length) { $("mineList").innerHTML = "<p class='hint'>Todavía no has subido mods.</p>"; return; }
   $("mineList").innerHTML = mine.map((m) => {
-    const st = !m.approved ? ["wait", "Retirado por moderación"] : (m.hidden ? ["off", "Oculto"] : ["ok", "Publicado"]);
+    const st = m.hidden ? ["off", "Oculto"] : ["ok", "Publicado"];
     return `<div class="mine"><span class="chip ${st[0]}">${st[1]}</span><h3>${esc(m.title)}</h3>
-      <div class="stats">${statsHtml(m)}</div>
+      <div class="gb-stats"><span>⬇ ${m.downloads || 0}</span><span>👁 ${m.views || 0}</span></div>
       <div class="acts"><button class="btn sm" data-act="edit" data-id="${esc(m.id)}">Editar</button>
       <button class="btn sm" data-act="hide" data-id="${esc(m.id)}">${m.hidden ? "Mostrar" : "Ocultar"}</button>
       <button class="btn sm danger" data-act="del" data-id="${esc(m.id)}">Eliminar</button></div></div>`;
   }).join("");
 }
+
 async function openMine() { await refreshIfNeeded(); await loadMine(); renderMine(); if (!$("mineDlg").open) $("mineDlg").showModal(); }
 
 async function toggleHide(m) {
@@ -406,8 +425,9 @@ async function toggleHide(m) {
     await Promise.all([loadMods(), loadMine()]); renderMine(); if ($("detDlg").open) $("detDlg").close();
   } catch (e) { toast("Error: " + e.message); }
 }
+
 async function deleteMod(m) {
-  if (!confirm("¿Eliminar \"" + m.title + "\" para siempre? Esta acción no se puede deshacer.")) return;
+  if (!confirm("¿Eliminar \"" + m.title + "\" para siempre?")) return;
   try {
     const r = await fetch(URL_BASE + "/rest/v1/mods?id=eq." + m.id, { method: "DELETE", headers: headers({ Prefer: "return=minimal" }) });
     if (!r.ok) { const e = await r.json().catch(() => ({})); throw new Error(e.message || ("Error " + r.status)); }
@@ -416,50 +436,13 @@ async function deleteMod(m) {
     await Promise.all([loadMods(), loadMine()]); renderMine(); if ($("detDlg").open) $("detDlg").close();
   } catch (e) { toast("Error: " + e.message); }
 }
-function renderEditThumbs() {
-  $("eThumbs").innerHTML = editImgs.map((u, i) => `<span class="thumb"><img src="${esc(u)}" alt=""><button data-rm="${i}" type="button">✕</button></span>`).join("");
-}
+
 function openEdit(m) {
   editing = m; editImgs = (m.images || []).slice();
   $("eTitle").value = m.title || ""; $("eDesc").value = m.description || ""; $("eExt").value = m.external_url || "";
-  $("eImgs").value = ""; $("eFile").value = "";
-  $("eImgName").textContent = "Agregar imágenes (máx. 5 en total)"; $("eFileName").textContent = "Reemplazar archivo (opcional, máx. 50 MB)";
-  renderEditThumbs();
   if ($("detDlg").open) $("detDlg").close();
   $("editDlg").showModal();
 }
-$("eThumbs").onclick = (e) => { const b = e.target.closest("[data-rm]"); if (b) { editImgs.splice(+b.dataset.rm, 1); renderEditThumbs(); } };
-$("eImgs").onchange = () => { const n = $("eImgs").files.length; $("eImgName").textContent = n ? n + " imagen(es) nueva(s)" : "Agregar imágenes (máx. 5 en total)"; };
-$("eFile").onchange = () => { const f = $("eFile").files[0]; $("eFileName").textContent = f ? f.name : "Reemplazar archivo (opcional, máx. 50 MB)"; };
-
-$("btnSaveEdit").onclick = async () => {
-  const m = editing; if (!m) return;
-  const title = $("eTitle").value.trim(), description = $("eDesc").value.trim(), ext = $("eExt").value.trim();
-  const newImgs = Array.from($("eImgs").files), newFile = $("eFile").files[0];
-  if (!title) return toast("Escribe un título.");
-  if (editImgs.length + newImgs.length > 5) return toast("Máximo 5 imágenes en total.");
-  if (newImgs.some((i) => i.size > MAX_IMG)) return toast("Cada imagen debe pesar menos de 5 MB.");
-  if (newFile && newFile.size > MAX_FILE) return toast("El archivo supera los 50 MB. Usa un enlace externo.");
-  if (newFile && !/\.(zip|7z|rar)$/i.test(newFile.name)) return toast("Solo se permiten .zip, .7z o .rar.");
-  if (ext && !safeUrl(ext)) return toast("El enlace debe empezar con http:// o https://");
-  if (!newFile && !m.file_url && !ext) return toast("El mod necesita un archivo o un enlace externo.");
-  await refreshIfNeeded(); if (!session) return toast("Inicia sesión primero.");
-
-  const btn = $("btnSaveEdit"); btn.disabled = true; btn.textContent = "Guardando...";
-  try {
-    const uid = session.user.id, stamp = Date.now();
-    const images = editImgs.slice();
-    for (let i = 0; i < newImgs.length; i++) images.push(await uploadFile("images", uid + "/" + stamp + "_" + i + "_" + safeName(newImgs[i].name), newImgs[i]));
-    let fileUrl = m.file_url;
-    if (newFile) fileUrl = await uploadFile("mods", uid + "/" + stamp + "_" + safeName(newFile.name), newFile);
-    await patchMod(m.id, { title, description, images, file_url: fileUrl, external_url: ext || null });
-    const removedImgs = (m.images || []).filter((u) => !images.includes(u));
-    if (removedImgs.length) await removeFiles("images", removedImgs);
-    if (newFile && m.file_url) await removeFiles("mods", [m.file_url]);
-    $("editDlg").close(); toast("Cambios guardados.");
-    await Promise.all([loadMods(), loadMine()]); if ($("mineDlg").open) renderMine();
-  } catch (e) { toast("Error: " + e.message); } finally { btn.disabled = false; btn.textContent = "Guardar cambios"; }
-};
 
 function onAction(e) {
   const b = e.target.closest("[data-act]"); if (!b) return;
@@ -469,129 +452,30 @@ function onAction(e) {
   else if (b.dataset.act === "del") deleteMod(m);
 }
 $("mineList").onclick = onAction;
-$("detBody").onclick = (e) => {
-  const u = e.target.closest("[data-user]"); if (u) { $("detDlg").close(); openUser(u.dataset.user); return; }
-  onAction(e);
-};
+$("detBody").onclick = onAction;
 
-/* ---------- Perfil público ---------- */
-async function openUser(uid) {
-  if (!isUuid(uid)) return;
-  if ($("detDlg").open) $("detDlg").close();
-  $("userBody").innerHTML = "<p class='hint'>Cargando perfil...</p>";
-  if (!$("userDlg").open) $("userDlg").showModal();
-  try {
-    const [pr, mr] = await Promise.all([
-      fetch(URL_BASE + "/rest/v1/profiles?select=*&id=eq." + uid, { headers: headers() }).then((r) => r.json()).catch(() => []),
-      fetch(URL_BASE + "/rest/v1/mods?select=*,profiles(username,avatar_url)&user_id=eq." + uid + "&approved=eq.true&hidden=eq.false&order=created_at.desc", { headers: headers() }).then((r) => r.json()).catch(() => []),
-    ]);
-    const p = Array.isArray(pr) ? pr[0] : null;
-    if (!p) { $("userBody").innerHTML = "<p class='hint'>No se encontró este perfil.</p>"; return; }
-    userMods = Array.isArray(mr) ? mr : [];
-    const own = myId() === uid;
-    const totalDl = userMods.reduce((s, m) => s + (m.downloads || 0), 0);
-    $("userBody").innerHTML = `
-      <div class="uhead">${avatarHtml(p.avatar_url, p.username, 64)}
-        <div><h2>${esc(p.username)}</h2>
-          <div class="hint">Miembro desde ${esc(fmtMonth(p.created_at))}</div>
-          ${own && isMod ? '<span class="chip ok" style="margin:4px 0 0">Moderador</span>' : ""}</div></div>
-      <p class="desc" style="margin-top:12px">${p.bio ? esc(p.bio) : (own ? "Todavía no escribiste nada sobre ti. Toca Editar perfil para agregarlo." : "Este perfil todavía no tiene descripción.")}</p>
-      <div class="stats"><span><b>${userMods.length}</b> ${userMods.length === 1 ? "mod" : "mods"}</span><span>${ic("i-dl")}<b>${totalDl}</b> descargas</span></div>
-      ${own ? `<div class="acts"><button class="btn sm" data-uact="edit">Editar perfil</button><button class="btn sm" data-uact="mine">Mis mods</button><button class="btn sm danger" data-uact="logout">Cerrar sesión</button></div>` : ""}
-      <h3 class="sec">Mods de ${esc(p.username)}</h3>
-      <div class="list one">${userMods.length ? userMods.map(itemHtml).join("") : "<div class='empty'>Todavía no ha subido mods.</div>"}</div>`;
-  } catch (e) { $("userBody").innerHTML = "<p class='hint'>No se pudo cargar el perfil.</p>"; }
-}
-$("userBody").onclick = (e) => {
-  const a = e.target.closest("[data-uact]");
-  if (a) {
-    if (a.dataset.uact === "edit") {
-      $("userDlg").close();
-      $("pName").value = (profile && profile.username) || ""; $("pBio").value = (profile && profile.bio) || "";
-      $("pAv").innerHTML = avatarHtml(profile && profile.avatar_url, profile && profile.username, 56); $("pFile").value = "";
-      $("profDlg").showModal();
-    } else if (a.dataset.uact === "mine") { $("userDlg").close(); openMine(); }
-    else if (a.dataset.uact === "logout") { saveSession(null); $("userDlg").close(); toast("Sesión cerrada."); loadMods(); }
-    return;
-  }
-  const u = e.target.closest("[data-user]"); if (u && u.dataset.user === myId()) return;
-  const c = e.target.closest(".item"); if (c) { $("userDlg").close(); openDetail(c.dataset.id); }
-};
-$("btnProfile").onclick = () => openUser(myId());
-$("pFile").onchange = () => { const f = $("pFile").files[0]; if (f) $("pAv").innerHTML = `<img class="av" src="${URL.createObjectURL(f)}" width="56" height="56" alt="">`; };
-
-$("btnSaveProf").onclick = async () => {
-  await refreshIfNeeded(); if (!session) return toast("Inicia sesión primero.");
-  const name = $("pName").value.trim(), bio = $("pBio").value.trim();
-  if (!name) return toast("Escribe un nombre de usuario.");
-  const f = $("pFile").files[0]; if (f && f.size > MAX_IMG) return toast("La foto supera los 5 MB.");
-  const btn = $("btnSaveProf"); btn.disabled = true; btn.textContent = "Guardando...";
-  try {
-    let avatar = profile && profile.avatar_url;
-    if (f) avatar = await uploadFile("images", session.user.id + "/avatar_" + Date.now() + "_" + safeName(f.name), f);
-    const r = await fetch(URL_BASE + "/rest/v1/profiles?id=eq." + session.user.id, { method: "PATCH", headers: headers({ "Content-Type": "application/json", Prefer: "return=minimal" }), body: JSON.stringify({ username: name, avatar_url: avatar, bio: bio || null }) });
-    if (!r.ok) { const e = await r.json().catch(() => ({})); throw new Error(e.message || ("Error " + r.status)); }
-    profile = Object.assign(profile || {}, { username: name, avatar_url: avatar, bio: bio || null }); renderAuth(); loadMods();
-    $("profDlg").close(); toast("Perfil actualizado."); openUser(session.user.id);
-  } catch (e) { toast("Error: " + e.message); } finally { btn.disabled = false; btn.textContent = "Guardar"; }
-};
-
-/* ---------- Información y Reglas (editables solo por moderadores) ---------- */
+/* ---------- Páginas Dinámicas (Reglas / Info) ---------- */
 function showPage(key) {
   curPage = key;
   const p = pages[key] || DEFAULT_PAGES[key];
   $("pgTitle").textContent = p.title; $("pgBody").innerHTML = richText(p.body);
   $("pgView").classList.remove("hide"); $("pgActsView").classList.remove("hide");
-  $("pgEdit").classList.add("hide"); $("pgActsEdit").classList.add("hide");
-  $("btnPgEdit").classList.toggle("hide", !isMod);
 }
 function openPage(key) { showPage(key); if (!$("pageDlg").open) $("pageDlg").showModal(); }
-$("btnPgEdit").onclick = () => {
-  const p = pages[curPage] || DEFAULT_PAGES[curPage];
-  $("pgTitleIn").value = p.title; $("pgBodyIn").value = p.body;
-  $("pgView").classList.add("hide"); $("pgActsView").classList.add("hide");
-  $("pgEdit").classList.remove("hide"); $("pgActsEdit").classList.remove("hide");
-};
-$("btnPgCancel").onclick = () => showPage(curPage);
-$("btnPgSave").onclick = async () => {
-  const title = $("pgTitleIn").value.trim(), body = $("pgBodyIn").value.trim();
-  if (!title) return toast("Escribe un título.");
-  await refreshIfNeeded(); if (!session) return toast("Inicia sesión primero.");
-  const btn = $("btnPgSave"); btn.disabled = true; btn.textContent = "Guardando...";
-  try {
-    const r = await fetch(URL_BASE + "/rest/v1/site_pages?key=eq." + curPage, { method: "PATCH", headers: headers({ "Content-Type": "application/json", Prefer: "return=representation" }), body: JSON.stringify({ title, body, updated_at: new Date().toISOString() }) });
-    const d = await r.json().catch(() => []);
-    if (!r.ok) throw new Error(d.message || ("Error " + r.status));
-    if (!Array.isArray(d) || !d.length) throw new Error("No tienes permiso para editar esta página.");
-    pages[curPage] = { title, body }; showPage(curPage); toast("Página actualizada.");
-  } catch (e) { toast("Error: " + e.message); } finally { btn.disabled = false; btn.textContent = "Guardar"; }
-};
+
 document.querySelectorAll("[data-nav]").forEach((b) => (b.onclick = () => {
+  document.querySelectorAll("[data-nav]").forEach((x) => x.classList.toggle("on", x === b));
   if (b.dataset.nav === "mods") window.scrollTo({ top: 0, behavior: "smooth" });
   else openPage(b.dataset.nav);
 }));
 
-/* ---------- Resto de la interfaz ---------- */
 document.querySelectorAll("[data-close]").forEach((b) => (b.onclick = () => b.closest("dialog").close()));
 $("btnOpenAuth").onclick = () => $("authDlg").showModal();
 $("btnOpenUpload").onclick = () => $("upDlg").showModal();
+$("btnProfile").onclick = () => openMine();
 $("q").oninput = renderMods;
-$("file").onchange = () => { const f = $("file").files[0]; $("fileName").textContent = f ? f.name : "Archivo del mod (.zip, .7z, .rar, máx. 50 MB)"; };
-$("imgs").onchange = () => {
-  const fs = Array.from($("imgs").files).slice(0, 5);
-  $("imgName").textContent = fs.length ? fs.length + " imagen(es) elegida(s)" : "Imágenes del mod (hasta 5)";
-  $("imgPrev").innerHTML = fs.map((f) => `<img src="${URL.createObjectURL(f)}" alt="">`).join("");
-};
 
-$("btnSignup").onclick = async () => {
-  const email = $("email").value.trim(), password = $("password").value;
-  if (!email || password.length < 6) return toast("Escribe un correo válido y una contraseña de 6 o más caracteres.");
-  try {
-    const d = await authCall("signup", { email, password }); $("authDlg").close();
-    if (d.access_token) { saveSession(d); await loadProfile(); toast("Cuenta creada. Ya iniciaste sesión."); }
-    else toast("Cuenta creada. Revisa tu correo (y spam) para confirmarla y luego inicia sesión.");
-  } catch (e) { toast("Error: " + e.message); }
-};
+/* Autenticación y Subida */
 $("btnLogin").onclick = async () => {
   const email = $("email").value.trim(), password = $("password").value;
   if (!email || !password) return toast("Escribe tu correo y contraseña.");
@@ -605,10 +489,6 @@ $("btnUpload").onclick = async () => {
   const imgs = Array.from($("imgs").files).slice(0, 5);
   if (!title) return toast("Escribe un título.");
   if (!file && !ext) return toast("Sube un archivo o pega un enlace externo.");
-  if (file && file.size > MAX_FILE) return toast("El archivo supera los 50 MB. Usa un enlace externo.");
-  if (file && !/\.(zip|7z|rar)$/i.test(file.name)) return toast("Solo se permiten .zip, .7z o .rar.");
-  if (ext && !safeUrl(ext)) return toast("El enlace debe empezar con http:// o https://");
-  if (imgs.some((i) => i.size > MAX_IMG)) return toast("Cada imagen debe pesar menos de 5 MB.");
   await refreshIfNeeded(); if (!session) return toast("Inicia sesión primero.");
   if (!profile) await loadProfile();
 
@@ -618,19 +498,19 @@ $("btnUpload").onclick = async () => {
     const imageUrls = [];
     for (let i = 0; i < imgs.length; i++) imageUrls.push(await uploadFile("images", uid + "/" + stamp + "_" + i + "_" + safeName(imgs[i].name), imgs[i]));
     const fileUrl = file ? await uploadFile("mods", uid + "/" + stamp + "_" + safeName(file.name), file) : null;
+    
     const ins = await fetch(URL_BASE + "/rest/v1/mods", { method: "POST", headers: headers({ "Content-Type": "application/json", Prefer: "return=minimal" }),
-      body: JSON.stringify({ title, description, author: (profile && profile.username) || "Anónimo", file_url: fileUrl, external_url: ext || null, images: imageUrls }) });
+      body: JSON.stringify({ title, description, author: (profile && profile.username) || "Anónimo", file_url: fileUrl, external_url: ext || null, images: imageUrls, approved: true, user_id: session.user.id }) });
+    
     if (!ins.ok) { const e = await ins.json().catch(() => ({})); throw new Error(e.message || ("Error al guardar (" + ins.status + ")")); }
     $("upDlg").close(); toast("¡Mod publicado!");
     ["title", "desc", "ext"].forEach((id) => ($(id).value = "")); $("file").value = ""; $("imgs").value = "";
-    $("fileName").textContent = "Archivo del mod (.zip, .7z, .rar, máx. 50 MB)"; $("imgName").textContent = "Imágenes del mod (hasta 5)"; $("imgPrev").innerHTML = "";
     loadMods();
   } catch (e) { toast("Error: " + e.message); } finally { btn.disabled = false; btn.textContent = "Subir mod"; }
 };
 
 renderAuth();
 refreshIfNeeded().then(loadProfile);
-loadPages();
 loadMods();
 </script>
 </body>
