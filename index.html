@@ -674,15 +674,28 @@ async function toggleLike(modId, btn) {
 
 async function loadComments(modId) {
   try {
-    const r = await fetch(URL_BASE + "/rest/v1/mod_comments?select=*,profiles:user_id(username,avatar_url)&mod_id=eq." + modId + "&order=created_at.asc", { headers: headers() });
-    const d = await r.json();
-    if (!r.ok) {
-      console.error("Error cargando comentarios:", d);
-      return [];
+    // 1. Obtener los comentarios del mod
+    const rC = await fetch(URL_BASE + "/rest/v1/mod_comments?select=*&mod_id=eq." + modId + "&order=created_at.asc", { headers: headers() });
+    const comments = await rC.json();
+    if (!rC.ok || !Array.isArray(comments) || !comments.length) return [];
+
+    // 2. Obtener los perfiles de los autores de esos comentarios
+    const userIds = [...new Set(comments.map(c => c.user_id))];
+    const rP = await fetch(URL_BASE + "/rest/v1/profiles?select=id,username,avatar_url&id=in.(" + userIds.join(",") + ")", { headers: headers() });
+    const profiles = await rP.json().catch(() => []);
+    
+    const profMap = {};
+    if (Array.isArray(profiles)) {
+      profiles.forEach(p => { profMap[p.id] = p; });
     }
-    return Array.isArray(d) ? d : [];
+
+    // 3. Unir comentario con el perfil del usuario
+    return comments.map(c => ({
+      ...c,
+      profile: profMap[c.user_id] || { username: "Usuario", avatar_url: null }
+    }));
   } catch(e) { 
-    console.error("Catch comentarios:", e);
+    console.error("Error cargando comentarios:", e);
     return []; 
   }
 }
@@ -743,8 +756,8 @@ async function loadModSocialData(id) {
   const cList = $("commentsList");
   if (cList) {
     cList.innerHTML = comments.length ? comments.map(c => {
-      const uName = (c.profiles && c.profiles.username) || "Usuario";
-      const uAv = c.profiles && c.profiles.avatar_url;
+      const uName = c.profile.username || "Usuario";
+      const uAv = c.profile.avatar_url;
       return `
         <div class="comment-item">
           <div class="comment-head">
