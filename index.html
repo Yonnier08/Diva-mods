@@ -17,7 +17,6 @@
   body { margin:0; font-family:"Inter","Segoe UI",Roboto,system-ui,sans-serif; background:var(--bg); color:var(--fg); line-height:1.45; }
   .ic { width:13px; height:13px; vertical-align:-1px; flex:none; }
   
-  /* Navbar */
   header { position:sticky; top:0; z-index:20; background:var(--bg); border-bottom:1px solid var(--line); }
   .top { display:flex; align-items:center; gap:10px; padding:8px 14px; }
   .brand { display:flex; align-items:center; text-decoration:none; margin-right:auto; }
@@ -32,6 +31,7 @@
   .btn.pri { background:var(--acc); border-color:var(--acc); color:var(--acc-fg); }
   .btn.danger { color:var(--danger); border-color:rgba(240,104,107,0.3); }
   .btn.sm { padding:5px 9px; font-size:12.5px; }
+  .btn:disabled { opacity:.55; cursor:default; }
   .hide { display:none !important; }
 
   .av { border-radius:50%; object-fit:cover; display:grid; place-items:center; font-weight:700; color:var(--acc-fg); background:var(--acc); flex:none; overflow:hidden; }
@@ -46,7 +46,6 @@
   .tabs button.on { color:var(--fg); border-bottom-color:var(--acc); }
   .count { color:var(--mut); font-size:12.5px; }
 
-  /* Cuadrícula Estilo GameBanana */
   .gb-grid { display:grid; grid-template-columns:repeat(2, 1fr); gap:12px; }
   @media (min-width: 768px) { .gb-grid { grid-template-columns:repeat(3, 1fr); gap:14px; } }
 
@@ -68,7 +67,6 @@
   .empty { grid-column:1/-1; text-align:center; color:var(--mut); padding:36px 8px; }
   footer { max-width:960px; margin:0 auto; padding:18px 14px 30px; color:var(--mut); font-size:12px; border-top:1px solid var(--line); text-align:center; }
 
-  /* Modales */
   dialog { width:min(94vw,480px); max-height:90vh; border:1px solid var(--line); border-radius:8px; padding:18px; background:var(--surface); color:var(--fg); }
   dialog::backdrop { background:rgba(0,0,0,.75); backdrop-filter:blur(3px); }
   dialog h2 { margin:0 0 12px; font-size:18px; }
@@ -80,6 +78,8 @@
   .hint { color:var(--mut); font-size:12px; margin:2px 0; }
   .thumbs { display:flex; gap:6px; flex-wrap:wrap; }
   .thumbs img { width:60px; height:60px; object-fit:cover; border-radius:4px; border:1px solid var(--line); }
+  .thumb { position:relative; }
+  .thumb button { position:absolute; top:-6px; right:-6px; width:20px; height:20px; border-radius:50%; border:none; background:var(--danger); color:#fff; font-size:11px; cursor:pointer; padding:0; }
   .gallery { display:flex; gap:8px; overflow-x:auto; scroll-snap-type:x mandatory; margin-bottom:12px; }
   .gallery img { height:200px; border-radius:4px; scroll-snap-align:start; flex:none; max-width:100%; object-fit:contain; background:var(--bg); }
   .desc { white-space:pre-wrap; word-break:break-word; margin:10px 0 14px; font-size:14px; }
@@ -332,7 +332,6 @@ async function patchMod(id, body) {
   if (!r.ok) { const e = await r.json().catch(() => ({})); throw new Error(e.message || ("Error " + r.status)); }
 }
 
-/* ---------- Tarjetas Estilo GameBanana (Grid 2x2) ---------- */
 function gbItemHtml(m) {
   const img = (m.images || [])[0];
   return `<div class="gb-card" data-id="${esc(m.id)}">
@@ -389,7 +388,6 @@ async function loadMine() {
 function rpc(fn, id) { return fetch(URL_BASE + "/rest/v1/rpc/" + fn, { method: "POST", headers: headers({ "Content-Type": "application/json" }), body: JSON.stringify({ mod_id: id }) }).catch(() => {}); }
 const findMod = (id) => mine.find((x) => x.id === id) || allMods.find((x) => x.id === id) || userMods.find((x) => x.id === id);
 
-/* ---------- Detalle del Mod ---------- */
 function openDetail(id) {
   const m = allMods.find((x) => x.id === id) || userMods.find((x) => x.id === id); if (!m) return;
   rpc("increment_views", id); m.views = (m.views || 0) + 1; renderMods();
@@ -418,7 +416,6 @@ $("list").onclick = (e) => {
   const c = e.target.closest(".gb-card"); if (c) openDetail(c.dataset.id);
 };
 
-/* ---------- Perfil Público de Creadores ---------- */
 async function openUser(uid) {
   if (!isUuid(uid)) return;
   if ($("detDlg").open) $("detDlg").close();
@@ -463,7 +460,6 @@ $("userBody").onclick = (e) => {
   const c = e.target.closest(".gb-card"); if (c) { $("userDlg").close(); openDetail(c.dataset.id); }
 };
 
-/* ---------- Resto de Acciones e Interfaz ---------- */
 function renderMine() {
   if (!mine.length) { $("mineList").innerHTML = "<p class='hint'>Todavía no has subido mods.</p>"; return; }
   $("mineList").innerHTML = mine.map((m) => {
@@ -497,12 +493,79 @@ async function deleteMod(m) {
   } catch (e) { toast("Error: " + e.message); }
 }
 
+function renderEditThumbs() {
+  $("eThumbs").innerHTML = editImgs.map((u, i) => `<span class="thumb"><img src="${esc(u)}" alt=""><button data-rm="${i}" type="button">✕</button></span>`).join("");
+}
+
 function openEdit(m) {
   editing = m; editImgs = (m.images || []).slice();
-  $("eTitle").value = m.title || ""; $("eDesc").value = m.description || ""; $("eExt").value = m.external_url || "";
+  $("eTitle").value = m.title || ""; 
+  $("eDesc").value = m.description || ""; 
+  $("eExt").value = m.external_url || "";
+  $("eImgs").value = ""; 
+  $("eFile").value = "";
+  $("eImgName").textContent = "Agregar imágenes (máx. 5 en total)"; 
+  $("eFileName").textContent = "Reemplazar archivo (opcional, máx. 50 MB)";
+  renderEditThumbs();
   if ($("detDlg").open) $("detDlg").close();
   $("editDlg").showModal();
 }
+
+$("eThumbs").onclick = (e) => { const b = e.target.closest("[data-rm]"); if (b) { editImgs.splice(+b.dataset.rm, 1); renderEditThumbs(); } };
+$("eImgs").onchange = () => { const n = $("eImgs").files.length; $("eImgName").textContent = n ? n + " imagen(es) nueva(s)" : "Agregar imágenes (máx. 5 en total)"; };
+$("eFile").onchange = () => { const f = $("eFile").files[0]; $("eFileName").textContent = f ? f.name : "Reemplazar archivo (opcional, máx. 50 MB)"; };
+
+/* LÓGICA COMPLETA DE GUARDAR EDICIÓN DEL MOD */
+$("btnSaveEdit").onclick = async () => {
+  const m = editing; if (!m) return;
+  const title = $("eTitle").value.trim(), description = $("eDesc").value.trim(), ext = $("eExt").value.trim();
+  const newImgs = Array.from($("eImgs").files), newFile = $("eFile").files[0];
+  
+  if (!title) return toast("Escribe un título.");
+  if (editImgs.length + newImgs.length > 5) return toast("Máximo 5 imágenes en total.");
+  if (newImgs.some((i) => i.size > MAX_IMG)) return toast("Cada imagen debe pesar menos de 5 MB.");
+  if (newFile && newFile.size > MAX_FILE) return toast("El archivo supera los 50 MB. Usa un enlace externo.");
+  if (newFile && !/\.(zip|7z|rar)$/i.test(newFile.name)) return toast("Solo se permiten .zip, .7z o .rar.");
+  if (ext && !safeUrl(ext)) return toast("El enlace debe empezar con http:// o https://");
+  if (!newFile && !m.file_url && !ext) return toast("El mod necesita un archivo o un enlace externo.");
+  
+  await refreshIfNeeded(); if (!session) return toast("Inicia sesión primero.");
+
+  const btn = $("btnSaveEdit"); btn.disabled = true; btn.textContent = "Guardando...";
+  try {
+    const uid = session.user.id, stamp = Date.now();
+    const images = editImgs.slice();
+    for (let i = 0; i < newImgs.length; i++) {
+      images.push(await uploadFile("images", uid + "/" + stamp + "_" + i + "_" + safeName(newImgs[i].name), newImgs[i]));
+    }
+    let fileUrl = m.file_url;
+    if (newFile) {
+      fileUrl = await uploadFile("mods", uid + "/" + stamp + "_" + safeName(newFile.name), newFile);
+    }
+    
+    await patchMod(m.id, { 
+      title, 
+      description, 
+      images, 
+      file_url: fileUrl, 
+      external_url: ext || null 
+    });
+    
+    const removedImgs = (m.images || []).filter((u) => !images.includes(u));
+    if (removedImgs.length) await removeFiles("images", removedImgs);
+    if (newFile && m.file_url) await removeFiles("mods", [m.file_url]);
+    
+    $("editDlg").close(); 
+    toast("Cambios guardados correctamente.");
+    await Promise.all([loadMods(), loadMine()]); 
+    if ($("mineDlg").open) renderMine();
+  } catch (e) { 
+    toast("Error: " + e.message); 
+  } finally { 
+    btn.disabled = false; 
+    btn.textContent = "Guardar cambios"; 
+  }
+};
 
 function onAction(e) {
   const b = e.target.closest("[data-act]"); if (!b) return;
@@ -517,7 +580,6 @@ $("detBody").onclick = (e) => {
   onAction(e);
 };
 
-/* ---------- Páginas Dinámicas (Reglas / Info con Edición para Mods) ---------- */
 function showPage(key) {
   curPage = key;
   const p = pages[key] || DEFAULT_PAGES[key];
@@ -564,7 +626,6 @@ $("btnOpenUpload").onclick = () => $("upDlg").showModal();
 $("btnProfile").onclick = () => openUser(myId());
 $("q").oninput = renderMods;
 
-/* Autenticación y Subida */
 $("btnLogin").onclick = async () => {
   const email = $("email").value.trim(), password = $("password").value;
   if (!email || !password) return toast("Escribe tu correo y contraseña.");
