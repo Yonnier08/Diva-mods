@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PDMM+ Mods</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<style>
+  :root { --bg:#fff; --fg:#1a1a1a; --card:#f4f4f6; --acc:#e0457b; --mut:#666; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#121214; --fg:#eee; --card:#1e1e22; --mut:#aaa; }
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:system-ui,sans-serif; background:var(--bg); color:var(--fg); }
+  main { max-width:720px; margin:0 auto; padding:16px; }
+  h1 { color:var(--acc); margin:8px 0 16px; }
+  section { background:var(--card); border-radius:12px; padding:16px; margin-bottom:16px; }
+  input, textarea, button { width:100%; padding:10px; margin:6px 0; border-radius:8px;
+    border:1px solid #8884; font-size:16px; background:var(--bg); color:var(--fg); }
+  button { background:var(--acc); color:#fff; border:none; font-weight:600; cursor:pointer; }
+  button.sec { background:transparent; color:var(--fg); border:1px solid #8886; }
+  .mod { border-top:1px solid #8883; padding:12px 0; }
+  .mod:first-child { border-top:none; }
+  .mod h3 { margin:0 0 4px; }
+  .mut { color:var(--mut); font-size:14px; }
+  a.dl { display:inline-block; margin-top:8px; padding:8px 14px; background:var(--acc);
+    color:#fff; border-radius:8px; text-decoration:none; font-weight:600; }
+  #msg { padding:10px; border-radius:8px; margin-bottom:12px; display:none; background:var(--card); }
+</style>
+</head>
+<body>
+<main>
+  <h1>PDMM+ Mods</h1>
+  <div id="msg"></div>
+
+  <section id="authBox">
+    <h2>Cuenta</h2>
+    <div id="loggedOut">
+      <input id="email" type="email" placeholder="Correo electrónico" autocomplete="email">
+      <input id="password" type="password" placeholder="Contraseña (mín. 6 caracteres)" autocomplete="current-password">
+      <button id="btnLogin">Iniciar sesión</button>
+      <button id="btnSignup" class="sec">Crear cuenta</button>
+    </div>
+    <div id="loggedIn" style="display:none">
+      <p>Sesión iniciada como <b id="userEmail"></b></p>
+      <button id="btnLogout" class="sec">Cerrar sesión</button>
+    </div>
+  </section>
+
+  <section id="uploadBox" style="display:none">
+    <h2>Subir un mod</h2>
+    <input id="title" placeholder="Título del mod">
+    <input id="author" placeholder="Autor / creador">
+    <textarea id="desc" rows="3" placeholder="Descripción"></textarea>
+    <input id="file" type="file" accept=".zip,.7z,.rar">
+    <p class="mut">Máximo 50 MB. Formatos: .zip, .7z, .rar. Tu mod se publicará cuando sea aprobado.</p>
+    <button id="btnUpload">Subir mod</button>
+  </section>
+
+  <section>
+    <h2>Mods disponibles</h2>
+    <div id="list"><p class="mut">Cargando...</p></div>
+  </section>
+</main>
+
+<script>
+const SUPABASE_URL = "https://nidlcakntjjzgkjlejbk.supabase.co";
+const SUPABASE_KEY = "sb_publishable_TVKTwGkcuLX_eXNon8IQjg_Jor-NquZ";
+const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const MAX_BYTES = 50 * 1024 * 1024;
+
+const $ = (id) => document.getElementById(id);
+
+function showMsg(text) {
+  const m = $("msg");
+  m.textContent = text;
+  m.style.display = "block";
+  setTimeout(() => (m.style.display = "none"), 6000);
+}
+
+function esc(s) {
+  const d = document.createElement("div");
+  d.textContent = s ?? "";
+  return d.innerHTML;
+}
+
+async function refreshSession() {
+  const { data } = await db.auth.getSession();
+  const user = data.session?.user;
+  $("loggedOut").style.display = user ? "none" : "block";
+  $("loggedIn").style.display = user ? "block" : "none";
+  $("uploadBox").style.display = user ? "bl
