@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="es" data-theme="dark">
+<html lang="es" translate="no" data-theme="dark">
 <head>
 <meta charset="UTF-8">
+<meta name="google" content="notranslate">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PDMM+ Mods</title>
 <link rel="icon" href="logo.png">
@@ -157,6 +158,41 @@
   .rich p { margin:0 0 10px; }
   .rich ul { margin:0 0 10px; padding-left:20px; }
   #toast { position:fixed; left:50%; bottom:22px; transform:translateX(-50%); z-index:50; max-width:90vw; padding:11px 16px; border-radius:5px; font-size:14px; display:none; background:var(--fg); color:var(--bg); }
+
+  .fld { display:flex; flex-direction:column; gap:6px; }
+  .fld-l { font-size:13px; font-weight:600; display:flex; justify-content:space-between; align-items:center; }
+  .fld-l .muted { color:var(--mut); font-weight:400; }
+  .up-body { max-height:60vh; gap:16px; }
+  #desc { min-height:160px; resize:vertical; line-height:1.55; }
+  #eDesc { min-height:160px; resize:vertical; line-height:1.55; }
+  .counter { align-self:flex-end; font-size:12px; color:var(--mut); }
+  .imggrid { display:grid; grid-template-columns:repeat(auto-fill, minmax(84px, 1fr)); gap:8px; }
+  .ithumb { position:relative; aspect-ratio:1; border-radius:5px; overflow:hidden; border:1px solid var(--line); cursor:pointer; background:var(--bg); }
+  .ithumb.cover { border-color:var(--acc); }
+  .ithumb img { width:100%; height:100%; object-fit:cover; display:block; }
+  .cover-tag { position:absolute; left:0; right:0; bottom:0; background:rgba(0,0,0,.72); color:#fff; font-size:11px; text-align:center; padding:2px 0; }
+  .ithumb .rm { position:absolute; top:3px; right:3px; width:22px; height:22px; border-radius:50%; border:none; background:rgba(0,0,0,.72); color:#fff; font-size:11px; cursor:pointer; padding:0; }
+  .iadd { aspect-ratio:1; border:1px dashed var(--mut); border-radius:5px; background:none; color:var(--mut); cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; font-size:12px; font-family:inherit; padding:4px; }
+  .iadd:hover { border-color:var(--acc); color:var(--fg); }
+  .iadd svg { width:22px; height:22px; }
+  .filepick { display:flex; align-items:center; gap:12px; width:100%; padding:14px; border:1px dashed var(--mut); border-radius:5px; background:none; color:var(--fg); cursor:pointer; text-align:left; font-family:inherit; font-size:14.5px; }
+  .filepick:hover { border-color:var(--acc); }
+  .filepick svg { width:26px; height:26px; color:var(--mut); flex:none; }
+  .filepick span { display:flex; flex-direction:column; gap:2px; }
+  .filepick small { color:var(--mut); font-size:12.5px; }
+  .filecard { display:flex; align-items:center; gap:12px; padding:12px; border:1px solid var(--acc); border-radius:5px; }
+  .filecard.bad { border-color:var(--danger); }
+  .filecard svg { width:24px; height:24px; color:var(--acc); flex:none; }
+  .filecard.bad svg { color:var(--danger); }
+  .fc-t { min-width:0; flex:1; display:flex; flex-direction:column; }
+  .fc-t b { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:600; font-size:14px; }
+  .fc-t small { color:var(--mut); font-size:12.5px; }
+  .filecard.bad .fc-t small { color:var(--danger); }
+  .up-progress { margin-top:10px; flex-shrink:0; }
+  .bar { height:8px; background:var(--bg); border:1px solid var(--line); border-radius:4px; overflow:hidden; }
+  #upBar { height:100%; width:0; background:var(--acc); transition:width .15s; }
+  #upStatus { display:block; margin-top:5px; font-size:13px; color:var(--mut); }
+  .center { text-align:center; }
 </style>
 </head>
 <body>
@@ -169,6 +205,9 @@
   <symbol id="i-menu" viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
   <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.35-4.35" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
   <symbol id="i-back" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8z M14 3v5h5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 12.5l2.7 2.7L16 9.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></symbol>
 </defs></svg>
 
 <!-- Menú Lateral -->
@@ -325,24 +364,37 @@
 
 <dialog id="upDlg">
   <h2 data-i18n="upload_title">Subir un mod</h2>
-  <div class="row">
-    <input id="title" data-i18n-ph="ph_mod_title" placeholder="Título del mod" maxlength="80">
-    <select id="category">
-      <option value="songs" data-i18n="cat_songs">Canciones</option>
-      <option value="modules" data-i18n="cat_modules">Módulos</option>
-      <option value="ui" data-i18n="cat_ui">UI / Interfaz</option>
-      <option value="patches" data-i18n="cat_patches">Parches / Scripts</option>
-      <option value="edits_pv" data-i18n="cat_edits_pv">EDITS PV</option>
-      <option value="3dpv" data-i18n="cat_3dpv">3DPV</option>
-      <option value="other" selected data-i18n="cat_other">Otros</option>
-    </select>
-    <textarea id="desc" rows="4" data-i18n-ph="ph_mod_desc" placeholder="Descripción"></textarea>
-    <label class="filebtn"><span id="imgName" data-i18n="img_placeholder">Imágenes del mod (hasta 5)</span><input id="imgs" type="file" accept="image/*" multiple></label>
-    <div id="imgPrev" class="thumbs"></div>
-    <label class="filebtn"><span id="fileName" data-i18n="file_placeholder">Archivo del mod (.zip, .7z, .rar, máx. 50 MB)</span><input id="file" type="file" accept=".zip,.7z,.rar"></label>
-    <p class="hint" style="text-align:center" data-i18n="or_external">— o, si pesa más de 50 MB —</p>
-    <input id="ext" type="url" data-i18n-ph="ph_ext_url" placeholder="Enlace de descarga externo (Mega, Drive, etc.)">
+  <div class="row up-body">
+    <label class="fld"><span class="fld-l" data-i18n="up_l_title">Título</span>
+      <input id="title" data-i18n-ph="ph_mod_title" placeholder="Título del mod" maxlength="80"></label>
+    <label class="fld"><span class="fld-l" data-i18n="up_l_cat">Categoría</span>
+      <select id="category">
+        <option value="songs" data-i18n="cat_songs">Canciones</option>
+        <option value="modules" data-i18n="cat_modules">Módulos</option>
+        <option value="ui" data-i18n="cat_ui">UI / Interfaz</option>
+        <option value="patches" data-i18n="cat_patches">Parches / Scripts</option>
+        <option value="edits_pv" data-i18n="cat_edits_pv">EDITS PV</option>
+        <option value="3dpv" data-i18n="cat_3dpv">3DPV</option>
+        <option value="other" selected data-i18n="cat_other">Otros</option>
+      </select></label>
+    <label class="fld"><span class="fld-l" data-i18n="up_l_desc">Descripción</span>
+      <textarea id="desc" rows="7" maxlength="2000" data-i18n-ph="ph_mod_desc" placeholder="Descripción"></textarea>
+      <span class="counter" id="descCount">0/2000</span></label>
+    <div class="fld">
+      <span class="fld-l"><span data-i18n="up_l_images">Imágenes</span><span class="muted" id="imgCount">0/10</span></span>
+      <div id="imgGrid" class="imggrid"></div>
+      <input id="imgs" type="file" accept="image/*" multiple class="hide">
+      <span class="hint" data-i18n="up_images_hint">La primera es la portada.</span>
+    </div>
+    <div class="fld">
+      <span class="fld-l" data-i18n="up_l_file">Archivo del mod</span>
+      <div id="fileBox"></div>
+      <input id="file" type="file" accept=".zip,.7z,.rar" class="hide">
+      <p class="hint center" data-i18n="or_external">— o, si pesa más de 50 MB —</p>
+      <input id="ext" type="url" data-i18n-ph="ph_ext_url" placeholder="Enlace de descarga externo (Mega, Drive, etc.)">
+    </div>
   </div>
+  <div id="upProgress" class="up-progress hide"><div class="bar"><div id="upBar"></div></div><span id="upStatus"></span></div>
   <p class="hint" data-i18n="instant_publish">Tu mod se publicará de inmediato.</p>
   <div class="acts"><button id="btnUpload" class="btn pri" data-i18n="btn_upload_mod">Subir mod</button><button class="btn" data-close data-i18n="btn_cancel">Cancelar</button></div>
 </dialog>
@@ -360,9 +412,9 @@
       <option value="3dpv" data-i18n="cat_3dpv">3DPV</option>
       <option value="other" data-i18n="cat_other">Otros</option>
     </select>
-    <textarea id="eDesc" rows="4" data-i18n-ph="ph_mod_desc" placeholder="Descripción"></textarea>
+    <textarea id="eDesc" rows="7" maxlength="2000" data-i18n-ph="ph_mod_desc" placeholder="Descripción"></textarea>
     <div id="eThumbs" class="thumbs"></div>
-    <label class="filebtn"><span id="eImgName" data-i18n="add_more_imgs">Agregar imágenes (máx. 5 en total)</span><input id="eImgs" type="file" accept="image/*" multiple></label>
+    <label class="filebtn"><span id="eImgName" data-i18n="add_more_imgs">Agregar imágenes (máx. 10 en total)</span><input id="eImgs" type="file" accept="image/*" multiple></label>
     <label class="filebtn"><span id="eFileName" data-i18n="replace_file">Reemplazar archivo (opcional, máx. 50 MB)</span><input id="eFile" type="file" accept=".zip,.7z,.rar"></label>
     <input id="eExt" type="url" data-i18n-ph="ph_ext_url_opt" placeholder="Enlace de descarga externo (opcional)">
   </div>
@@ -399,12 +451,20 @@ const i18n = {
     edit_profile: "Editar perfil", change_photo: "Cambiar foto", ph_username: "Nombre de usuario", ph_bio: "Cuéntanos sobre ti", my_mods: "Mis mods",
     upload_title: "Subir un mod", ph_mod_title: "Título del mod", ph_mod_desc: "Descripción", img_placeholder: "Imágenes del mod (hasta 5)",
     file_placeholder: "Archivo del mod (.zip, .7z, .rar, máx. 50 MB)", or_external: "— o, si pesa más de 50 MB —", ph_ext_url: "Enlace de descarga externo (Mega, Drive, etc.)",
-    instant_publish: "Tu mod se publicará de inmediato.", btn_upload_mod: "Subir mod", edit_mod_title: "Editar mod", add_more_imgs: "Agregar imágenes (máx. 5 en total)",
+    instant_publish: "Tu mod se publicará de inmediato.", btn_upload_mod: "Subir mod", edit_mod_title: "Editar mod", add_more_imgs: "Agregar imágenes (máx. 10 en total)",
     replace_file: "Reemplazar archivo (opcional, máx. 50 MB)", ph_ext_url_opt: "Enlace de descarga externo (opcional)", btn_save_changes: "Guardar cambios",
     profile: "Perfil", anon: "Anónimo", download_btn: "Descargar", member_since: "Miembro desde", moderator: "Moderador", no_bio: "Este perfil todavía no tiene descripción.",
     no_bio_own: "Todavía no escribiste nada sobre ti. Toca Editar perfil para agregarlo.", downloads_word: "descargas", logout: "Cerrar sesión",
     edit: "Editar", hide: "Ocultar", show: "Mostrar", delete: "Eliminar", published: "Publicado", hidden: "Oculto",
-    cat_all: "Todas las categorías", cat_songs: "Canciones", cat_modules: "Módulos", cat_ui: "UI / Interfaz", cat_patches: "Parches / Scripts", cat_edits_pv: "EDITS PV", cat_3dpv: "3DPV", cat_other: "Otros"
+    cat_all: "Todas las categorías", cat_songs: "Canciones", cat_modules: "Módulos", cat_ui: "UI / Interfaz", cat_patches: "Parches / Scripts", cat_edits_pv: "EDITS PV", cat_3dpv: "3DPV", cat_other: "Otros",
+    up_l_title: "Título", up_l_cat: "Categoría", up_l_desc: "Descripción", up_l_images: "Imágenes", up_l_file: "Archivo del mod",
+    up_images_add: "Agregar", up_images_hint: "La primera es la portada: toca una imagen para ponerla de portada. Hasta 10 imágenes de 5 MB cada una.",
+    up_cover: "Portada", up_file_add: "Elegir archivo del mod", up_file_hint: ".zip, .7z o .rar · máx. 50 MB", up_file_remove: "Quitar",
+    up_uploading: "Subiendo", up_saving: "Guardando...", up_done: "¡Mod publicado!", up_wait: "Espera a que termine la subida.",
+    up_err_title: "Escribe un título.", up_err_source: "Sube un archivo o pega un enlace externo.", up_err_big: "El archivo pesa más de 50 MB. Usa un enlace externo.",
+    up_err_big_short: "supera el límite de 50 MB", up_err_type: "Solo se permiten archivos .zip, .7z o .rar.", up_err_link: "El enlace debe empezar con http:// o https://",
+    up_err_img_big: "Una imagen supera los 5 MB y se omitió.", up_err_img_type: "Solo se pueden agregar imágenes.", up_err_img_max: "Máximo 10 imágenes.",
+    up_err_login: "Inicia sesión primero.", up_new_imgs: "imagen(es) nueva(s)"
   },
   en: {
     nav_title: "Navigation", nav_mods: "Mods", nav_rules: "Rules", nav_info: "Information", nav_settings: "Settings",
@@ -418,12 +478,20 @@ const i18n = {
     edit_profile: "Edit profile", change_photo: "Change photo", ph_username: "Username", ph_bio: "Tell us about yourself", my_mods: "My mods",
     upload_title: "Upload a mod", ph_mod_title: "Mod title", ph_mod_desc: "Description", img_placeholder: "Mod images (up to 5)",
     file_placeholder: "Mod file (.zip, .7z, .rar, max 50 MB)", or_external: "— or, if larger than 50 MB —", ph_ext_url: "External download link (Mega, Drive, etc.)",
-    instant_publish: "Your mod will be published immediately.", btn_upload_mod: "Upload mod", edit_mod_title: "Edit mod", add_more_imgs: "Add images (max 5 total)",
+    instant_publish: "Your mod will be published immediately.", btn_upload_mod: "Upload mod", edit_mod_title: "Edit mod", add_more_imgs: "Add images (max 10 total)",
     replace_file: "Replace file (optional, max 50 MB)", ph_ext_url_opt: "External download link (optional)", btn_save_changes: "Save changes",
     profile: "Profile", anon: "Anonymous", download_btn: "Download", member_since: "Member since", moderator: "Moderator", no_bio: "This profile has no description yet.",
     no_bio_own: "You haven't written anything about yourself yet. Tap Edit profile to add it.", downloads_word: "downloads", logout: "Log out",
     edit: "Edit", hide: "Hide", show: "Show", delete: "Delete", published: "Published", hidden: "Hidden",
-    cat_all: "All categories", cat_songs: "Songs", cat_modules: "Modules", cat_ui: "UI / Interface", cat_patches: "Patches / Scripts", cat_edits_pv: "EDITS PV", cat_3dpv: "3DPV", cat_other: "Other"
+    cat_all: "All categories", cat_songs: "Songs", cat_modules: "Modules", cat_ui: "UI / Interface", cat_patches: "Patches / Scripts", cat_edits_pv: "EDITS PV", cat_3dpv: "3DPV", cat_other: "Other",
+    up_l_title: "Title", up_l_cat: "Category", up_l_desc: "Description", up_l_images: "Images", up_l_file: "Mod file",
+    up_images_add: "Add", up_images_hint: "The first one is the cover: tap an image to make it the cover. Up to 10 images, 5 MB each.",
+    up_cover: "Cover", up_file_add: "Choose mod file", up_file_hint: ".zip, .7z or .rar · max 50 MB", up_file_remove: "Remove",
+    up_uploading: "Uploading", up_saving: "Saving...", up_done: "Mod published!", up_wait: "Wait for the upload to finish.",
+    up_err_title: "Enter a title.", up_err_source: "Upload a file or paste an external link.", up_err_big: "The file is larger than 50 MB. Use an external link.",
+    up_err_big_short: "over the 50 MB limit", up_err_type: "Only .zip, .7z or .rar files are allowed.", up_err_link: "The link must start with http:// or https://",
+    up_err_img_big: "An image is over 5 MB and was skipped.", up_err_img_type: "Only images can be added.", up_err_img_max: "Maximum 10 images.",
+    up_err_login: "Log in first.", up_new_imgs: "new image(s)"
   }
 };
 
@@ -444,6 +512,7 @@ function setLanguage(lang) {
     if (i18n[lang][key]) el.placeholder = i18n[lang][key];
   });
   $("langSelect").value = lang;
+  if (typeof renderUpImgs === "function") { renderUpImgs(); renderUpFile(); }
 }
 
 function setTheme(theme) {
@@ -1026,6 +1095,7 @@ function renderEditThumbs() {
 
 function openEdit(m) {
   editing = m; editImgs = (m.images || []).slice();
+  $("eImgs").value = ""; $("eFile").value = ""; $("eImgName").textContent = T("add_more_imgs"); $("eFileName").textContent = T("replace_file");
   $("eTitle").value = m.title || ""; 
   $("eCategory").value = m.category || "other";
   $("eDesc").value = m.description || ""; 
@@ -1050,6 +1120,9 @@ $("btnSaveEdit").onclick = async () => {
   const newImgs = Array.from($("eImgs").files), newFile = $("eFile").files[0];
   
   if (!title) return toast("Título requerido.");
+  if (editImgs.length + newImgs.length > MAX_IMGS) return toast(T("up_err_img_max"));
+  if (newImgs.some((i) => i.size > MAX_IMG)) return toast(T("up_err_img_big"));
+  if (newFile && newFile.size > MAX_FILE) return toast(T("up_err_big"));
   await refreshIfNeeded(); if (!session) return toast("Inicia sesión.");
 
   const btn = $("btnSaveEdit"); btn.disabled = true;
@@ -1202,35 +1275,156 @@ $("btnSaveProf").onclick = async () => {
   } catch (e) { toast("Error"); }
 };
 
+// ---------- Subida de mods: vista previa, progreso y hasta 10 imágenes ----------
+const MAX_IMGS = 10;
+const T = (k) => (i18n[currentLang] && i18n[currentLang][k]) || i18n.es[k] || k;
+let upImgs = [], upFile = null, upBusy = false;
+const icUse = (n) => `<svg><use href="#${n}"/></svg>`;
+const fmtSize = (b) => b >= 1048576 ? (b / 1048576).toFixed(1) + " MB" : Math.max(1, Math.round(b / 1024)) + " KB";
+
+function renderUpImgs() {
+  const g = $("imgGrid"); if (!g) return;
+  g.innerHTML = upImgs.map((it, i) =>
+    `<div class="ithumb ${i === 0 ? "cover" : ""}" data-i="${i}"><img src="${esc(it.url)}" alt="">${i === 0 ? `<span class="cover-tag">${esc(T("up_cover"))}</span>` : ""}<button type="button" class="rm" data-rm="${i}">✕</button></div>`
+  ).join("") + (upImgs.length < MAX_IMGS ? `<button type="button" class="iadd" id="imgAdd">${icUse("i-plus")}<span>${esc(T("up_images_add"))}</span></button>` : "");
+  $("imgCount").textContent = upImgs.length + "/" + MAX_IMGS;
+}
+
+function renderUpFile() {
+  const b = $("fileBox"); if (!b) return;
+  if (!upFile) {
+    b.innerHTML = `<button type="button" class="filepick" id="filePick">${icUse("i-file")}<span><b>${esc(T("up_file_add"))}</b><small>${esc(T("up_file_hint"))}</small></span></button>`;
+    return;
+  }
+  const big = upFile.size > MAX_FILE;
+  b.innerHTML = `<div class="filecard ${big ? "bad" : ""}">${icUse(big ? "i-file" : "i-check")}<div class="fc-t"><b>${esc(upFile.name)}</b><small>${fmtSize(upFile.size)}${big ? " · " + esc(T("up_err_big_short")) : ""}</small></div><button type="button" class="linkbtn" id="fileRm">${esc(T("up_file_remove"))}</button></div>`;
+}
+
+function addUpImgs(files) {
+  let big = false, notImg = false, tooMany = false;
+  files.forEach((f) => {
+    if (!/^image\//.test(f.type)) { notImg = true; return; }
+    if (f.size > MAX_IMG) { big = true; return; }
+    if (upImgs.length >= MAX_IMGS) { tooMany = true; return; }
+    upImgs.push({ file: f, url: URL.createObjectURL(f) });
+  });
+  renderUpImgs();
+  if (tooMany) toast(T("up_err_img_max")); else if (big) toast(T("up_err_img_big")); else if (notImg) toast(T("up_err_img_type"));
+}
+
+function resetUpload() {
+  upImgs.forEach((it) => URL.revokeObjectURL(it.url));
+  upImgs = []; upFile = null;
+  ["title", "desc", "ext"].forEach((id) => ($(id).value = ""));
+  $("category").value = "other"; $("descCount").textContent = "0/2000";
+  renderUpImgs(); renderUpFile();
+}
+
+function xhrUpload(bucket, path, file, onProg) {
+  return new Promise((resolve, reject) => {
+    const x = new XMLHttpRequest();
+    x.open("POST", URL_BASE + "/storage/v1/object/" + bucket + "/" + path);
+    const h = headers({ "Content-Type": file.type || "application/octet-stream" });
+    Object.keys(h).forEach((k) => x.setRequestHeader(k, h[k]));
+    x.upload.onprogress = (e) => { if (e.lengthComputable) onProg(e.loaded); };
+    x.onload = () => {
+      if (x.status >= 200 && x.status < 300) return resolve(URL_BASE + "/storage/v1/object/public/" + bucket + "/" + path);
+      let m = ""; try { const j = JSON.parse(x.responseText); m = j.message || j.error; } catch (e) {}
+      reject(new Error(m || ("Error " + x.status)));
+    };
+    x.onerror = () => reject(new Error("Sin conexión / No connection"));
+    x.send(file);
+  });
+}
+
+$("imgs").onchange = () => { addUpImgs(Array.from($("imgs").files)); $("imgs").value = ""; };
+$("imgGrid").onclick = (e) => {
+  const rm = e.target.closest("[data-rm]");
+  if (rm) { const i = +rm.dataset.rm; URL.revokeObjectURL(upImgs[i].url); upImgs.splice(i, 1); renderUpImgs(); return; }
+  if (e.target.closest("#imgAdd")) { $("imgs").click(); return; }
+  const th = e.target.closest(".ithumb");
+  if (th) { const i = +th.dataset.i; if (i > 0) { const it = upImgs.splice(i, 1)[0]; upImgs.unshift(it); renderUpImgs(); } }
+};
+$("file").onchange = () => {
+  const f = $("file").files[0]; $("file").value = "";
+  if (!f) return;
+  if (!/\.(zip|7z|rar)$/i.test(f.name)) return toast(T("up_err_type"));
+  upFile = f; renderUpFile();
+};
+$("fileBox").onclick = (e) => {
+  if (e.target.closest("#filePick")) $("file").click();
+  else if (e.target.closest("#fileRm")) { upFile = null; renderUpFile(); }
+};
+$("desc").oninput = () => { $("descCount").textContent = $("desc").value.length + "/2000"; };
+$("upDlg").addEventListener("close", () => { if (upBusy) { $("upDlg").showModal(); toast(T("up_wait")); } });
+
+$("eImgs").onchange = () => { const n = $("eImgs").files.length; $("eImgName").textContent = n ? n + " " + T("up_new_imgs") : T("add_more_imgs"); };
+$("eFile").onchange = () => { const f = $("eFile").files[0]; $("eFileName").textContent = f ? f.name + " (" + fmtSize(f.size) + ")" : T("replace_file"); };
+
 $("btnUpload").onclick = async () => {
+  if (upBusy) return;
   const title = $("title").value.trim(), category = $("category").value, description = $("desc").value.trim();
-  const file = $("file").files[0], ext = $("ext").value.trim();
-  const imgs = Array.from($("imgs").files).slice(0, 5);
-  if (!title) return toast("Escribe un título.");
-  await refreshIfNeeded(); if (!session) return toast("Inicia sesión primero.");
+  const ext = $("ext").value.trim();
+  if (!title) return toast(T("up_err_title"));
+  if (!upFile && !ext) return toast(T("up_err_source"));
+  if (upFile && upFile.size > MAX_FILE) return toast(T("up_err_big"));
+  if (ext && !/^https?:\/\//i.test(ext)) return toast(T("up_err_link"));
+  await refreshIfNeeded(); if (!session) return toast(T("up_err_login"));
   if (!profile) await loadProfile();
 
-  const btn = $("btnUpload"); btn.disabled = true; btn.textContent = "Subiendo...";
+  const uid = session.user.id, stamp = Date.now();
+  const tasks = upImgs.map((it, i) => ({ bucket: "images", path: uid + "/" + stamp + "_" + i + "_" + safeName(it.file.name), file: it.file, kind: "img" }));
+  if (upFile) tasks.push({ bucket: "mods", path: uid + "/" + stamp + "_" + safeName(upFile.name), file: upFile, kind: "file" });
+  const total = tasks.reduce((n, t) => n + t.file.size, 0) || 1;
+  const loaded = tasks.map(() => 0), urls = tasks.map(() => null);
+  let finished = 0, failed = null;
+
+  const btn = $("btnUpload");
+  upBusy = true; btn.disabled = true;
+  $("upProgress").classList.remove("hide");
+  const paint = () => {
+    const pct = Math.min(100, Math.round(loaded.reduce((a, c) => a + c, 0) / total * 100));
+    $("upBar").style.width = pct + "%";
+    $("upStatus").textContent = T("up_uploading") + " " + finished + "/" + tasks.length + " · " + pct + "%";
+    btn.textContent = pct + "%";
+  };
+  paint();
+
   try {
-    const uid = session.user.id, stamp = Date.now();
-    const imageUrls = [];
-    for (let i = 0; i < imgs.length; i++) imageUrls.push(await uploadFile("images", uid + "/" + stamp + "_" + i + "_" + safeName(imgs[i].name), imgs[i]));
-    const fileUrl = file ? await uploadFile("mods", uid + "/" + stamp + "_" + safeName(file.name), file) : null;
-    
+    let next = 0;
+    const worker = async () => {
+      while (!failed) {
+        const i = next++; if (i >= tasks.length) return;
+        try {
+          urls[i] = await xhrUpload(tasks[i].bucket, tasks[i].path, tasks[i].file, (n) => { loaded[i] = n; paint(); });
+          loaded[i] = tasks[i].file.size; finished++; paint();
+        } catch (e) { failed = failed || e; }
+      }
+    };
+    await Promise.all(Array.from({ length: Math.min(3, tasks.length) }, worker));
+    if (failed) throw failed;
+
+    $("upStatus").textContent = T("up_saving");
+    const imageUrls = tasks.map((t, i) => (t.kind === "img" ? urls[i] : null)).filter(Boolean);
+    const fi = tasks.findIndex((t) => t.kind === "file");
+    const fileUrl = fi >= 0 ? urls[fi] : null;
+
     const ins = await fetch(URL_BASE + "/rest/v1/mods", { method: "POST", headers: headers({ "Content-Type": "application/json", Prefer: "return=minimal" }),
       body: JSON.stringify({ title, category, description, author: (profile && profile.username) || "Anónimo", file_url: fileUrl, external_url: ext || null, images: imageUrls, approved: true, user_id: session.user.id }) });
-    
-    if (!ins.ok) { const e = await ins.json().catch(() => ({})); throw new Error(e.message || ("Error al guardar (" + ins.status + ")")); }
+    if (!ins.ok) { const e = await ins.json().catch(() => ({})); throw new Error(e.message || ("Error " + ins.status)); }
 
+    upBusy = false;
     $("upDlg").close();
-    toast("¡Mod publicado!");
-    ["title", "desc", "ext"].forEach((id) => ($(id).value = "")); $("file").value = ""; $("imgs").value = "";
+    toast(T("up_done"));
+    resetUpload();
     loadMods();
-  } catch (e) { 
-    toast("Error: " + e.message); 
-  } finally { 
-    btn.disabled = false; 
-    btn.textContent = currentLang === 'es' ? "Subir mod" : "Upload mod"; 
+  } catch (e) {
+    await removeFiles("images", tasks.map((t, i) => (t.kind === "img" ? urls[i] : null)).filter(Boolean));
+    await removeFiles("mods", tasks.map((t, i) => (t.kind === "file" ? urls[i] : null)).filter(Boolean));
+    toast("Error: " + e.message);
+  } finally {
+    upBusy = false; btn.disabled = false; btn.textContent = T("btn_upload_mod");
+    $("upProgress").classList.add("hide"); $("upBar").style.width = "0";
   }
 };
 
