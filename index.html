@@ -193,6 +193,27 @@
   #upBar { height:100%; width:0; background:var(--acc); transition:width .15s; }
   #upStatus { display:block; margin-top:5px; font-size:13px; color:var(--mut); }
   .center { text-align:center; }
+
+  .rte-bar { display:flex; flex-wrap:wrap; gap:4px; margin-bottom:8px; }
+  .rte-bar button { min-width:34px; height:32px; padding:0 7px; border:1px solid var(--line); background:var(--surface); color:var(--fg); border-radius:4px; font-size:13px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; font-family:inherit; }
+  .rte-bar button:hover { border-color:var(--acc); }
+  .rte-bar button svg { width:17px; height:17px; }
+  .rte-bar .sep { width:8px; }
+  .rte-tabs { display:flex; gap:2px; border-bottom:1px solid var(--line); margin-bottom:8px; }
+  .rte-tabs button { background:none; border:none; border-bottom:2px solid transparent; color:var(--mut); font-size:13px; font-weight:600; padding:6px 10px; cursor:pointer; font-family:inherit; margin-bottom:-1px; }
+  .rte-tabs button.on { color:var(--fg); border-bottom-color:var(--acc); }
+  .rte-prev { min-height:160px; border:1px solid var(--line); border-radius:5px; padding:12px; background:var(--bg); overflow-wrap:anywhere; }
+  .rt { line-height:1.6; overflow-wrap:anywhere; }
+  .rt p { margin:0 0 10px; }
+  .rt h2, .rt h3, .rt h4 { margin:16px 0 8px; font-weight:600; line-height:1.3; }
+  .rt h2 { font-size:20px; } .rt h3 { font-size:17px; } .rt h4 { font-size:15px; }
+  .rt ul, .rt ol { margin:0 0 10px; padding-left:22px; }
+  .rt li { margin-bottom:4px; }
+  .rt hr { border:none; border-top:1px solid var(--line); margin:16px 0; }
+  .rt a { color:var(--acc); text-decoration:underline; }
+  .rt img.rimg { max-width:100%; height:auto; border-radius:4px; margin:6px 0; display:block; }
+  .rt .rvideo { position:relative; aspect-ratio:16/9; margin:12px 0; background:var(--bg); border-radius:4px; overflow:hidden; }
+  .rt .rvideo iframe { position:absolute; inset:0; width:100%; height:100%; border:0; }
 </style>
 </head>
 <body>
@@ -208,6 +229,11 @@
   <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
   <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8z M14 3v5h5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></symbol>
   <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 12.5l2.7 2.7L16 9.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 14a4 4 0 005.7 0l3-3a4 4 0 00-5.7-5.7l-1 1M14 10a4 4 0 00-5.7 0l-3 3a4 4 0 005.7 5.7l1-1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="10" r="1.6" fill="currentColor"/><path d="M4 18l5-5 4 4 3-3 4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+  <symbol id="i-video" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10 9.3v5.4l4.6-2.7z" fill="currentColor"/></symbol>
+  <symbol id="i-undo" viewBox="0 0 24 24"><path d="M9 14L4 9l5-5M4 9h10a6 6 0 010 12h-3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-redo" viewBox="0 0 24 24"><path d="M15 14l5-5-5-5M20 9H10a6 6 0 000 12h3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
 </defs></svg>
 
 <!-- Menú Lateral -->
@@ -377,9 +403,9 @@
         <option value="3dpv" data-i18n="cat_3dpv">3DPV</option>
         <option value="other" selected data-i18n="cat_other">Otros</option>
       </select></label>
-    <label class="fld"><span class="fld-l" data-i18n="up_l_desc">Descripción</span>
-      <textarea id="desc" rows="7" maxlength="2000" data-i18n-ph="ph_mod_desc" placeholder="Descripción"></textarea>
-      <span class="counter" id="descCount">0/2000</span></label>
+    <div class="fld"><span class="fld-l" data-i18n="up_l_desc">Descripción</span>
+      <textarea id="desc" rows="8" maxlength="5000" data-i18n-ph="ph_mod_desc" placeholder="Descripción"></textarea>
+      <span class="counter" id="descCount">0/5000</span></div>
     <div class="fld">
       <span class="fld-l"><span data-i18n="up_l_images">Imágenes</span><span class="muted" id="imgCount">0/10</span></span>
       <div id="imgGrid" class="imggrid"></div>
@@ -412,7 +438,7 @@
       <option value="3dpv" data-i18n="cat_3dpv">3DPV</option>
       <option value="other" data-i18n="cat_other">Otros</option>
     </select>
-    <textarea id="eDesc" rows="7" maxlength="2000" data-i18n-ph="ph_mod_desc" placeholder="Descripción"></textarea>
+    <textarea id="eDesc" rows="8" maxlength="5000" data-i18n-ph="ph_mod_desc" placeholder="Descripción"></textarea>
     <div id="eThumbs" class="thumbs"></div>
     <label class="filebtn"><span id="eImgName" data-i18n="add_more_imgs">Agregar imágenes (máx. 10 en total)</span><input id="eImgs" type="file" accept="image/*" multiple></label>
     <label class="filebtn"><span id="eFileName" data-i18n="replace_file">Reemplazar archivo (opcional, máx. 50 MB)</span><input id="eFile" type="file" accept=".zip,.7z,.rar"></label>
@@ -464,7 +490,11 @@ const i18n = {
     up_err_title: "Escribe un título.", up_err_source: "Sube un archivo o pega un enlace externo.", up_err_big: "El archivo pesa más de 50 MB. Usa un enlace externo.",
     up_err_big_short: "supera el límite de 50 MB", up_err_type: "Solo se permiten archivos .zip, .7z o .rar.", up_err_link: "El enlace debe empezar con http:// o https://",
     up_err_img_big: "Una imagen supera los 5 MB y se omitió.", up_err_img_type: "Solo se pueden agregar imágenes.", up_err_img_max: "Máximo 10 imágenes.",
-    up_err_login: "Inicia sesión primero.", up_new_imgs: "imagen(es) nueva(s)"
+    up_err_login: "Inicia sesión primero.",
+    rte_write: "Escribir", rte_preview: "Vista previa", rte_link_text: "Texto del enlace (el nombre que se verá)", rte_link_url: "Dirección del enlace (https://...)",
+    rte_img_url: "Dirección de la imagen (https://...)", rte_vid_url: "Enlace del video de YouTube", rte_bad_url: "Enlace no válido. Debe empezar con https://",
+    rte_bad_video: "Solo se admiten enlaces de YouTube.", rte_empty: "Todavía no hay nada que mostrar.",
+    rte_hint: "Usa los botones para dar formato: negrita, subrayado, listas, enlaces con nombre, imágenes y videos de YouTube.", up_new_imgs: "imagen(es) nueva(s)"
   },
   en: {
     nav_title: "Navigation", nav_mods: "Mods", nav_rules: "Rules", nav_info: "Information", nav_settings: "Settings",
@@ -491,7 +521,11 @@ const i18n = {
     up_err_title: "Enter a title.", up_err_source: "Upload a file or paste an external link.", up_err_big: "The file is larger than 50 MB. Use an external link.",
     up_err_big_short: "over the 50 MB limit", up_err_type: "Only .zip, .7z or .rar files are allowed.", up_err_link: "The link must start with http:// or https://",
     up_err_img_big: "An image is over 5 MB and was skipped.", up_err_img_type: "Only images can be added.", up_err_img_max: "Maximum 10 images.",
-    up_err_login: "Log in first.", up_new_imgs: "new image(s)"
+    up_err_login: "Log in first.",
+    rte_write: "Write", rte_preview: "Preview", rte_link_text: "Link text (the name people will see)", rte_link_url: "Link address (https://...)",
+    rte_img_url: "Image address (https://...)", rte_vid_url: "YouTube video link", rte_bad_url: "Invalid link. It must start with https://",
+    rte_bad_video: "Only YouTube links are supported.", rte_empty: "Nothing to show yet.",
+    rte_hint: "Use the buttons to format: bold, underline, lists, named links, images and YouTube videos.", up_new_imgs: "new image(s)"
   }
 };
 
@@ -556,17 +590,7 @@ const safeName = (n) => n.replace(/[^a-zA-Z0-9._-]/g, "_");
 const isOwner = (m) => !!(session && session.user && m.user_id === session.user.id);
 const myId = () => (session && session.user ? session.user.id : null);
 
-function richText(body) {
-  let html = "", list = [];
-  const flush = () => { if (list.length) { html += "<ul>" + list.map((x) => "<li>" + esc(x) + "</li>").join("") + "</ul>"; list = []; } };
-  String(body || "").split("\n").forEach((raw) => {
-    const l = raw.trim();
-    if (/^[-•*]\s+/.test(l)) list.push(l.replace(/^[-•*]\s+/, ""));
-    else { flush(); if (l) html += "<p>" + esc(l) + "</p>"; }
-  });
-  flush();
-  return html;
-}
+function richText(body) { return renderRich(body); }
 
 function saveSession(s) { session = s; if (s) localStorage.setItem("pdmm_session", JSON.stringify(s)); else { localStorage.removeItem("pdmm_session"); profile = null; mine = []; isMod = false; } renderAuth(); }
 
@@ -955,7 +979,7 @@ function openModPage(id) {
       <span>${fmtDate(m.created_at)}</span>
     </div>
 
-    <p class="desc">${esc(m.description)}</p>
+    <div class="rt" style="margin:12px 0 18px">${renderRich(m.description)}</div>
 
     ${link ? `<a id="dlBtn" class="btn pri" style="display:flex;padding:12px 24px;font-size:16px;width:100%" href="${esc(link)}" target="_blank" rel="noopener">${tLang.download_btn}</a>` : ""}
     ${acts}
@@ -1095,7 +1119,7 @@ function renderEditThumbs() {
 
 function openEdit(m) {
   editing = m; editImgs = (m.images || []).slice();
-  $("eImgs").value = ""; $("eFile").value = ""; $("eImgName").textContent = T("add_more_imgs"); $("eFileName").textContent = T("replace_file");
+  $("eImgs").value = ""; $("eFile").value = ""; rteBackToWrite("eDesc"); $("eImgName").textContent = T("add_more_imgs"); $("eFileName").textContent = T("replace_file");
   $("eTitle").value = m.title || ""; 
   $("eCategory").value = m.category || "other";
   $("eDesc").value = m.description || ""; 
@@ -1275,6 +1299,159 @@ $("btnSaveProf").onclick = async () => {
   } catch (e) { toast("Error"); }
 };
 
+// ---------- Editor de texto enriquecido (formato tipo GameBanana) ----------
+function rtInlineFmt(t) {
+  return t
+    .replace(/\*\*(.+?)\*\*/g, "<b>$1</b>")
+    .replace(/(^|[^*])\*(?!\s)([^*]+?)\*(?!\*)/g, "$1<i>$2</i>")
+    .replace(/__(.+?)__/g, "<u>$1</u>")
+    .replace(/~~(.+?)~~/g, "<s>$1</s>");
+}
+function rtInline(t) {
+  const toks = [];
+  const keep = (html) => "\u0000" + (toks.push(html) - 1) + "\u0000";
+  t = t.replace(/!\[([^\]]*)\]\((https:\/\/[^\s)]+)\)/g, (m, alt, url) => keep(`<img class="rimg" src="${url}" alt="${alt}" loading="lazy" referrerpolicy="no-referrer">`));
+  t = t.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, (m, txt, url) => keep(`<a href="${url}" target="_blank" rel="noopener noreferrer nofollow">${rtInlineFmt(txt)}</a>`));
+  t = rtInlineFmt(t);
+  for (let n = 0; n < 4 && /\u0000\d+\u0000/.test(t); n++) t = t.replace(/\u0000(\d+)\u0000/g, (m, i) => toks[+i]);
+  return t;
+}
+function renderRich(src) {
+  const lines = String(src || "").replace(/\r/g, "").split("\n");
+  let html = "", list = null, para = [];
+  const flushP = () => { if (para.length) { html += "<p>" + para.map((l) => rtInline(esc(l))).join("<br>") + "</p>"; para = []; } };
+  const closeList = () => { if (list) { html += "</" + list + ">"; list = null; } };
+  for (const raw of lines) {
+    const line = raw.trimEnd();
+    let m;
+    if (!line.trim()) { flushP(); closeList(); continue; }
+    if ((m = line.match(/^\s*\[video\]\(https:\/\/(?:www\.|m\.)?(?:youtube\.com\/watch\?[^\s)]*v=|youtu\.be\/)([\w-]{11})[^\s)]*\)\s*$/))) {
+      flushP(); closeList();
+      html += `<div class="rvideo"><iframe src="https://www.youtube-nocookie.com/embed/${m[1]}" loading="lazy" allowfullscreen referrerpolicy="strict-origin-when-cross-origin" allow="encrypted-media; picture-in-picture"></iframe></div>`;
+      continue;
+    }
+    if (/^\s*---+\s*$/.test(line)) { flushP(); closeList(); html += "<hr>"; continue; }
+    if ((m = line.match(/^(#{1,3})\s+(.+)$/))) { flushP(); closeList(); const n = m[1].length + 1; html += `<h${n}>${rtInline(esc(m[2]))}</h${n}>`; continue; }
+    if ((m = line.match(/^\s*[-•]\s+(.+)$/)) || (m = line.match(/^\s*\*\s+(.+)$/))) {
+      flushP(); if (list !== "ul") { closeList(); html += "<ul>"; list = "ul"; }
+      html += "<li>" + rtInline(esc(m[1])) + "</li>"; continue;
+    }
+    if ((m = line.match(/^\s*\d+[.)]\s+(.+)$/))) {
+      flushP(); if (list !== "ol") { closeList(); html += "<ol>"; list = "ol"; }
+      html += "<li>" + rtInline(esc(m[1])) + "</li>"; continue;
+    }
+    closeList(); para.push(line);
+  }
+  flushP(); closeList();
+  return html;
+}
+
+function rteInsert(ta, text, s0, e0) {
+  ta.focus(); ta.setSelectionRange(s0, e0);
+  let ok = false;
+  try { ok = document.execCommand && document.execCommand("insertText", false, text); } catch (e) {}
+  if (!ok) { ta.setRangeText(text, s0, e0, "end"); ta.dispatchEvent(new Event("input", { bubbles: true })); }
+}
+function rteWrap(ta, before, after, placeholder) {
+  const s0 = ta.selectionStart, e0 = ta.selectionEnd;
+  const sel = ta.value.slice(s0, e0) || placeholder;
+  rteInsert(ta, before + sel + after, s0, e0);
+  ta.setSelectionRange(s0 + before.length, s0 + before.length + sel.length);
+}
+function rteLines(ta, fn) {
+  const v = ta.value, s0 = ta.selectionStart, e0 = ta.selectionEnd;
+  const ls = v.lastIndexOf("\n", s0 - 1) + 1;
+  let le = v.indexOf("\n", e0); if (le < 0) le = v.length;
+  const block = v.slice(ls, le).split("\n").map(fn).join("\n");
+  rteInsert(ta, block, ls, le);
+  ta.setSelectionRange(ls, ls + block.length);
+}
+function rteHeading(ta, n) {
+  const mark = "#".repeat(n) + " ";
+  rteLines(ta, (l) => { const plain = l.replace(/^#{1,3}\s+/, ""); return l.startsWith(mark) ? plain : mark + plain; });
+}
+function rteList(ta, ordered) {
+  const v = ta.value, s0 = ta.selectionStart, e0 = ta.selectionEnd;
+  const ls = v.lastIndexOf("\n", s0 - 1) + 1; let le = v.indexOf("\n", e0); if (le < 0) le = v.length;
+  const rows = v.slice(ls, le).split("\n");
+  const re = ordered ? /^\d+[.)]\s+/ : /^[-•]\s+/;
+  const all = rows.every((l) => re.test(l));
+  rteLines(ta, (l, i) => {
+    const plain = l.replace(/^(\d+[.)]|[-•])\s+/, "");
+    return all ? plain : (ordered ? (i + 1) + ". " : "- ") + plain;
+  });
+}
+function rteBlockInsert(ta, text) {
+  const s0 = ta.selectionStart, e0 = ta.selectionEnd, v = ta.value;
+  const pre = s0 > 0 && v[s0 - 1] !== "\n" ? "\n" : "";
+  const post = e0 < v.length && v[e0] !== "\n" ? "\n" : "";
+  rteInsert(ta, pre + text + post, s0, e0);
+}
+function rteAction(ta, act) {
+  const sel = ta.value.slice(ta.selectionStart, ta.selectionEnd);
+  if (act === "b") rteWrap(ta, "**", "**", "texto");
+  else if (act === "i") rteWrap(ta, "*", "*", "texto");
+  else if (act === "u") rteWrap(ta, "__", "__", "texto");
+  else if (act === "s") rteWrap(ta, "~~", "~~", "texto");
+  else if (act === "h1") rteHeading(ta, 1);
+  else if (act === "h2") rteHeading(ta, 2);
+  else if (act === "h3") rteHeading(ta, 3);
+  else if (act === "ul") rteList(ta, false);
+  else if (act === "ol") rteList(ta, true);
+  else if (act === "hr") rteBlockInsert(ta, "---");
+  else if (act === "link") {
+    const txt = prompt(T("rte_link_text"), sel || ""); if (txt === null) return;
+    const url = (prompt(T("rte_link_url"), "https://") || "").trim(); if (!url) return;
+    if (!/^https?:\/\/\S+$/i.test(url) || /[()]/.test(url)) return toast(T("rte_bad_url"));
+    rteInsert(ta, "[" + (txt.trim() || url) + "](" + url + ")", ta.selectionStart, ta.selectionEnd);
+  } else if (act === "img") {
+    const url = (prompt(T("rte_img_url"), "https://") || "").trim(); if (!url) return;
+    if (!/^https:\/\/\S+$/i.test(url) || /[()]/.test(url)) return toast(T("rte_bad_url"));
+    rteBlockInsert(ta, "![](" + url + ")");
+  } else if (act === "vid") {
+    const url = (prompt(T("rte_vid_url"), "https://") || "").trim(); if (!url) return;
+    if (!/^https:\/\/(?:www\.|m\.)?(?:youtube\.com\/watch\?\S*v=|youtu\.be\/)[\w-]{11}\S*$/i.test(url) || /[()]/.test(url)) return toast(T("rte_bad_video"));
+    rteBlockInsert(ta, "[video](" + url + ")");
+  } else if (act === "undo") { ta.focus(); document.execCommand && document.execCommand("undo"); }
+  else if (act === "redo") { ta.focus(); document.execCommand && document.execCommand("redo"); }
+}
+const RTE_BTNS = [
+  ["b", "<b>B</b>"], ["i", "<i>I</i>"], ["u", "<u>U</u>"], ["s", "<s>S</s>"], null,
+  ["h1", "H1"], ["h2", "H2"], ["h3", "H3"], null,
+  ["ul", "•"], ["ol", "1."], ["hr", "—"], null,
+  ["link", '<svg><use href="#i-link"/></svg>'], ["img", '<svg><use href="#i-image"/></svg>'], ["vid", '<svg><use href="#i-video"/></svg>'], null,
+  ["undo", '<svg><use href="#i-undo"/></svg>'], ["redo", '<svg><use href="#i-redo"/></svg>']
+];
+function rteBackToWrite(id) {
+  const w = document.querySelector('.rte[data-ta="' + id + '"] [data-tab="write"]');
+  if (w) w.click();
+}
+function initRte(id) {
+  const ta = $(id); if (!ta) return;
+  const wrap = document.createElement("div");
+  wrap.className = "rte"; wrap.dataset.ta = id;
+  const label = ta.closest("label");
+  const anchor = label || ta;
+  // si el textarea está dentro de un <label>, el editor se arma justo después del texto del campo
+  wrap.innerHTML = `<div class="rte-bar">${RTE_BTNS.map((b) => b ? `<button type="button" data-act="${b[0]}">${b[1]}</button>` : '<span class="sep"></span>').join("")}</div>
+    <div class="rte-tabs"><button type="button" class="on" data-tab="write" data-i18n="rte_write">Escribir</button><button type="button" data-tab="preview" data-i18n="rte_preview">Vista previa</button></div>
+    <div class="rte-prev rt hide"></div>`;
+  ta.parentNode.insertBefore(wrap, ta);
+  wrap.insertBefore(ta, wrap.querySelector(".rte-prev"));
+  const bar = wrap.querySelector(".rte-bar"), prev = wrap.querySelector(".rte-prev");
+  bar.addEventListener("mousedown", (e) => e.preventDefault());
+  bar.addEventListener("click", (e) => { const b = e.target.closest("[data-act]"); if (b) rteAction(ta, b.dataset.act); });
+  wrap.querySelector(".rte-tabs").addEventListener("click", (e) => {
+    const t = e.target.closest("[data-tab]"); if (!t) return;
+    wrap.querySelectorAll(".rte-tabs button").forEach((x) => x.classList.toggle("on", x === t));
+    const preview = t.dataset.tab === "preview";
+    bar.classList.toggle("hide", preview); ta.classList.toggle("hide", preview); prev.classList.toggle("hide", !preview);
+    if (preview) prev.innerHTML = ta.value.trim() ? renderRich(ta.value) : `<p class="hint">${esc(T("rte_empty"))}</p>`;
+  });
+}
+initRte("desc");
+initRte("eDesc");
+
 // ---------- Subida de mods: vista previa, progreso y hasta 10 imágenes ----------
 const MAX_IMGS = 10;
 const T = (k) => (i18n[currentLang] && i18n[currentLang][k]) || i18n.es[k] || k;
@@ -1316,7 +1493,8 @@ function resetUpload() {
   upImgs.forEach((it) => URL.revokeObjectURL(it.url));
   upImgs = []; upFile = null;
   ["title", "desc", "ext"].forEach((id) => ($(id).value = ""));
-  $("category").value = "other"; $("descCount").textContent = "0/2000";
+  $("category").value = "other"; $("descCount").textContent = "0/5000";
+  rteBackToWrite("desc");
   renderUpImgs(); renderUpFile();
 }
 
@@ -1355,7 +1533,7 @@ $("fileBox").onclick = (e) => {
   if (e.target.closest("#filePick")) $("file").click();
   else if (e.target.closest("#fileRm")) { upFile = null; renderUpFile(); }
 };
-$("desc").oninput = () => { $("descCount").textContent = $("desc").value.length + "/2000"; };
+$("desc").oninput = () => { $("descCount").textContent = $("desc").value.length + "/5000"; };
 $("upDlg").addEventListener("close", () => { if (upBusy) { $("upDlg").showModal(); toast(T("up_wait")); } });
 
 $("eImgs").onchange = () => { const n = $("eImgs").files.length; $("eImgName").textContent = n ? n + " " + T("up_new_imgs") : T("add_more_imgs"); };
